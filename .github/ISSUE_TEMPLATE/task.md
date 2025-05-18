@@ -1,3 +1,13 @@
+---
+name: 📋 작업(Task)
+description: 일반적인 작업 항목을 기록할 때 사용하세요.
+title: "[Feat] 새로운 기능 추가"
+labels: ["feat"]
+assignees: []
+about: |
+  이 템플릿은 작업(Task) 항목을 기록할 때 사용됩니다.
+---
+
 # 📋 작업(Task)
 
 
