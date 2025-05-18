@@ -1,0 +1,9 @@
+<blank_issues_enabled: false
+contact_links: []
+issue_templates:
+  - name: 📋 작업(Task)
+    description: 일반적인 작업 항목을 기록할 때 사용하세요.
+    file: task.md
+  - name: 🛠️ 문제 해결 리포트
+    description: 문제를 어떻게 해결했는지 기록하세요.
+    file: troubleshooting_report.md
