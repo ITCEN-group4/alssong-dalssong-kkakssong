@@ -1,3 +1,13 @@
+---
+name: 🛠️ 트러블 해결
+description: 트러블을 어떻게 해결했는지 기록하세요.
+title: "[Fix] 기능 수정"
+labels: ["bug", "fix"]
+assignees: []
+about: |
+  이 템플릿은 문제를 해결한 방법과 원인 분석/해결방법을 기록하는 데 사용됩니다.
+---
+
 # 🛠️ 트러블슈팅 기록서 (Troubleshooting Report)
 
 
