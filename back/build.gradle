@@ -30,8 +30,23 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	//javax.validation 사용
+	//javax.validation 디펜던시
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	//redis 디펜던시
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	//querydsl 디펜던시
+    implementation 'com.querydsl:querydsl-apt:5.0.0'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+	//mybatis 디펜던시
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -42,6 +57,26 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+// Querydsl 빌드 옵션 설정
+def querydslGeneratedDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+    main {
+        java {
+            srcDir querydslGeneratedDir
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.annotationProcessorGeneratedSourcesDirectory = querydslGeneratedDir
+}
+
+clean {
+    delete querydslGeneratedDir
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
