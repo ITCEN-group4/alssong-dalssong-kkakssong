@@ -48,6 +48,11 @@ dependencies {
 	//mybatis 디펜던시
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
 
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
