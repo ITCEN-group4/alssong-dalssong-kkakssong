@@ -1,4 +1,4 @@
-package com.thirdparty.ticketing.domain.member.controller;
+package com.group4.aldalka.domain.user.controller;
 
 import jakarta.validation.Valid;
 
@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thirdparty.ticketing.domain.member.dto.request.MemberCreationRequest;
-import com.thirdparty.ticketing.domain.member.dto.response.CreateMemberResponse;
-import com.thirdparty.ticketing.domain.member.service.MemberService;
+import com.group4.aldalka.domain.user.dto.request.UserCreationRequest;
+import com.group4.aldalka.domain.user.dto.response.CreateUserResponse;
+import com.group4.aldalka.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
-public class MemberController {
+@RequestMapping("/users")
+public class UserController {
 
-    private final MemberService memberService;
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<CreateMemberResponse> createMember(
-            @RequestBody @Valid MemberCreationRequest request) {
-        CreateMemberResponse response = memberService.createMember(request);
+    public ResponseEntity<CreateUserResponse> createUser(
+            @RequestBody @Valid UserCreationRequest request) {
+        CreateUserResponse response = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

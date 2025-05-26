@@ -5,10 +5,10 @@ import com.group4.aldalka.domain.user.User;
 import lombok.Data;
 
 @Data
-public class CreateMemberResponse {
-    private final Long memberId;
+public class CreateUserResponse {
+    private final Long userId;
 
-    public static CreateMemberResponse from(User user) {
-        return new CreateMemberResponse(user.getUserId());
+    public static CreateUserResponse from(User user) {
+        return new CreateUserResponse(user.getUserId());
     }
 }

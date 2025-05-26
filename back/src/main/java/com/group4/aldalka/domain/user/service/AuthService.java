@@ -1,14 +1,14 @@
-package com.thirdparty.ticketing.domain.member.service;
+package com.group4.aldalka.domain.user.service;
 
 import java.util.NoSuchElementException;
 
-import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.thirdparty.ticketing.domain.member.Member;
-import com.thirdparty.ticketing.domain.member.dto.response.LoginResponse;
-import com.thirdparty.ticketing.domain.member.repository.MemberRepository;
+import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.user.dto.response.LoginResponse;
+import com.group4.aldalka.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,17 +17,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public LoginResponse login(String email, String rawPassword) {
-        Member member =
-                memberRepository
-                        .findByEmail(email)
+    public LoginResponse login(String username, String rawPassword) {
+        User user =
+                userRepository
+                        .findByUsername(username)
                         .orElseThrow(() -> new NoSuchElementException("이메일/비밀번호가 일치하지 않습니다."));
-        passwordEncoder.checkMatches(member, rawPassword);
-        String accessToken = jwtProvider.createAccessToken(member);
-        return LoginResponse.of(member, accessToken);
+        passwordEncoder.checkMatches(user, rawPassword);
+        String accessToken = jwtProvider.createAccessToken(user);
+        return LoginResponse.of(user, accessToken);
     }
 }

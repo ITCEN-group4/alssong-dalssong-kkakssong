@@ -1,4 +1,4 @@
-package com.group4.aldalka.user;
+package com.group4.aldalka.domain.user;
 
 import java.util.Arrays;
 import java.util.Set;

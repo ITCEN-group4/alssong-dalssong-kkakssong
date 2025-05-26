@@ -1,20 +1,20 @@
-package com.thirdparty.ticketing.domain.member.dto.response;
+package com.group4.aldalka.domain.user.dto.response;
 
-import com.thirdparty.ticketing.domain.member.Member;
+import com.group4.aldalka.domain.user.User;
 
 import lombok.Data;
 
 @Data
 public class LoginResponse {
-    private Long memberId;
+    private Long userId;
     private String accessToken;
 
-    public LoginResponse(Long memberId, String accessToken) {
-        this.memberId = memberId;
+    public LoginResponse(Long userId, String accessToken) {
+        this.userId = userId;
         this.accessToken = accessToken;
     }
 
-    public static LoginResponse of(Member member, String accessToken) {
-        return new LoginResponse(member.getMemberId(), accessToken);
+    public static LoginResponse of(User user, String accessToken) {
+        return new LoginResponse(user.getUserId(), accessToken);
     }
 }

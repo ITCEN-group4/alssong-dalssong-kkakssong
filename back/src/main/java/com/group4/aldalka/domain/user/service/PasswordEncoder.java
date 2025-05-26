@@ -1,9 +1,11 @@
-package com.thirdparty.ticketing.domain.member.service;
+package com.group4.aldalka.domain.user.service;
 
-import com.thirdparty.ticketing.domain.member.Member;
+
+import com.group4.aldalka.domain.user.User;
 
 public interface PasswordEncoder {
+
     String encode(String rawPassword);
 
-    void checkMatches(Member member, String rawPassword);
+    void checkMatches(User user, String rawPassword);
 }

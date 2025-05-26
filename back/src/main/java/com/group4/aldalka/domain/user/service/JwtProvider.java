@@ -1,10 +1,11 @@
-package com.thirdparty.ticketing.domain.member.service;
+package com.group4.aldalka.domain.user.service;
 
-import com.thirdparty.ticketing.domain.member.Member;
-import com.thirdparty.ticketing.domain.member.dto.response.CustomClaims;
+
+import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.user.dto.response.CustomClaims;
 
 public interface JwtProvider {
     CustomClaims parseAccessToken(String accessToken);
 
-    String createAccessToken(Member member);
+    String createAccessToken(User user);
 }
