@@ -25,7 +25,7 @@ spring:
       idle-timeout: 600000
       pool-name: MyHikariCP
       validation-timeout: 5000
-      auto-commit: true
+      auto-commit: false
       data-source-properties:
         rewriteBatchedStatements: true
 
@@ -45,3 +45,8 @@ spring:
       "[hibernate.jdbc.batch_versioned_data]": true
       "[hibernate.connection.provider_disables_autocommit]": true
 
+jwt:
+  issuer: test
+  expiry-seconds: 1800
+  # TODO: 이건 꼭 바꿔야함
+  secret: thisisjusttestaccesssecretsodontworry
