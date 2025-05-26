@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.user;
+package com.group4.aldalka.domain;
 
 import java.time.ZonedDateTime;
 
