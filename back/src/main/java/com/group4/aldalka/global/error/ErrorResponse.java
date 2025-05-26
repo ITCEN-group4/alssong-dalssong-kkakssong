@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
