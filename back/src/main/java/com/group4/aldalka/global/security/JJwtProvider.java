@@ -1,16 +1,15 @@
-package com.thirdparty.ticketing.global.security;
+package com.group4.aldalka.global.security;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-
 import javax.crypto.SecretKey;
 
-import com.thirdparty.ticketing.domain.common.ErrorCode;
-import com.thirdparty.ticketing.domain.common.TicketingException;
-import com.thirdparty.ticketing.domain.member.Member;
-import com.thirdparty.ticketing.domain.member.MemberRole;
-import com.thirdparty.ticketing.domain.member.dto.response.CustomClaims;
-import com.thirdparty.ticketing.domain.member.service.JwtProvider;
+import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.user.UserRole;
+import com.group4.aldalka.domain.user.dto.response.CustomClaims;
+import com.group4.aldalka.domain.user.service.JwtProvider;
+import com.group4.aldalka.global.error.ErrorCode;
+import com.group4.aldalka.global.error.exception.BusinessException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -40,27 +39,29 @@ public class JJwtProvider implements JwtProvider {
     public CustomClaims parseAccessToken(String accessToken) {
         try {
             Claims payload = accessTokenParser.parseSignedClaims(accessToken).getPayload();
-            String email = payload.getSubject();
-            MemberRole memberRole = MemberRole.find(payload.get(ROLE, String.class));
-            return new CustomClaims(email, memberRole);
+            String username = payload.getSubject();
+            UserRole userRole = UserRole.find(payload.get(ROLE, String.class));
+            return new CustomClaims(username, userRole);
         } catch (ExpiredJwtException e) {
-            throw new TicketingException(ErrorCode.EXPIRED_TOKEN);
+            // TODO: 새로운 ErrorCode 정의 필요. EXPIRED_TOKEN으로 하는게?
+            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
         } catch (RuntimeException e) {
             log.debug("액세스 토큰이 유효하지 않습니다. token={}", accessToken);
-            throw new TicketingException(ErrorCode.INVALID_TOKEN);
+            // TODO: 새로운 ErrorCode 정의 필요. Invalid_Token으로 하는게?
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
         }
     }
 
     @Override
-    public String createAccessToken(Member member) {
+    public String createAccessToken(User user) {
         Date now = new Date();
         Date expiresAt = new Date(now.getTime() + expirySeconds * 1000L);
         return Jwts.builder()
                 .issuer(issuer)
                 .issuedAt(now)
-                .subject(member.getEmail())
+                .subject(user.getUsername())
                 .expiration(expiresAt)
-                .claim(ROLE, member.getMemberRole().getValue())
+                .claim(ROLE, user.getUserRole().getValue())
                 .signWith(secretKey)
                 .compact();
     }

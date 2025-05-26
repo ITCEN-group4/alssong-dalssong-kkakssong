@@ -1,4 +1,4 @@
-package com.thirdparty.ticketing.global.config;
+package com.group4.aldalka.global.config;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.thirdparty.ticketing.domain.member.MemberRole;
-import com.thirdparty.ticketing.domain.member.service.JwtProvider;
-import com.thirdparty.ticketing.domain.member.service.PasswordEncoder;
-import com.thirdparty.ticketing.global.security.AuthenticationFilter;
-import com.thirdparty.ticketing.global.security.BCryptPasswordEncoder;
-import com.thirdparty.ticketing.global.security.JJwtProvider;
+import com.group4.aldalka.domain.user.UserRole;
+import com.group4.aldalka.domain.user.service.JwtProvider;
+import com.group4.aldalka.domain.user.service.PasswordEncoder;
+import com.group4.aldalka.global.security.AuthenticationFilter;
+import com.group4.aldalka.global.security.BCryptPasswordEncoder;
+import com.group4.aldalka.global.security.JJwtProvider;
 
 @Configuration
 public class SecurityConfig {
@@ -42,11 +42,9 @@ public class SecurityConfig {
                         request ->
                                 request.requestMatchers(
                                                 HttpMethod.POST,
-                                                "/api/performances",
-                                                "/api/performances/*/zones",
-                                                "/api/performances/*/zones/*/seats")
-                                        .hasAuthority(MemberRole.ADMIN.getValue())
-                                        .requestMatchers("/api/performances/**", "/api/tickets/**")
+                                                "/api/admin/**")
+                                        .hasAuthority(UserRole.ADMIN.getValue())
+                                        .requestMatchers("/api/my/**")
                                         .authenticated()
                                         .anyRequest()
                                         .permitAll())
@@ -62,7 +60,7 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(
-                List.of("http://localhost:3000/", "https://3rd-party-ticketing-front.vercel.app/"));
+                List.of("http://localhost:3000/", ""));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(List.of("*"));

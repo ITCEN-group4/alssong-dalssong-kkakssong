@@ -1,9 +1,10 @@
-package com.thirdparty.ticketing.global.security;
+package com.group4.aldalka.global.security;
 
 import java.util.NoSuchElementException;
 
-import com.thirdparty.ticketing.domain.member.Member;
-import com.thirdparty.ticketing.domain.member.service.PasswordEncoder;
+import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.user.service.PasswordEncoder;
+
 
 public class BCryptPasswordEncoder implements PasswordEncoder {
 
@@ -16,8 +17,8 @@ public class BCryptPasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    public void checkMatches(Member member, String rawPassword) {
-        if (passwordEncoder.matches(rawPassword, member.getPassword())) {
+    public void checkMatches(User user, String rawPassword) {
+        if (passwordEncoder.matches(rawPassword, user.getPassword())) {
             return;
         }
         throw new NoSuchElementException("아이디/패스워드가 일치하지 않습니다.");

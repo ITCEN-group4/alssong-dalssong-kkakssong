@@ -1,24 +1,24 @@
-package com.thirdparty.ticketing.global.security;
+package com.group4.aldalka.global.security;
 
 import java.util.Set;
 
-import com.thirdparty.ticketing.domain.member.MemberRole;
+import com.group4.aldalka.domain.user.UserRole;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JwtAuthentication {
 
-    private final String email;
-    private final MemberRole memberRole;
+    private final String username;
+    private final UserRole userRole;
     private final String accessToken;
 
     public String getPrincipal() {
-        return email;
+        return username;
     }
 
     public String getAuthority() {
-        return memberRole.getValue();
+        return userRole.getValue();
     }
 
     public String getCredential() {
@@ -26,6 +26,6 @@ public class JwtAuthentication {
     }
 
     public Set<String> getAuthorities() {
-        return memberRole.getAuthorities();
+        return userRole.getAuthorities();
     }
 }

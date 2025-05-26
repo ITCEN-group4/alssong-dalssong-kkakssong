@@ -1,4 +1,4 @@
-package com.thirdparty.ticketing.global.security;
+package com.group4.aldalka.global.security;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -13,10 +13,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.thirdparty.ticketing.domain.common.ErrorCode;
-import com.thirdparty.ticketing.domain.common.TicketingException;
-import com.thirdparty.ticketing.domain.member.dto.response.CustomClaims;
-import com.thirdparty.ticketing.domain.member.service.JwtProvider;
+import com.group4.aldalka.domain.user.dto.response.CustomClaims;
+import com.group4.aldalka.domain.user.service.JwtProvider;
+import com.group4.aldalka.global.error.ErrorCode;
+import com.group4.aldalka.global.error.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,15 +57,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String removeBearer(String bearerAccessToken) {
+        // TODO: 새로운 ErrorCode 만들지 허가 받기 line 62
         if (bearerAccessToken.contains(BEARER)) {
             return bearerAccessToken.replace(BEARER, "");
         }
-        throw new TicketingException(ErrorCode.INVALID_TOKEN_HEADER);
+        throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
     }
 
     private JwtAuthentication authenticate(String accessToken) {
         CustomClaims customClaims = jwtProvider.parseAccessToken(accessToken);
         return new JwtAuthentication(
-                customClaims.getEmail(), customClaims.getMemberRole(), accessToken);
+                customClaims.getUsername(), customClaims.getUserRole(), accessToken);
     }
 }

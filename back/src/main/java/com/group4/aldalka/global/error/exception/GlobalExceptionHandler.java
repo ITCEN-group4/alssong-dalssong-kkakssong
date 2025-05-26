@@ -34,7 +34,7 @@ import jakarta.validation.*;
 public class GlobalExceptionHandler {
 
 
-    @ExceptionHandler
+    @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
             //http요청 파라미터 누락
             MissingServletRequestParameterException e) {
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(fieldErrors, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<ErrorResponse> handleConstraintViolationException(
             ConstraintViolationException e) {  //객체 제약조건 위반
         final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID,
@@ -57,14 +57,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(BindException.class)
     protected ResponseEntity<ErrorResponse> handleBindException(
             BindException e) { //매개변수 타입 불일치 등 데이터 바인딩 실패
         final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, e.getBindingResult());
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(MissingServletRequestPartException.class)
     protected ResponseEntity<ErrorResponse> handleMissingServletRequestPartException(
             //@RequestPart(파일업로드) 에서 기대한 파트 누락
             MissingServletRequestPartException e) {
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(MissingRequestCookieException.class)
     protected ResponseEntity<ErrorResponse> handleMissingServletRequestPartException(
             //@CookieValue에서 기대한 쿠키 누락
             MissingRequestCookieException e) {
@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
             //컨트롤러 메서드의 매개변수에 전달된 인자의 유형이 예상한 유형과 일치하지 않을 때
             MethodArgumentTypeMismatchException e) {
@@ -89,14 +89,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
             HttpMessageNotReadableException e) {  //요청바디 역직렬화 실패
         final ErrorResponse response = ErrorResponse.of(HTTP_MESSAGE_NOT_READABLE);
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
             //지원하지 않는 http메서드로 요청 시
             HttpRequestMethodNotSupportedException e) {
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, BAD_REQUEST);
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(
             BusinessException e) { //기타 개발자 정의 예외
         final ErrorCode errorCode = e.getErrorCode();
@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
         e.printStackTrace();
         final ErrorResponse response = ErrorResponse.of(INTERNAL_SERVER_ERROR);
