@@ -18,7 +18,7 @@ public class BaseLiquor extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "base_liquor_id")
-    private Long base_liquor_id;
+    private Long baseLiquorId;
 
     @Column(name = "name")
     private String name;
