@@ -18,7 +18,7 @@ public class Ingredient extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
-    private Long id;
+    private Long ingredientId;
 
     @Column(name = "name")
     private String name;
