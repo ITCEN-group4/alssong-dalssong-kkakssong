@@ -20,19 +20,19 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    private Long post_id;
+    private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = "380")
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, length = "2200")
     private String content;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = "2200")
     private String recipe;
 
     @Column(nullable = false)
@@ -47,7 +47,7 @@ public class Post extends BaseEntity {
     @Column(name = "isOfficial", nullable = false)
     private boolean isOfficial;
 
-    @Column(name = "imageUrl")
+    @Column(name = "imageUrl", length = "2083")
     private String imageUrl;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
