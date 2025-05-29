@@ -15,7 +15,7 @@ public class PostIngredient extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_ingredient_id")
-    private Long post_ingredient_id;
+    private Long postIngredientId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
