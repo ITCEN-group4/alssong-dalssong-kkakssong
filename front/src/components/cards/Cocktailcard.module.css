@@ -1,0 +1,103 @@
+.card {
+    position: relative;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    max-width: 280px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.cardImage {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.cardTitle {
+    font-size: 1rem; /* ↓ */
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.cardContent {
+    padding: 0.8rem;
+    font-size: 0.875rem; /* ↓ 전체 텍스트 기본 */
+}
+
+.cardTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tagBase {
+    background-color: #E3F0FF;
+    color: #2070B6;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+.tagIngredient {
+    background-color: #FFF8E1;
+    color: #C1861C;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+.tagShaking {
+    background-color: #E9FFD9;
+    color: #41B300;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.likeButton {
+    margin: 0.5rem 1rem 1rem;
+    align-self: flex-start;
+    background: #ffeaea;
+    border: none;
+    color: #ff5a5f;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.likeButton:hover {
+    transform: scale(1.1);
+}
+
+.levelBadge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 48px;
+    height: auto;
+}
+
+.description {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 0.4rem;
+    margin-bottom: 0.6rem;
+    height: 5em;
+    line-height: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    padding: 0 15px;
+}
+
