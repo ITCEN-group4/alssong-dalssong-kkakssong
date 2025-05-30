@@ -38,16 +38,16 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private int difficulty;
 
-    @Column(name = "isShaken", nullable = false)
+    @Column(name = "is_shaken", nullable = false)
     private boolean isShaken;
 
-    @Column(name = "likeCount", nullable = false)
+    @Column(name = "like_count", nullable = false)
     private int likeCount;
 
-    @Column(name = "isOfficial", nullable = false)
+    @Column(name = "is_official", nullable = false)
     private boolean isOfficial;
 
-    @Column(name = "imageUrl", length = "2083")
+    @Column(name = "image_url", length = "2083")
     private String imageUrl;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
