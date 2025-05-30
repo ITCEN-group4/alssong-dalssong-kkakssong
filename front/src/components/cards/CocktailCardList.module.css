@@ -1,0 +1,9 @@
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* ✅ auto-fill + 최소폭 보장 */
+    gap: 20px;
+    max-width: 1300px;
+    padding: 0 1rem;
+    margin: 0 auto;
+    justify-items: start;
+}
