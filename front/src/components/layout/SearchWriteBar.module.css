@@ -1,0 +1,36 @@
+.barContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.searchInput {
+    flex: 1;
+    padding: 14px 14px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    outline: none;
+}
+
+.searchInput::placeholder {
+    color: #aaa;
+}
+
+.writeButton {
+    padding: 8px 16px;
+    background-color: #ff6f91;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+
+.writeButton:hover {
+    background-color: #ff4f76;
+}
