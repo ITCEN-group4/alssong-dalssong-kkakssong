@@ -1,16 +1,13 @@
 package com.group4.aldalka.domain.user;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.group4.aldalka.domain.post.service.UserLike;
+import com.group4.aldalka.domain.post.service.Post;
+import jakarta.persistence.*;
 
 import com.group4.aldalka.domain.BaseEntity;
 
@@ -42,6 +39,12 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserLike> likes = new ArrayList<UserLike>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<Post>();
 
     public User(String username, String password, UserRole userRole) {
         this.username = username;
