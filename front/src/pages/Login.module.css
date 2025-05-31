@@ -1,0 +1,161 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* 화면 전체에서 스크롤 안 생기게 */
+    height: 100%;
+}
+
+.loginPage {
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom, #FFE4EC, #FFE9C9);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    padding: 0 100px;
+}
+
+.logoSection {
+    flex: 1;
+    display: flex;
+    /* text-align: center; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoIcon {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #FC619C;
+}
+
+.formWrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    width: 250px;
+    margin-right: 60px;
+}
+
+.login_title_form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 50px;
+}
+
+.login_img{
+    width: 20px;
+    height: 20px;
+}
+
+.formTitle {
+    font-size: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
+    height: 100%;
+
+}
+
+.input_label{
+    font-size: 0.74rem;
+    font-weight: bold;
+}
+
+.label {
+    display: block;
+    width: 100%;
+}
+
+.input_wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input_wrapper img {
+    position: absolute;
+    align-self: center;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+
+}
+
+.input_wrapper input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border-radius: 8px;
+    border: 1px solid #FFB0CE;
+    font-size: 0.85rem;
+    color: #ADAEBC;
+    margin-top: 5px;
+    box-sizing: border-box;
+
+}
+
+input::placeholder {
+    color: #ADAEBC;
+    font-size: 0.85rem;
+}
+
+
+.loginButton {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to right, #FC82AB, #FEC58F, #FBDFC0);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 15px;
+}
+
+.loginButton:hover {
+    filter: brightness(0.95);
+}
+
+.registerLink {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+    cursor: pointer;
+}
+
+.cloudImg {
+    position: absolute;
+    bottom: -150px;
+    left: 0;
+    width: 90%;
+    z-index: 0;
+    pointer-events: none;
+    object-fit: cover;
+}
+
+.rightSection {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
