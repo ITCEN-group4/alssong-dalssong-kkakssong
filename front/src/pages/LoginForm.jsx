@@ -16,16 +16,16 @@ export default function LoginForm() {
                 <label>
                     <span className={styles.input_label}>이메일</span>
                     <div className={styles.input_wrapper}>
-                        <img src={email} alt="email_img" className={styles.email_img} />
+                        <img src={email} alt="email_img" className={styles.leftIcon} />
                         <input type="email" placeholder="이메일을 입력하세요" className={styles.input} />
                     </div>
                 </label>
                 <label>
                     <span className={styles.input_label}>비밀번호</span>
                     <div className={styles.input_wrapper}>
-                        <img src={password} alt="password_img" className={styles.password_img} />
+                        <img src={password} alt="password_img" className={styles.leftIcon} />
                         <input type="password" placeholder="비밀번호를 입력해주세요" className={styles.input} />
-                        <img src={password_viewless} alt="password_viewless_img" className={styles.password_viewless_img} />
+                        <img src={password_viewless} alt="password_viewless_img" className={styles.rightIcon} />
                     </div>
                 </label>
                 <button type="submit" className={styles.loginButton}>로그인</button>
