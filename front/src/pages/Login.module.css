@@ -91,6 +91,11 @@ html, body {
     width: 100%;
 }
 
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 192, 203, 0.2);
+}
+
 .leftIcon,
 .rightIcon {
     position: absolute;
@@ -127,7 +132,7 @@ html, body {
     border-radius: 8px;
     border: 1px solid #FFB0CE;
     font-size: 0.85rem;
-    color: #ADAEBC;
+    color: #2b2b2b;
     margin-top: 5px;
     box-sizing: border-box;
 
@@ -154,6 +159,10 @@ input::placeholder {
 
 .loginButton:hover {
     filter: brightness(0.95);
+}
+
+.loginButton:focus {
+    outline: none;
 }
 
 .registerLink {
