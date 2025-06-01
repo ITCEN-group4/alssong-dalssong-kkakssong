@@ -42,7 +42,7 @@ html, body {
     background: white;
     border-radius: 16px;
     padding: 40px 30px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
     width: 250px;
     margin-right: 60px;
 }
@@ -130,6 +130,7 @@ input::placeholder {
     cursor: pointer;
     transition: 0.2s;
     margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .loginButton:hover {
