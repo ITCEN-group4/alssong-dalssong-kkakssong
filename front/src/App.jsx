@@ -1,15 +1,24 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {Routes, Route, BrowserRouter} from "react-router-dom";
+import CocktailSharePage from "./pages/CocktailSharePage";
+import CocktailDetailPage from "./pages/CocktailDetailPage";
+import CocktailWritePage from "./pages/CocktailWritePage.jsx";
+import {CocktailProvider} from "./context/CocktailContext.jsx";
 import Login from './pages/LoginPage.jsx';
 
 function App() {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/auth/login" element={<Login />} />
-            </Routes>
+            <CocktailProvider>
+                <Routes>
+                    <Route path="/auth/login" element={<Login />} />
+                    <Route path="/post" element={<CocktailSharePage/>}/>
+                    <Route path="/post/:id" element={<CocktailDetailPage/>}/>
+                    <Route path="/post/userId" element={<CocktailWritePage/>}/>
+                </Routes>
+            </CocktailProvider>
         </BrowserRouter>
     );
 }
 
-export default App;
+export default App
