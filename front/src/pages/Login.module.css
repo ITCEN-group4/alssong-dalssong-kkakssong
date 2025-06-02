@@ -21,10 +21,52 @@ html, body {
 .logoSection {
     flex: 0 0 auto;
     display: flex;
-    /* text-align: center; */
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+/* 미디어쿼리 적용 */
+@media screen and (max-width: 900px) {
+    .loginPage {
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px 20px;
+    }
+
+    .logoSection {
+        order: -1; /* 로그인폼 위로 이동 */
+        margin-bottom: 10px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-direction: row-reverse;
+    }
+
+    .loginPage .title {
+        font-size: 1.6rem;
+    }
+
+    .loginPage .logoIcon {
+        width: 23px;
+        margin-bottom: 0;
+    }
+
+    .rightSection {
+        order: 0;
+    }
+
+    .cloudImg {
+        display: none;
+    }
+
+    .formWrapper {
+        width: 100%;
+        max-width: 320px;
+        margin-bottom: 40px;
+        margin-top: -20px;
+    }
+
 }
 
 .logoIcon {
