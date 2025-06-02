@@ -2,12 +2,13 @@
     display: flex;
     justify-content: space-between;
     gap: 1.5rem;
-    padding: 16px; /* ↓ */
+    padding: 16px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    background-color: #fafafa;
+    background-color: #ffffff;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
+    box-sizing: border-box;
 }
 
 .column {
@@ -51,11 +52,11 @@
 
 
 .button {
-    padding: 6px 10px; /* ↓ */
-    font-size: 0.875rem; /* ↓ */
+    padding: 6px 10px;
+    font-size: 0.875rem;
     border-radius: 15px;
     border: 1px solid #ccc;
-    background-color: white;
+    background-color: #F9FAFB;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -66,7 +67,7 @@
 
 .submitButton,
 .resetPlaceholder {
-    padding: 8px 14px; /* ↓ */
+    padding: 8px 14px;
     font-size: 0.875rem;
     font-weight: 500;
     background-color: #ffdddd;
@@ -75,7 +76,10 @@
     cursor: pointer;
 }
 
-.resetPlaceholder {
-    opacity: 0.5;
-    cursor: default;
+.submitButton:hover {
+    background-color: #ffeaea;
+}
+
+.resetPlaceholder:hover {
+    background-color: #ffeaea;
 }

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./CocktailCard.module.css";
-import getLevelTag  from "../../utils/getLevelTag.js";
+import getAbvTag  from "../../utils/getAbvTag.js";
 import { useCocktailContext} from "../../context/CocktailContext.jsx";
 
 export default function CocktailCard({ cocktail }) {
@@ -24,7 +24,7 @@ export default function CocktailCard({ cocktail }) {
                 <h3 className={styles.cardTitle}>{cocktail.name}</h3>
 
                 <div className={styles.cardTags}>
-                    <span className={styles.tagBase}>{cocktail.base}</span>
+                    <span className={styles.tagBaseLiquors}>{cocktail.baseLiquors}</span>
                     <span className={styles.tagIngredient}>{cocktail.ingredients[0]}</span>
                     <span className={styles.tagShaking}>{cocktail.shaking ? "쉐이킹 ON" : "쉐이킹 OFF"}</span>
                 </div>
@@ -37,9 +37,9 @@ export default function CocktailCard({ cocktail }) {
             </button>
 
             <img
-                src={`/assets/level-${getLevelTag(cocktail.level)}.png`}
-                alt={getLevelTag(cocktail.level)}
-                className={styles.levelBadge}
+                src={`/assets/${getAbvTag(cocktail.abv)}.png`}
+                alt={getAbvTag(cocktail.abv)}
+                className={styles.abvBadge}
             />
         </div>
     );

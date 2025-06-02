@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import FilterBar from "../components/filter/FilterBar.jsx";
-import SortBar from "../components/filter/SortBar.jsx";
+import FilterBar from "../components/layout/FilterBar.jsx";
+import SortBar from "../components/layout/SortBar.jsx";
 import CocktailCardList from "../components/cards/CocktailCardList.jsx";
 import Pagination from "../components/layout/Pagination.jsx";
 import { paginate } from "../utils/paginate.js";
@@ -13,20 +13,17 @@ export default function CocktailSharePage() {
     const [sortOption, setSortOption] = useState("likes");
     const [currentPage, setCurrentPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState("");
-    const pageSize = 4;
+    const pageSize = 8;   //한 페이지에 보여줄 카드 수
 
-    // 정렬
     const sortedList = [...cocktailList].sort((a, b) => {
         if (sortOption === "likes") return b.likes - a.likes;
         if (sortOption === "latest") return b.id - a.id;
         return 0;
     });
 
-    // 페이지네이션
     const usePagination = sortedList.length > pageSize;
     const { pagedList: currentList, totalPages } = paginate(sortedList, currentPage, pageSize);
 
-    //검색
     const handleSearch = () => {
         searchList(searchKeyword);
         setCurrentPage(1)
