@@ -1,12 +1,11 @@
 package com.group4.aldalka.domain.post.controller;
 
-import com.group4.aldalka.domain.common.LoginUser;
+import com.group4.aldalka.domain.common.CurrentUserProvider;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +35,12 @@ public class PostController
 
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @ModelAttribute PostSearchRequest postRequest) {
-        return ResponseEntity.ok(ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest)));
+    public ResponseEntity<ResultResponse> searchPosts(@ModelAttribute PostSearchRequest postRequest) {
+        String userId = CurrentUserProvider.getCurrentUserId();
+
+        return ResponseEntity.ok(
+                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest))
+        );
     }
 }
