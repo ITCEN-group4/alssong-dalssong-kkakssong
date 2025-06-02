@@ -111,7 +111,7 @@ html, body {
 .formTitle {
     font-size: 1rem;
     text-align: center;
-    font-weight: bold;
+    font-family: "Jua", sans-serif;
 }
 
 .form {
@@ -197,11 +197,11 @@ input::placeholder {
     border-radius: 8px;
     background: linear-gradient(to right, #FC82AB, #FEC58F, #FBDFC0);
     color: white;
-    font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
     margin-top: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-family: "Jua", sans-serif;
 }
 
 .loginButton:hover {
