@@ -4,9 +4,9 @@ import { useCocktailContext} from "../../context/CocktailContext.jsx";
 
 export default function FilterBar() {
     const [filters, setFilters] = useState({
-        base: [],
+        baseLiquors: [],
         ingredients: [],
-        level: null,
+        abv: null,
         shaking: null,
     });
 
@@ -33,19 +33,28 @@ export default function FilterBar() {
         });
     }
 
+    function handleResetFilters() {
+        setFilters({
+            baseLiquors: [],
+            ingredients: [],
+            abv: null,
+            shaking: null,
+        });
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.column}>
                 <div className={styles.inlineSection}>
                     <span className={styles.label}>베이스 주종</span>
                     <div className={styles.buttonGroup}>
-                        {["럼", "보드카", "진", "위스키", "데킬라", "리큐르"].map(base => (
+                        {["럼", "보드카", "진", "위스키", "데킬라", "리큐르"].map(baseLiquors => (
                             <button
-                                key={base}
-                                onClick={() => handleMultiSelect("base", base)}
-                                className={`${styles.button} ${filters.base.includes(base) ? styles.active : ''}`}
+                                key={baseLiquors}
+                                onClick={() => handleMultiSelect("baseLiquors", baseLiquors)}
+                                className={`${styles.button} ${filters.baseLiquors.includes(baseLiquors) ? styles.active : ''}`}
                             >
-                                {base}
+                                {baseLiquors}
                             </button>
                         ))}
                     </div>
@@ -86,13 +95,13 @@ export default function FilterBar() {
                 <div className={styles.inlineSection}>
                     <span className={styles.label}>도수</span>
                     <div className={styles.buttonGroup}>
-                        {["초보", "중수", "고수"].map(level => (
+                        {["초보", "중수", "고수"].map(abv => (
                             <button
-                                key={level}
-                                onClick={() => handleSelect("level", level)}
-                                className={`${styles.button} ${filters.level === level ? styles.active : ''}`}
+                                key={abv}
+                                onClick={() => handleSelect("abv", abv)}
+                                className={`${styles.button} ${filters.abv === abv ? styles.active : ''}`}
                             >
-                                {level}
+                                {abv}
                             </button>
                         ))}
                     </div>
@@ -108,6 +117,7 @@ export default function FilterBar() {
                 </button>
                 <button
                     className={styles.resetPlaceholder}
+                    onClick={handleResetFilters}
                     >
                     필터 초기화
                 </button>

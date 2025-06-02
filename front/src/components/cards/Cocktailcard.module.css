@@ -25,14 +25,14 @@
 }
 
 .cardTitle {
-    font-size: 1rem; /* ↓ */
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.3rem;
 }
 
 .cardContent {
     padding: 0.8rem;
-    font-size: 0.875rem; /* ↓ 전체 텍스트 기본 */
+    font-size: 0.875rem;
 }
 
 .cardTags {
@@ -41,7 +41,7 @@
     gap: 6px;
 }
 
-.tagBase {
+.tagBaseLiquors {
     background-color: #E3F0FF;
     color: #2070B6;
     padding: 4px 8px;
@@ -78,7 +78,7 @@
     transform: scale(1.1);
 }
 
-.levelBadge {
+.abvBadge {
     position: absolute;
     bottom: 12px;
     right: 12px;
