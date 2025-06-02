@@ -10,12 +10,25 @@ import java.util.List;
 public class PostSearchRequest {
 
     private Boolean isOfficial;
-    private Integer page = 1; // 기본값
-    private String sort = "like";
+    private Integer page;
+    private String sort;
     private Integer difficulty;
     private List<String> ingredients;
     private List<String> baseLiqueurs;
     private Boolean isShaken;
     private String query;
+
+    // 기본값 세팅 메서드
+    public void applyDefaults() {
+        if (this.isOfficial == null) {
+            this.isOfficial = true;
+        }
+        if (this.page == null) {
+            this.page = 1;
+        }
+        if (this.sort == null || this.sort.isEmpty()) {
+            this.sort = "like";
+        }
+    }
 
 }

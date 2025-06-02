@@ -38,7 +38,7 @@ public class PostController
     //비회원, 회원 모두 접근가능
     @GetMapping("")
     public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @ModelAttribute PostSearchRequest postRequest) {
-
+        postRequest.applyDefaults();
         return ResponseEntity.ok(
                 ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest))
         );
