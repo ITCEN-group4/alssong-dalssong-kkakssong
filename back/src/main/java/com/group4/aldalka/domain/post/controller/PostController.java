@@ -1,6 +1,6 @@
 package com.group4.aldalka.domain.post.controller;
 
-import com.group4.aldalka.domain.common.CurrentUserProvider;
+import com.group4.aldalka.domain.common.LoginUser;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.service.PostService;
@@ -35,9 +35,9 @@ public class PostController
 
     }
 
+    //비회원, 회원 모두 접근가능
     @GetMapping("")
-    public ResponseEntity<ResultResponse> searchPosts(@ModelAttribute PostSearchRequest postRequest) {
-        String userId = CurrentUserProvider.getCurrentUserId();
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @ModelAttribute PostSearchRequest postRequest) {
 
         return ResponseEntity.ok(
                 ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest))
