@@ -18,38 +18,29 @@ html, body {
     gap: 300px;
 }
 
-.logoSection {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
 /* 미디어쿼리 적용 */
 @media screen and (max-width: 900px) {
     .loginPage {
         flex-direction: column;
-        gap: 30px;
-        padding: 20px 20px;
+        gap: 10px;
     }
 
     .logoSection {
         order: -1; /* 로그인폼 위로 이동 */
-        margin-bottom: 10px;
         justify-content: center;
         align-items: center;
         gap: 10px;
-        flex-direction: row-reverse;
+        flex-direction: row;
     }
 
     .loginPage .title {
-        font-size: 1.6rem;
+        font-size: 2.5rem;
+        font-family: "Dongle", sans-serif;
     }
 
     .loginPage .logoIcon {
-        width: 23px;
-        margin-bottom: 0;
+        width: 25px;
+        margin: 0;
     }
 
     .rightSection {
@@ -66,18 +57,30 @@ html, body {
         margin-bottom: 40px;
         margin-top: -20px;
     }
+}
 
+.logoSection {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 50px;
 }
 
 .logoIcon {
-    width: 60px;
-    margin-bottom: 10px;
+    width: 70px;
+    margin-top: 10px;
 }
 
 .title {
-    font-size: 3rem;
+    font-size: 6rem;
     font-weight: bold;
     color: #FC619C;
+    font-family: "Dongle", sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 /* 로그인 폼 */
