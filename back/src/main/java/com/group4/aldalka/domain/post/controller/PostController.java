@@ -1,6 +1,7 @@
 package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.common.LoginUser;
+import com.group4.aldalka.domain.post.dto.PostSearchRequest;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
