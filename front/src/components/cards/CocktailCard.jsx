@@ -5,10 +5,11 @@ import { useCocktailContext} from "../../context/CocktailContext.jsx";
 
 export default function CocktailCard({ cocktail }) {
     const navigate = useNavigate();
+    const { label, icon } = getAbvTag(cocktail.abv);
     const {updateLikes} = useCocktailContext()
 
     const handleClick = () => {
-        navigate(`/${cocktail.id}`);
+        navigate(`/post/${cocktail.id}`);
     };
 
     const handleLike = (e) => {
@@ -37,8 +38,8 @@ export default function CocktailCard({ cocktail }) {
             </button>
 
             <img
-                src={`/assets/${getAbvTag(cocktail.abv)}.png`}
-                alt={getAbvTag(cocktail.abv)}
+                src={icon}
+                alt={label}
                 className={styles.abvBadge}
             />
         </div>
