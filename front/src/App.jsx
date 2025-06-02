@@ -5,9 +5,12 @@ import Login from './pages/LoginPage.jsx';
 function App() {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/auth/login" element={<Login />} />
-            </Routes>
+            <CocktailProvider>
+                <Routes>
+                    <Route path="/auth/login" element={<Login />} />
+                    <Route path="/auth/signup" element={<Signup />} />
+                </Routes>
+            </CocktailProvider>
         </BrowserRouter>
     );
 }
