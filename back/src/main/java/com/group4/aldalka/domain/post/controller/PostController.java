@@ -3,6 +3,7 @@ package com.group4.aldalka.domain.post.controller;
 import com.group4.aldalka.domain.common.LoginUser;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
 import com.group4.aldalka.domain.post.entity.Post;
+import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ import static com.group4.aldalka.global.result.ResultCode.GET_POST_INFO_SUCCESS;
 @RequestMapping("/post")
 public class PostController
 {
+
+    private final PostService postService;
+
     @PostMapping("/create")
     public String createPost() {
         return null;
