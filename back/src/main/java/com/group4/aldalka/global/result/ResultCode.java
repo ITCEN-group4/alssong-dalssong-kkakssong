@@ -8,7 +8,10 @@ import lombok.Getter;
 public enum ResultCode {
 
     //User 예시
-    GET_USER_INFO_SUCCESS(200, "회원 정보 조회에 성공하였습니다.");
+    GET_USER_INFO_SUCCESS(200, "회원 정보 조회에 성공하였습니다."),
+
+    //포스트
+    GET_POST_INFO_SUCCESS(200, "포스트 정보 조회에 성공하였습니다.");
 
     private final int status;
     private final String message;
