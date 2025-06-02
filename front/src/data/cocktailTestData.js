@@ -51,7 +51,7 @@ const testData = [
         id: 5,
         name: "라선라이즈",
         image: "https://i.namu.wiki/i/ZiJDi6FDaoKZ-wLDbSd56FlL9p1ulLra-SzBcxTaTV8A8wHHfXrroNneRppSoIHho0SIa_hz_vah2AcQzbNmShpgm-8vE1Y1v4Qcr3HGoyKBIfcR-Xavo1lybMlXjojhcBZF-jnjxChh9sorjE1XIA.webp",
-        abv: 19,
+        abv: 40,
         baseLiquors: "데킬라",
         ingredients: ["오렌지 주스", "그레나딘 시럽"],
         likes: 21,
