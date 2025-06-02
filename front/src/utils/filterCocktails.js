@@ -9,10 +9,10 @@ export function filterCocktails(data, filters) {
             !cocktail.ingredients.some(ing => filters.ingredients.includes(ing))
         ) return false;
 
-        if (filters.abv && getAbvTag(cocktail.abv) !== filters.abv) return false;
+        if (filters.abv && getAbvTag(cocktail.abv).label !== filters.abv) return false;
 
-        if (filters.shaking !== null && cocktail.shaking !== filters.shaking) return false;
+        return !(filters.shaking !== null && cocktail.shaking !== filters.shaking);
 
-        return true;
+
     });
 }
