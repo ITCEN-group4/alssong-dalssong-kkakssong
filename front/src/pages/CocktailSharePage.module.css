@@ -34,11 +34,11 @@
     width: 100%;
     margin: 0 auto;
     padding: 0 1rem;
-    box-sizing: border-box; /* ✅ 추가 */
+    box-sizing: border-box;
 }
 
 .bottomSection {
     width: 100%;
     background-color: #f9f9f9;
-    box-sizing: border-box; /* ✅ 추가 */
+    box-sizing: border-box;
 }

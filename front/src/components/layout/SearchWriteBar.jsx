@@ -29,7 +29,7 @@ export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSear
                 </button>
             </div>
             <button className={styles.writeButton} onClick={() => navigate("/post/userId")}>
-                + 글쓰기
+                + 게시글 작성
             </button>
         </div>
     );
