@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.service;
+package com.group4.aldalka.domain.post.entity;
 
 import com.group4.aldalka.domain.BaseEntity;
 import com.group4.aldalka.domain.user.User;

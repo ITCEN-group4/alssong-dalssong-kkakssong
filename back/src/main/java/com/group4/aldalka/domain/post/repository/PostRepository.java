@@ -1,12 +1,9 @@
 package com.group4.aldalka.domain.post.repository;
 
-import com.group4.aldalka.domain.post.service.Post;
-import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 

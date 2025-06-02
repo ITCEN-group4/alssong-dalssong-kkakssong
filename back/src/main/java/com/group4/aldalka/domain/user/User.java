@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.group4.aldalka.domain.post.service.UserLike;
-import com.group4.aldalka.domain.post.service.Post;
+import com.group4.aldalka.domain.post.entity.UserLike;
+import com.group4.aldalka.domain.post.entity.Post;
 import jakarta.persistence.*;
 
 import com.group4.aldalka.domain.BaseEntity;

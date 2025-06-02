@@ -1,9 +1,7 @@
 package com.group4.aldalka.domain.post.controller;
 
-import com.group4.aldalka.domain.post.service.Post;
+import com.group4.aldalka.domain.post.entity.Post;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
