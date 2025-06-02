@@ -19,12 +19,9 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class PostRepositoryImpl implements PostRepositoryCustom{
-
+public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private final BaseLiquorRepository baseLiquorRepository;
-    private final IngredientReposiroty ingredientReposiroty;
 
     @Override
     public List<PostResponse> getFilteredPosts(String userId, PostSearchRequest request) {
@@ -32,9 +29,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (request.getIsOfficial() != null) {
-            builder.and(post.isOfficial.eq(request.getIsOfficial()));
-        }
+        builder.and(post.isOfficial.eq(request.getIsOfficial()));
 
         if (request.getDifficulty() != null) {
             builder.and(post.difficulty.eq(request.getDifficulty()));
@@ -46,13 +41,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         if (request.getBaseLiqueurs() != null && !request.getBaseLiqueurs().isEmpty()) {
             List<String> selected = request.getBaseLiqueurs();
-            List<String> selectable = baseLiquorRepository.findAll()
-                    .stream()
-                    .map(BaseLiquor::getName)
-                    .collect(Collectors.toList());
 
-
-            List<Long> postIds = filterPostIdsByBaseLiquors(queryFactory, post, selected, selectable);
+            List<Long> postIds = filterPostIdsByBaseLiquors(queryFactory, post, selected);
             if (!postIds.isEmpty()) {
                 builder.and(post.postId.in(postIds));
             } else {
@@ -61,15 +51,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
             }
         }
 
-
         if (request.getIngredients() != null && !request.getIngredients().isEmpty()) {
             List<String> selected = request.getIngredients();
-            List<String> selectable = ingredientReposiroty.findAll()
-                    .stream()
-                    .map(Ingredient::getName)
-                    .collect(Collectors.toList());
 
-            List<Long> postIds = filterPostIdsByIngredient(queryFactory, post, selected, selectable);
+            List<Long> postIds = filterPostIdsByIngredient(queryFactory, post, selected);
             if (!postIds.isEmpty()) {
                 builder.and(post.postId.in(postIds));
             } else {
@@ -83,18 +68,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         }
 
         // 정렬
-        List<Post> results= new ArrayList<>();
+        List<Post> results = new ArrayList<>();
         if ("new".equals(request.getSort())) {
-            results= queryFactory
+            results = queryFactory
                     .selectFrom(post)
                     .where(builder)
                     .orderBy(post.createdAt.desc())
                     .fetch();
-        }else {
+        } else {
 
             QUserLike userLike = QUserLike.userLike;
 
-                results = queryFactory
+            results = queryFactory
                     .select(post)
                     .from(post)
                     .leftJoin(userLike).on(userLike.post.eq(post)) // Post ↔ UserLike
@@ -104,15 +89,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     .fetch();
         }
 
+        QUserLike userLike= QUserLike.userLike;
+
         return results.stream().map(p -> PostResponse.builder()
-            .postId(p.getPostId())
-            .title(p.getTitle())
-            .difficulty(p.getDifficulty())
-            .isShaken(p.isShaken())
-            .likeCount(p.getLikeCount())
-            .isLiked(p.getLikes().stream()
-                    .anyMatch(userLike -> userLike.getUser().getUserId() == Integer.parseInt(userId)))
-            .imageUrl(p.getImageUrl())
+                .postId(p.getPostId())
+                .title(p.getTitle())
+                .difficulty(p.getDifficulty())
+                .isShaken(p.isShaken())
+                .likeCount(likeCount(queryFactory, post, userLike, p.getPostId()))
+                .isLiked(p.getLikes().stream()
+                        .anyMatch(like -> like.getUser().getUserId() == Integer.parseInt(userId)))
+                .imageUrl(p.getImageUrl())
                 .baseLiqueurs(
                         p.getPostBaseLiquors().stream()
                                 .map(postBaseLiquor -> postBaseLiquor.getBaseLiquor().getName())
@@ -123,52 +110,48 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                                 .map(postIngredient -> postIngredient.getIngredient().getName())
                                 .collect(Collectors.toList())
                 )
-            .build()
+                .build()
         ).toList();
     }
+
+    private Integer likeCount(
+            JPAQueryFactory queryFactory,
+            QPost post,
+            QUserLike userLike,
+            Long postId) {
+
+        return queryFactory
+                .select(userLike.count().intValue())
+                .from(post)
+                .leftJoin(userLike).on(userLike.post.eq(post))
+                .where(post.postId.eq(postId))
+                .fetchOne();
+    }
+
 
     public List<Long> filterPostIdsByBaseLiquors(
             JPAQueryFactory queryFactory,
             QPost post,
-            List<String> selected,
-            List<String> selectable
+            List<String> selected
     ) {
-        List<String> notSelected = selectable.stream()
-                .filter(name -> !selected.contains(name))
-                .collect(Collectors.toList());
-
         QPostBaseLiquor pbl = QPostBaseLiquor.postBaseLiquor;
         QBaseLiquor liquor = QBaseLiquor.baseLiquor;
 
         return queryFactory
-                .select(post.postId)
+                .selectDistinct(post.postId)
                 .from(post)
                 .join(post.postBaseLiquors, pbl)
                 .join(pbl.baseLiquor, liquor)
-                .groupBy(post.postId)
-                .having(
-                        // 선택한 주종이 정확히 모두 포함되어야 함
-                                new CaseBuilder()
-                                        .when(liquor.name.in(selected)).then(liquor.name)
-                                        .otherwise((String) null)
-                                                .countDistinct().eq((long) selected.size()),
-
-                        // 선택하지 않은 주종이 포함되면 안 됨
-                        new CaseBuilder()
-                                .when(liquor.name.in(notSelected)).then(1)
-                                .otherwise((Integer) null)
-                                .countDistinct().eq(0L)
-                )
+                .where(liquor.name.in(selected))
                 .fetch();
     }
+
 
     public List<Long> filterPostIdsByIngredient(
             JPAQueryFactory queryFactory,
             QPost post,
-            List<String> selected,
-            List<String> selectable
+            List<String> selected
     ) {
-
 
         boolean hasOnlyOthers = selected.size() == 1 && selected.contains("기타");
 
@@ -178,10 +161,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     .select(post.postId)
                     .from(post)
                     .fetch();
-        }else{
-            List<String> notSelected = selectable.stream()
-                    .filter(name -> !selected.contains(name))
-                    .collect(Collectors.toList());
+        } else {
 
             QPostIngredient pi = QPostIngredient.postIngredient;
             QIngredient ingredient = QIngredient.ingredient;
@@ -191,20 +171,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     .from(post)
                     .join(post.postIndgredients, pi)
                     .join(pi.ingredient, ingredient)
-                    .groupBy(post.postId)
-                    .having(
-                            // 선택한 주종이 정확히 모두 포함되어야 함
-                            new CaseBuilder()
-                                    .when(ingredient.name.in(selected)).then(ingredient.name)
-                                    .otherwise((String) null)
-                                    .countDistinct().eq((long) selected.size()),
-
-                            // 선택하지 않은 주종이 포함되면 안 됨
-                            new CaseBuilder()
-                                    .when(ingredient.name.in(notSelected)).then(1)
-                                    .otherwise((Integer) null)
-                                    .countDistinct().eq(0L)
-                    )
+                    .where(ingredient.name.in(selected))
                     .fetch();
         }
     }
