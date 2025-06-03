@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/LoginPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
 import CocktailSharePage from "./pages/CocktailSharePage";
-import CocktailDetailPage from "./pages/CocktailDetailPage";
-import CocktailWritePage from "./pages/CocktailWritePage.jsx";
+// import CocktailDetailPage from "./pages/CocktailDetailPage";
+// import CocktailWritePage from "./pages/CocktailWritePage.jsx";
 import {CocktailProvider} from "./context/CocktailContext.jsx";
 
 function App() {
@@ -11,9 +11,10 @@ function App() {
         <BrowserRouter>
             <CocktailProvider>
                 <Routes>
+                    <Route path="/auth/login" element={<LoginPage/>} />
                     <Route path="/post" element={<CocktailSharePage/>}/>
-                    <Route path="/post/:id" element={<CocktailDetailPage/>}/>
-                    <Route path="/post/userId" element={<CocktailWritePage/>}/>
+                    {/*<Route path="/post/:id" element={<CocktailDetailPage/>}/>*/}
+                    {/*<Route path="/post/userId" element={<CocktailWritePage/>}/>*/}
                 </Routes>
             </CocktailProvider>
         </BrowserRouter>
