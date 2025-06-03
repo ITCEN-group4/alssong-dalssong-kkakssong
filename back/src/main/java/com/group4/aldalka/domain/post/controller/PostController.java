@@ -36,9 +36,12 @@ public class PostController
     }
 
     //비회원, 회원 모두 접근가능
-    @GetMapping("")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @ModelAttribute PostSearchRequest postRequest) {
+    @PostMapping("")
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @RequestBody  PostSearchRequest postRequest) {
         postRequest.applyDefaults();
+
+        System.out.println("official: "+postRequest.getIsOfficial());
+
         return ResponseEntity.ok(
                 ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest))
         );
