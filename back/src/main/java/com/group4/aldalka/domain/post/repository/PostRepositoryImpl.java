@@ -50,10 +50,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             builder.and(post.isShaken.eq(postSearchRequest.getIsShaken()));
         }
         if (postSearchRequest.getQuery() != null && !postSearchRequest.getQuery().isBlank()) {
-            builder.and(post.title.containsIgnoreCase(postSearchRequest.getQuery()));
-            builder.and(post.content.containsIgnoreCase(postSearchRequest.getQuery()));
-            builder.and(post.recipe.containsIgnoreCase(postSearchRequest.getQuery()));
+            String query = postSearchRequest.getQuery();
+            builder.and(
+                    post.title.containsIgnoreCase(query)
+                            .or(post.content.containsIgnoreCase(query))
+                            .or(post.recipe.containsIgnoreCase(query))
+            );
         }
+
 
         return builder;
     }

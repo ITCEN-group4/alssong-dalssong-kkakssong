@@ -3,6 +3,9 @@ server:
     context-path: /api/v1
 
 spring:
+  config:
+    import:
+      - optional:application-secret.yml
 
   application:
     name: aldalka
@@ -29,8 +32,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: false
+      ddl-auto: none
+    show-sql: true
     defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     properties:
@@ -42,8 +45,20 @@ spring:
       "[hibernate.jdbc.batch_versioned_data]": true
       "[hibernate.connection.provider_disables_autocommit]": true
 
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
 jwt:
   issuer: test
   expiry-seconds: 1800
   # TODO: 이건 꼭 바꿔야함
   secret: thisisjusttestaccesssecretsodontworry
+
+
