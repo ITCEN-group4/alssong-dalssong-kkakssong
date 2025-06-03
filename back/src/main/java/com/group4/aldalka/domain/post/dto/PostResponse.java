@@ -1,6 +1,7 @@
 package com.group4.aldalka.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.group4.aldalka.domain.post.entity.Post;
 import lombok.*;
 
 import java.util.List;
@@ -11,28 +12,48 @@ import java.util.List;
 @Builder
 public class PostResponse {
 
-        @JsonProperty("post_id")
-        private Long postId;
+    @JsonProperty("post_id")
+    private Long postId;
 
-        private String title;
+    private String title;
 
-        private Integer difficulty;
+    private Integer difficulty;
 
-        @JsonProperty("is_shaken")
-        private Boolean isShaken;
+    @JsonProperty("is_shaken")
+    private Boolean isShaken;
 
-        @JsonProperty("like_count")
-        private Integer likeCount;
+    @JsonProperty("like_count")
+    private Integer likeCount;
 
-        @JsonProperty("is_liked")
-        private Boolean isLiked;
+    @JsonProperty("is_liked")
+    private Boolean isLiked;
 
-        @JsonProperty("image_url")
-        private String imageUrl;
+    @JsonProperty("image_url")
+    private String imageUrl;
 
-        @JsonProperty("base_liqueurs")
-        private List<String> baseLiqueurs;
+    @JsonProperty("base_liqueurs")
+    private List<String> baseLiqueurs;
 
-        private List<String> ingredients;
+    private List<String> ingredients;
+
+    public static PostResponse from(Post post, int likeCount, boolean isLiked) {
+        return new PostResponse(
+                post.getPostId(),
+                post.getTitle(),
+                post.getDifficulty(),
+                post.isShaken(),
+                likeCount,
+                isLiked,
+                post.getImageUrl(),
+                post.getPostBaseLiquors().stream()
+                        .map(pbl -> pbl.getBaseLiquor().getName())
+                        .toList(),
+                post.getPostIndgredients().stream()
+                        .map(pi -> pi.getIngredient().getName())
+                        .toList()
+        );
+    }
 
 }
+
+

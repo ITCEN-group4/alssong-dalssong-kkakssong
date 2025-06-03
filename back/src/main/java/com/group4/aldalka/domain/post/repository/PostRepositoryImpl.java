@@ -20,147 +20,45 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Post> searchWithIngredientsAndBaseLiqueurs(PostSearchRequest postSearchRequest) {
-        BooleanBuilder booleanBuilder = buildCommonConditions(postSearchRequest);
-        booleanBuilder.and(buildBaseLiquorFilter(postSearchRequest));
-        booleanBuilder.and(buildIngredientsFilter(postSearchRequest));
-
-        if ("like".equals(postSearchRequest.getSort())) {
-            QUserLike userLike = QUserLike.userLike;
-            return queryFactory
-                    .selectFrom(post)
-                    .where(booleanBuilder)
-                    .orderBy(userLike.likeId.count().desc())
-                    .groupBy(post.postId)
-                    .fetch();
-        } else {
-            return queryFactory
-                    .selectFrom(post)
-                    .where(booleanBuilder)
-                    .orderBy(post.updatedAt.desc())
-                    .fetch();
-        }
-    }
-
-    @Override
-    public List<Post> searchWithIngredients(PostSearchRequest postSearchRequest) {
-
+    public List<Post> searchPosts(PostSearchRequest postSearchRequest) {
         BooleanBuilder builder = buildCommonConditions(postSearchRequest);
 
-        boolean hasOnlyOthers = postSearchRequest.getIngredients().size() == 1 && postSearchRequest.getIngredients().contains("기타");
+        if (postSearchRequest.getBaseLiqueurs() != null && !postSearchRequest.getBaseLiqueurs().isEmpty()) {
+            builder.and(buildBaseLiquorFilter(postSearchRequest));
+        }
 
-        if (hasOnlyOthers) {
-            if ("like".equals(postSearchRequest.getSort())) {
-                QUserLike userLike = QUserLike.userLike;
-                return queryFactory
-                        .selectFrom(post)
-                        .where(builder)
-                        .orderBy(userLike.likeId.count().desc())
-                        .groupBy(post.postId)
-                        .fetch();
-            } else {
-                return queryFactory
-                        .selectFrom(post)
-                        .where(builder)
-                        .orderBy(post.updatedAt.desc())
-                        .fetch();
-            }
-
-        } else {
-            builder.and(buildIngredientsFilter(postSearchRequest));
-            {
-
-                if ("like".equals(postSearchRequest.getSort())) {
-                    QUserLike userLike = QUserLike.userLike;
-                    return queryFactory
-                            .selectFrom(post)
-                            .where(builder)
-                            .orderBy(userLike.likeId.count().desc())
-                            .groupBy(post.postId)
-                            .fetch();
-                } else {
-                    return queryFactory
-                            .selectFrom(post)
-                            .where(builder)
-                            .orderBy(post.updatedAt.desc())
-                            .fetch();
-                }
+        if (postSearchRequest.getIngredients() != null && !postSearchRequest.getIngredients().isEmpty()) {
+            boolean hasOnlyOthers = postSearchRequest.getIngredients().size() == 1 && postSearchRequest.getIngredients().contains("기타");
+            if (!hasOnlyOthers) {
+                builder.and(buildIngredientsFilter(postSearchRequest));
             }
         }
-    }
 
-
-    @Override
-    public List<Post> searchWithBaseLiqueurs(PostSearchRequest postSearchRequest) {
-
-        BooleanBuilder booleanBuilder = buildCommonConditions(postSearchRequest);
-        booleanBuilder.and(buildBaseLiquorFilter(postSearchRequest));
-
-        if ("like".equals(postSearchRequest.getSort())) {
-            QUserLike userLike = QUserLike.userLike;
-            return queryFactory
-                    .selectFrom(post)
-                    .where(booleanBuilder)
-                    .orderBy(userLike.likeId.count().desc())
-                    .groupBy(post.postId)
-                    .fetch();
-        } else {
-            return queryFactory
-                    .selectFrom(post)
-                    .where(booleanBuilder)
-                    .orderBy(post.updatedAt.desc())
-                    .fetch();
-        }
-    }
-
-    @Override
-    public List<Post> searchWithoutJoin(PostSearchRequest postSearchRequest) {
-
-        BooleanBuilder booleanBuilder = buildCommonConditions(postSearchRequest);
-        QUserLike userLike = QUserLike.userLike;
-
-        if (postSearchRequest.getSort().equals("like")) {
-            queryFactory.selectFrom(post)
-                    .where(booleanBuilder)
-                    .leftJoin(userLike).on(userLike.post.eq(post))
-                    .groupBy(post.postId)
-                    .orderBy(userLike.likeId.count().desc())
-                    .fetch();
-        } else { //최신순이라면
-            queryFactory.selectFrom(post)
-                    .where(booleanBuilder)
-                    .orderBy(post.updatedAt.desc())
-                    .fetch();
-        }
-
-        return null;
+        return fetchPosts(postSearchRequest, builder);
     }
 
     public BooleanBuilder buildCommonConditions(PostSearchRequest postSearchRequest) {
         BooleanBuilder builder = new BooleanBuilder();
-        QPost post = QPost.post;
 
         if (postSearchRequest.getIsOfficial() != null) {
             builder.and(post.isOfficial.eq(postSearchRequest.getIsOfficial()));
         }
-
         if (postSearchRequest.getDifficulty() != null) {
             builder.and(post.difficulty.eq(postSearchRequest.getDifficulty()));
         }
-
         if (postSearchRequest.getIsShaken() != null) {
             builder.and(post.isShaken.eq(postSearchRequest.getIsShaken()));
         }
-
         if (postSearchRequest.getQuery() != null && !postSearchRequest.getQuery().isBlank()) {
             builder.and(post.title.containsIgnoreCase(postSearchRequest.getQuery()));
+            builder.and(post.content.containsIgnoreCase(postSearchRequest.getQuery()));
+            builder.and(post.recipe.containsIgnoreCase(postSearchRequest.getQuery()));
         }
 
         return builder;
     }
 
     private BooleanExpression buildBaseLiquorFilter(PostSearchRequest postSearchRequest) {
-
         QPostBaseLiquor pbl = QPostBaseLiquor.postBaseLiquor;
         QBaseLiquor liquor = QBaseLiquor.baseLiquor;
 
@@ -174,7 +72,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     }
 
     private BooleanExpression buildIngredientsFilter(PostSearchRequest postSearchRequest) {
-
         QPostIngredient pi = QPostIngredient.postIngredient;
         QIngredient ingredient = QIngredient.ingredient;
 
@@ -187,5 +84,24 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         );
     }
 
+    private List<Post> fetchPosts(PostSearchRequest postSearchRequest, BooleanBuilder builder) {
+        QUserLike userLike = QUserLike.userLike;
+
+        if ("like".equals(postSearchRequest.getSort())) {
+            return queryFactory
+                    .selectFrom(post)
+                    .leftJoin(userLike).on(userLike.post.eq(post))
+                    .where(builder)
+                    .groupBy(post.postId)
+                    .orderBy(userLike.likeId.count().desc())
+                    .fetch();
+        } else {
+            return queryFactory
+                    .selectFrom(post)
+                    .where(builder)
+                    .orderBy(post.updatedAt.desc())
+                    .fetch();
+        }
+    }
 
 }

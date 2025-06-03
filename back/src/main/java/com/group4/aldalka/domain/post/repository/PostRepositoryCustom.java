@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface  PostRepositoryCustom {
 
-    List<Post> searchWithIngredientsAndBaseLiqueurs(PostSearchRequest postSearchRequest);
-    List<Post> searchWithIngredients(PostSearchRequest postSearchRequest);
-    List<Post> searchWithBaseLiqueurs(PostSearchRequest postSearchRequest);
-    List<Post> searchWithoutJoin(PostSearchRequest postSearchRequest);
-
+    List<Post> searchPosts(PostSearchRequest postSearchRequest);
 }
