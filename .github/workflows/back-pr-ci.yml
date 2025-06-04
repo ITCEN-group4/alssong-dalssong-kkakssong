@@ -1,8 +1,8 @@
- name: back-pr-ci
+name: back-pr-ci
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [main]
     paths:
       - 'back/**'
 
