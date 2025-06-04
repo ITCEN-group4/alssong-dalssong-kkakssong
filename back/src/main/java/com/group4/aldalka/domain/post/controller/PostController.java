@@ -2,17 +2,13 @@ package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.common.LoginUser;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
-import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.group4.aldalka.global.result.ResultCode.GET_POST_INFO_SUCCESS;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,22 +17,6 @@ public class PostController
 {
 
     private final PostService postService;
-
-    @PostMapping("/create")
-    public String createPost() {
-        return null;
-    }
-
-    @PutMapping("/update")
-    public String updatePost(Post post) {
-        return null;
-    }
-
-    @DeleteMapping("/delete")
-    public String deletePost(Post post) {
-        return null;
-
-    }
 
     //비회원, 회원 모두 접근가능
     @PostMapping("")
