@@ -60,7 +60,11 @@ export default function LoginForm({setErrorMessage}) {
         }
 
         setErrorMessage('');
-        console.log("로그인 시도:", trimmedEmail, trimmedPassword);
+        setErrorMessage(`${trimmedEmail}님 환영합니다.`);
+        setTimeout(() => {
+            setErrorMessage('');
+            navigate('/post');
+        }, 1000);
     };
 
     return (
