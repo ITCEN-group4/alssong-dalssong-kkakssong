@@ -91,6 +91,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private List<Post> fetchPosts(PostSearchRequest postSearchRequest, BooleanBuilder builder) {
         QUserLike userLike = QUserLike.userLike;
 
+        int page = postSearchRequest.getPage() != null ? postSearchRequest.getPage() : 0;
+        int pageSize = 8;
+        long offset = (long) page * pageSize;
+
         if ("like".equals(postSearchRequest.getSort())) {
             return queryFactory
                     .selectFrom(post)
@@ -98,14 +102,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                     .where(builder)
                     .groupBy(post.postId)
                     .orderBy(userLike.likeId.count().desc())
+                    .offset(offset)
+                    .limit(pageSize)
                     .fetch();
         } else {
             return queryFactory
                     .selectFrom(post)
                     .where(builder)
                     .orderBy(post.updatedAt.desc())
+                    .offset(offset)
+                    .limit(pageSize)
                     .fetch();
         }
     }
+
 
 }
