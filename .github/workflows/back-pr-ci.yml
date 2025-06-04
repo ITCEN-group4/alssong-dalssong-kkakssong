@@ -11,7 +11,7 @@ jobs:
     name: back-ci
     runs-on: ubuntu-22.04
 		
-		defaults:
+    defaults:
       run:
         working-directory: back
 		
