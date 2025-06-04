@@ -19,9 +19,6 @@ export default function SignupForm() {
         navigate('/auth/login');
     };
 
-    const [successMessage, setSuccessMessage] = useState('');
-
-
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -79,7 +76,7 @@ export default function SignupForm() {
         setErrorMessage('');
         setErrorMessage('회원가입이 완료되었습니다!');
         setTimeout(() => {
-            setSuccessMessage('');
+            setErrorMessage('');
             navigate('/auth/login');
         }, 1000);
 
