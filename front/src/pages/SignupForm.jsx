@@ -1,9 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './signup.module.css';
 import React from "react";
 import login from '../assets/login.svg';
 import logo from '../assets/cocktail_logo.svg';
 
+
 export default function SignupForm() {
+
+    const navigate = useNavigate();
+
+    const handleCancel = () => {
+        navigate('/auth/login');
+    };
 
     return (
         <div className={styles.fullWrapper}>
@@ -53,7 +61,7 @@ export default function SignupForm() {
                     </label>
 
                     <button type="submit" className={styles.signupButton}>회원가입</button>
-                    <div className={styles.cancelLink}>취소</div>
+                    <div className={styles.cancelLink} onClick={handleCancel}>취소</div>
                 </form>
             </div>
         </div>

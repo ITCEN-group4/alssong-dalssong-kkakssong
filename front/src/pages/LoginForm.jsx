@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import email from '../assets/email.svg';
 import password from '../assets/password.svg';
@@ -13,6 +14,11 @@ export default function LoginForm() {
     const togglePasswordVisibility = () => {
         setShowPassword(prev => !prev);
     }
+    const navigate = useNavigate();
+
+    const handlesignup = () => {
+        navigate('/auth/signup');
+    };
 
     return (<div className={styles.formWrapper}>
             <div className={styles.login_title_form}>
@@ -45,7 +51,7 @@ export default function LoginForm() {
                     </div>
                 </label>
                 <button type="submit" className={styles.loginButton}>로그인</button>
-                <div className={styles.registerLink}>회원가입</div>
+                <div className={styles.registerLink} onClick={handlesignup}>회원가입</div>
             </form>
         </div>);
 }
