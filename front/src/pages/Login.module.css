@@ -27,13 +27,13 @@
     }
 
     .loginPage .title {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-family: "Dongle", sans-serif;
     }
 
     .loginPage .logoIcon {
-        width: 25px;
-        margin: 0;
+        width: 27px;
+        margin-top: -20px;
     }
 
     .rightSection {
@@ -48,7 +48,7 @@
         width: 100%;
         max-width: 320px;
         margin-bottom: 40px;
-        margin-top: -20px;
+        margin-top: -30px;
     }
 }
 
