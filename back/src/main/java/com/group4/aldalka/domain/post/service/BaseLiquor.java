@@ -23,6 +23,7 @@ public class BaseLiquor extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "baseLiquor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostBaseLiquor> postBaseLiquors = new ArrayList<>();
 }

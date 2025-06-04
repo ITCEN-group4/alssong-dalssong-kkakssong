@@ -26,13 +26,13 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = "380")
+    @Column(nullable = false, length = 380)
     private String title;
 
-    @Column(nullable = false, length = "2200")
+    @Column(nullable = false, length = 2200)
     private String content;
 
-    @Column(length = "2200")
+    @Column(length = 2200)
     private String recipe;
 
     @Column(nullable = false)
@@ -41,21 +41,21 @@ public class Post extends BaseEntity {
     @Column(name = "is_shaken", nullable = false)
     private boolean isShaken;
 
-    @Column(name = "like_count", nullable = false)
-    private int likeCount;
-
     @Column(name = "is_official", nullable = false)
     private boolean isOfficial;
 
-    @Column(name = "image_url", length = "2083")
+    @Column(name = "image_url", length = 2083)
     private String imageUrl;
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIngredient> postIndgredients = new ArrayList<PostIngredient>();
+    private List<PostIngredient> postIngredients = new ArrayList<PostIngredient>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLike> likes = new ArrayList<UserLike>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
 }
