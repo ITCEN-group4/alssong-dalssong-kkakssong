@@ -6,14 +6,17 @@ import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.group4.aldalka.global.result.ResultCode.GET_POST_INFO_SUCCESS;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController
 {
 
@@ -37,11 +40,8 @@ public class PostController
 
     //비회원, 회원 모두 접근가능
     @PostMapping("")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @RequestBody  PostSearchRequest postRequest) {
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @RequestBody PostSearchRequest postRequest) {
         postRequest.applyDefaults();
-
-        System.out.println("official: "+postRequest.getIsOfficial());
-
         return ResponseEntity.ok(
                 ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest))
         );

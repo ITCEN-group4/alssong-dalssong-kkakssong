@@ -1,4 +1,5 @@
 application-secret.yml
+application.yml
 
 HELP.md
 .gradle

@@ -1,26 +1,40 @@
 package com.group4.aldalka.domain.post.service;
 
+import com.group4.aldalka.domain.post.dto.PagedPostResponse;
 import com.group4.aldalka.domain.post.dto.PostResponse;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
+import com.group4.aldalka.domain.post.dto.PostSearchResult;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserLikeRepository userLikeRepository;
 
-    public List<PostResponse> searchPosts(String userId, PostSearchRequest postSearchRequest) {
-        List<Post> posts = postRepository.searchPosts(postSearchRequest);
-        return getPostsWithLikeInfo(userId, posts);
+    public PagedPostResponse searchPosts(String userId, PostSearchRequest postSearchRequest) {
+
+        PostSearchResult result = postRepository.searchPosts(postSearchRequest);
+        int pageSize = 8;
+        int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
+
+
+        return PagedPostResponse.builder()
+                .posts(getPostsWithLikeInfo(userId, result.getPosts()))
+                .totalPages(totalPages)
+                .totalElements(result.getTotalElements())
+                .build();
+
     }
 
     public List<PostResponse> getPostsWithLikeInfo(String userId, List<Post> posts) {
