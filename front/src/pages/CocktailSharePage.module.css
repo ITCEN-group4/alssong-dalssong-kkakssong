@@ -1,0 +1,44 @@
+.container {
+    margin: 0 auto;
+    font-family: 'Pretendard', sans-serif;
+    width: 100%;
+    max-width: 1280px;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+.header {
+    background: linear-gradient(to right, #ffa1c5, #ffc58f);
+    text-align: center;
+    padding: 2rem 0;
+    margin-bottom: 0.1rem;
+    width: 100%;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.3rem;
+    width: 100%;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: white;
+    margin-top: 0.5rem;
+}
+
+.topSection {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.bottomSection {
+    width: 100%;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}

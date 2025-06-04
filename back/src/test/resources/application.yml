@@ -1,0 +1,34 @@
+server:
+  servlet:
+    context-path: /api/v1
+
+spring:
+  config:
+    import:
+      - optional:application-secret.yml
+
+  application:
+    name: aldalka
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    defer-datasource-initialization: true
+    properties:
+      "[hibernate.format_sql]": true
+      "[hibernate.order_inserts]": true
+      "[hibernate.order_updates]": true
+      "[hibernate.default_batch_fetch_size]": 1000
+      "[hibernate.jdbc.batch_size]": 1000
+      "[hibernate.jdbc.batch_versioned_data]": true
+      "[hibernate.connection.provider_disables_autocommit]": true
+
+jwt:
+  issuer: test
+  expiry-seconds: 1800
+  # TODO: 이건 꼭 바꿔야함
+  secret: thisisjusttestaccesssecretsodontworry
