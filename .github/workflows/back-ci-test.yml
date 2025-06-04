@@ -11,6 +11,10 @@ jobs:
     name: Back CI
     runs-on: ubuntu-22.04
 
+    defaults:
+      run:
+        working-directory: back
+
     permissions:
       checks: write
       pull-requests: write
