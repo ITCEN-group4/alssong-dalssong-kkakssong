@@ -89,7 +89,7 @@
     border: 1px solid #FFB0CE;
     font-size: 0.7rem;
     color: #2b2b2b;
-    margin-top: 5px;
+    margin-top: 3px;
     box-sizing: border-box;
 }
 
@@ -106,7 +106,7 @@ input::placeholder {
     color: white;
     cursor: pointer;
     transition: 0.2s;
-    margin-top: 15px;
+    margin-top: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-family: "Jua", sans-serif;
 }
