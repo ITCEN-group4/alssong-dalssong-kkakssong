@@ -2,13 +2,17 @@ import { useParams } from "react-router-dom";
 import React from "react";
 import styles from "./CocktailDetailPage.module.css";
 import { useCocktailContext } from "../context/CocktailContext.jsx";
-import getAbvTag from "../utils/getAbvTag.js";
+import baseIcon from "../assets/baseIcon.svg";
+import ingredientIcon from "../assets/ingredientIcon.svg";
+import getShakingIcon from "../utils/getShakingIcon.js";
+import getAbvIcon from "../utils/getAbcIcon.js";
 
 export default function CocktailDetailPage() {
     const { id } = useParams();
     const { cocktailList, updateLikes } = useCocktailContext();
     const cocktail = cocktailList.find((c) => String(c.id) === id);
-    const {  label } = getAbvTag(cocktail.abv);
+    const {label: abvLabel, icon: abvIcon} = getAbvIcon(cocktail.abv);
+    const {label: shakingLabel, icon: shakingIcon} = getShakingIcon(cocktail.shaking);
 
     const handleLikeCount = () => {
         updateLikes(cocktail.id);
@@ -19,11 +23,15 @@ export default function CocktailDetailPage() {
     return (
         <div className={styles.detailPage}>
             <div className={styles.pageHeader}>
-                <h1>칵테일 정보 공유</h1>
-                <p>
-                    칵테일 정보를 공유하는 공간..<br />
-                    다른 유저의 황금레시피를 엿볼 수 있어요.
-                </p>
+                <div className={styles.pageHeaderLeft}>
+                    <h1>칵테일 정보 공유</h1>
+                    <p>칵테일 정보를 공유하는 공간..<br />다른 유저의 황금레시피를 엿볼 수 있어요.</p>
+                </div>
+
+                <div className={styles.editButtonGroup}>
+                    <button className={styles.editButton}>✏️ 수정</button>
+                    <button className={styles.deleteButton}>🗑️ 삭제</button>
+                </div>
             </div>
 
             <div className={styles.topSection}>
@@ -61,11 +69,27 @@ export default function CocktailDetailPage() {
                     </ul>
                 </div>
 
-                <div className={styles.infoSummary}>
-                    <div>🍶 베이스 술: {cocktail.baseLiquors}</div>
-                    <div>🔥 도수: {label}</div>
-                    <div>🍋 부가재료: {cocktail.ingredients.join(", ")}</div>
-                    <div>🍸 셰이킹: {cocktail.shaking ? "ON" : "OFF"}</div>
+                <div className={styles.iconGrid}>
+                    <div className={styles.iconItem}>
+                        <span className={styles.iconLabel}>베이스 술</span>
+                        <img src={baseIcon} alt="base" className={styles.infoIcon} />
+                        <span className={styles.iconValue}>{cocktail.baseLiquors}</span>
+                    </div>
+                    <div className={styles.iconItem}>
+                        <span className={styles.iconLabel}>도수</span>
+                        <img src={abvIcon} alt="abv" className={styles.infoIcon} />
+                        <span className={styles.iconValue}>{abvLabel}</span>
+                    </div>
+                    <div className={styles.iconItem}>
+                        <span className={styles.iconLabel}>부가재료</span>
+                        <img src={ingredientIcon} alt="ingredient" className={styles.infoIcon} />
+                        <span className={styles.iconValue}>{cocktail.ingredients[0]}</span>
+                    </div>
+                    <div className={styles.iconItem}>
+                        <span className={styles.iconLabel}>쉐이킹</span>
+                        <img src={shakingIcon} alt="shaking" className={styles.infoIcon} />
+                        <span className={styles.iconValue}>{shakingLabel}</span>
+                    </div>
                 </div>
             </div>
         </div>
