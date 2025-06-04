@@ -7,12 +7,11 @@ import login from '../assets/login.svg';
 import password_viewless from '../assets/password_viewless.svg';
 import password_visible from '../assets/password_visible.svg';
 
-export default function LoginForm() {
+export default function LoginForm({setErrorMessage}) {
 
     const [showPassword, setShowPassword] = useState(false);
     const [emailValue, setEmailValue] = useState('');
     const [passwordValue, setPasswordValue] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
@@ -26,28 +25,45 @@ export default function LoginForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!emailValue.trim() || !passwordValue.trim()) {
+        const trimmedEmail = emailValue.trim();
+        const trimmedPassword = passwordValue.trim();
+
+        if (!trimmedEmail && !trimmedPassword) {
             setErrorMessage('아이디와 비밀번호를 입력해주세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
+            return;
+        }
 
-            setTimeout(() => {
-                setErrorMessage('');
-            }, 2000);
+        if (!trimmedEmail) {
+            setErrorMessage('이메일을 입력해주세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
+            return;
+        }
 
+        if (!trimmedEmail.includes('@')) {
+            setErrorMessage('올바른 이메일 형식을 입력해주세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
+            return;
+        }
+
+        if (!trimmedPassword) {
+            setErrorMessage('비밀번호를 입력해주세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
+            return;
+        }
+
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]).{7,}$/;
+        if (!passwordRegex.test(trimmedPassword)) {
+            setErrorMessage('영문, 숫자 포함 7자 이상, 특수문자 1자 이상 입력해주세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
             return;
         }
 
         setErrorMessage('');
-        console.log('로그인 시도:', emailValue, passwordValue);
+        console.log("로그인 시도:", trimmedEmail, trimmedPassword);
     };
 
     return (
-        <div>
-            {errorMessage && (
-                <div className={styles.errorMessage}>
-                    {errorMessage}
-                </div>
-            )}
-
             <div className={styles.formWrapper}>
                 <div className={styles.login_title_form}>
                     <img src={login} alt="login_img" className={styles.login_img}/>
@@ -59,7 +75,7 @@ export default function LoginForm() {
                         <div className={styles.input_wrapper}>
                             <img src={email} alt="email_img" className={styles.leftIcon}/>
                             <input
-                                type="email"
+                                type="text"
                                 placeholder="이메일을 입력하세요"
                                 className={styles.input}
                                 value={emailValue}
@@ -89,7 +105,6 @@ export default function LoginForm() {
                     <button type="submit" className={styles.loginButton}>로그인</button>
                     <div className={styles.registerLink} onClick={handlesignup}>회원가입</div>
                 </form>
-            </div>
         </div>
             );
 }
