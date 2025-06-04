@@ -5,7 +5,6 @@ import com.group4.aldalka.domain.post.dto.response.PostDeleteRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
-import com.group4.aldalka.domain.post.repository.*;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.repository.UserRepository;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/posts")
 public class PostController {
 
-    private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostService postService;
 
@@ -44,11 +42,9 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponseDTO> updatePost(
-            @PathVariable Long postId,
-            @RequestBody PostRequestDTO requestDTO
+    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO
     ) {
-        return postService.updatePost(postId, requestDTO)
+        return postService.updatePost(requestDTO, postId)
                 .map(updatedDto -> ResponseEntity.ok(updatedDto))
                 .orElse(ResponseEntity.notFound().build());
     }

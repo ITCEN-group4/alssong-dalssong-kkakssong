@@ -104,6 +104,7 @@ public class PostService {
                             .map(pl -> pl.getBaseLiquor().getName())
                             .collect(Collectors.toList());
 
+                    // like_count 테이블에서 해당 post와 연관된 행을 가져와 개수 저장
                     int likeCount = post.getLikes().size();
 
                     // DTO 빌드
@@ -125,10 +126,7 @@ public class PostService {
     }
 
     @Transactional
-    public Optional<PostResponseDTO> updatePost(
-            Long postId,
-            PostRequestDTO requestDTO
-    ) {
+    public Optional<PostResponseDTO> updatePost(PostRequestDTO requestDTO, Long postId) {
         // 원본 Post 조회
         Optional<Post> optPost = postRepository.findById(postId);
         if (optPost.isEmpty()) {
