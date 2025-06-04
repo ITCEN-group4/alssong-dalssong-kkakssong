@@ -2,7 +2,7 @@ name: front ci test
 
 on:
   pull_request:
-    branches: [pr_test]
+    branches: [develop]
     paths:
       - 'front/**'  
 
