@@ -3,17 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import styles from './signup.module.css';
 import login from '../assets/login.svg';
 import logo from '../assets/cocktail_logo.svg';
-
+import password_viewless from '../assets/password_viewless.svg';
+import password_visible from '../assets/password_visible.svg';
 
 export default function SignupForm() {
 
     const navigate = useNavigate();
 
+    const [showPassword, setShowPassword] = useState(false); // 기존 비밀번호
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 비밀번호 확인
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(prev => !prev);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(prev => !prev);
+    };
+
 
     const handleCancel = () => {
         navigate('/auth/login');
@@ -126,10 +138,17 @@ export default function SignupForm() {
                         <span className={styles.input_label}>비밀번호</span>
                         <div className={styles.input_wrapper}>
                             <input
-                                type='password'
+                                type={showPassword ? 'text' : 'password'}
                                 placeholder="비밀번호를 입력해주세요"
+                                className={styles.input}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <img
+                                src={showPassword ? password_visible : password_viewless}
+                                alt="password_viewless_img"
+                                className={styles.rightIcon}
+                                onClick={togglePasswordVisibility}
                             />
                         </div>
                     </label>
@@ -138,11 +157,19 @@ export default function SignupForm() {
                         <span className={styles.input_label}>비밀번호 확인</span>
                         <div className={styles.input_wrapper}>
                             <input
-                                type="password"
+                                type={showConfirmPassword ? 'text' : 'password'}
                                 placeholder="비밀번호를 다시 입력해주세요"
+                                className={styles.input}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
+                            <img
+                                src={showConfirmPassword ? password_visible : password_viewless}
+                                alt="confirm_password_icon"
+                                className={styles.rightIcon}
+                                onClick={toggleConfirmPasswordVisibility}
+                            />
+
                         </div>
                     </label>
 

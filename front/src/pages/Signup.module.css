@@ -84,13 +84,23 @@
 
 .input_wrapper input {
     width: 100%;
-    padding: 13px 13px 13px 13px;
+    padding: 13px 40px 13px 13px;
     border-radius: 8px;
     border: 1px solid #FFB0CE;
     font-size: 0.8rem;
     color: #2b2b2b;
     margin-top: 3px;
     box-sizing: border-box;
+}
+
+.rightIcon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
 }
 
 input::placeholder {
