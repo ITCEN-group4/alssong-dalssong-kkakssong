@@ -1,22 +1,20 @@
 package com.group4.aldalka.domain.post.service;
 
 import com.group4.aldalka.domain.post.dto.request.PostCreateRequestDTO;
-import com.group4.aldalka.domain.post.dto.response.PostDeleteRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
 import com.group4.aldalka.domain.post.repository.*;
 import com.group4.aldalka.domain.user.User;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
@@ -86,53 +84,50 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<PostSelectResponseDTO> SelectPost(Long postId) {
-        return postRepository.findById(postId)
-                .map(post -> {
-                    // 작성자 정보 가져오기
-                    User author = post.getUser();
+    public PostSelectResponseDTO selectPost(Long postId) {
+        // postId 존재 여부 검사(기존 Controller 에서 Service 로 이동)
+        Post post = postRepository.findById(postId)
+                .orElseThrow();
 
-                    // 연관된 PostIngredient 엔티티들로부터 Ingredient 이름만 추출
-                    List<String> ingredientNames = post.getPostIngredients()
-                            .stream()
-                            .map(pi -> pi.getIngredient().getName())
-                            .collect(Collectors.toList());
+        // 작성자 정보 추출
+        User author = post.getUser();
 
-                    // 연관된 PostBaseLiquor 엔티티들로부터 BaseLiquor 이름만 추출
-                    List<String> baseLiquorNames = post.getPostBaseLiquors()
-                            .stream()
-                            .map(pl -> pl.getBaseLiquor().getName())
-                            .collect(Collectors.toList());
+        // 연관된 PostIngredient 엔티티들로부터 Ingredient 이름만 추출
+        List<String> ingredientNames = post.getPostIngredients()
+                .stream()
+                .map(pi -> pi.getIngredient().getName())
+                .toList();
 
-                    // like_count 테이블에서 해당 post와 연관된 행을 가져와 개수 저장
-                    int likeCount = post.getLikes().size();
+        // 연관된 PostBaseLiquor 엔티티들로부터 BaseLiquor 이름만 추출
+        List<String> baseLiquorNames = post.getPostBaseLiquors()
+                .stream()
+                .map(pl -> pl.getBaseLiquor().getName())
+                .toList();
 
-                    // DTO 빌드
-                    return PostSelectResponseDTO.builder()
-                            .postId(post.getPostId())
-                            .title(post.getTitle())
-                            .content(post.getContent())
-                            .recipe(post.getRecipe())
-                            .difficulty(post.getDifficulty())
-                            .isShaken(post.isShaken())
-                            .isOfficial(post.isOfficial())
-                            .imageUrl(post.getImageUrl())
-                            .userName(author.getUsername())
-                            .likeCount(likeCount)
-                            .ingredients(ingredientNames)
-                            .baseLiquors(baseLiquorNames)
-                            .build();
-                });
+        // like_count 테이블에서 해당 post와 연관된 행을 가져와 개수 저장
+        int likeCount = post.getLikes().size();
+
+        // DTO 빌드 후 리턴
+        return PostSelectResponseDTO.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .recipe(post.getRecipe())
+                .difficulty(post.getDifficulty())
+                .isShaken(post.isShaken())
+                .isOfficial(post.isOfficial())
+                .imageUrl(post.getImageUrl())
+                .userName(author.getUsername())
+                .likeCount(likeCount)
+                .ingredients(ingredientNames)
+                .baseLiquors(baseLiquorNames)
+                .build();
     }
 
     @Transactional
-    public Optional<PostResponseDTO> updatePost(PostRequestDTO requestDTO, Long postId) {
-        // 원본 Post 조회
-        Optional<Post> optPost = postRepository.findById(postId);
-        if (optPost.isEmpty()) {
-            return Optional.empty(); // 404
-        }
-        Post postEntity = optPost.get();
+    public PostResponseDTO updatePost(PostRequestDTO requestDTO, Long postId) {
+
+        Post postEntity = postRepository.findById(postId).orElse(null);
 
         // 새 Post 객체를 빌더로 생성 (기존 postId, user만 복사하고, 나머지는 requestDTO에서 가져옴)
         Post newPost = Post.builder()
@@ -200,7 +195,7 @@ public class PostService {
                 .map(pbl -> pbl.getBaseLiquor().getName())
                 .collect(Collectors.toList());
 
-        PostResponseDTO responseDTO = PostResponseDTO.builder()
+        return PostResponseDTO.builder()
                 .postId(updated.getPostId())
                 .title(updated.getTitle())
                 .content(updated.getContent())
@@ -213,30 +208,10 @@ public class PostService {
                 .ingredientNames(ingredientNames)
                 .baseLiquorNames(baseLiquorNames)
                 .build();
-
-        return Optional.of(responseDTO);
     }
 
-    @Transactional
-    public Optional<PostDeleteRequestDTO> deletePost(Long postId, String userName) {
-        // postId 존재여부 확인
-        Optional<Post> optPost = postRepository.findById(postId);
-        if (optPost.isEmpty()) {
-            return Optional.empty();
-        }
-        Post postEntity = optPost.get();
-
-        System.out.println("User ID : " + userName);
-
-        // 작성자 검증
-        if (!postEntity.getUser().getUsername().equals(userName)) {
-            return Optional.empty();
-        }
-
-        // 삭제 수행 (cascade=ALL 설정 덕분에 연관된 엔티티도 함께 삭제됨)
-        postRepository.delete(postEntity);
-        
-        return Optional.of(PostDeleteRequestDTO.builder().postId(postEntity.getPostId()).build());
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
     }
 
 }
