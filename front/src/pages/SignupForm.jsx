@@ -34,9 +34,9 @@ export default function SignupForm() {
                     </label>
 
                     <label>
-                        <span className={styles.input_label}>아이디</span>
+                        <span className={styles.input_label}>이메일</span>
                         <div className={styles.input_wrapper}>
-                            <input type="email" placeholder="아이디를 입력하세요" />
+                            <input type="email" placeholder="이메일을 입력하세요" />
                         </div>
                     </label>
 

@@ -29,7 +29,7 @@ export default function LoginForm({setErrorMessage}) {
         const trimmedPassword = passwordValue.trim();
 
         if (!trimmedEmail && !trimmedPassword) {
-            setErrorMessage('아이디와 비밀번호를 입력해주세요.');
+            setErrorMessage('이메일와 비밀번호를 입력해주세요.');
             setTimeout(() => setErrorMessage(''), 2000);
             return;
         }
