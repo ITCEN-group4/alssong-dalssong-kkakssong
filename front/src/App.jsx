@@ -1,5 +1,6 @@
 import React from 'react';
-import {Routes, Route, BrowserRouter} from "react-router-dom";
+import {Routes, Route, BrowserRouter} from "react-router-dom"
+import ScrollToTop from "./utils/ScrollToTop.jsx";
 import CocktailSharePage from "./pages/CocktailSharePage";
 import CocktailDetailPage from "./pages/CocktailDetailPage";
 import CocktailWritePage from "./pages/CocktailWritePage.jsx";
@@ -10,6 +11,7 @@ function App() {
     return (
         <BrowserRouter>
             <CocktailProvider>
+                <ScrollToTop />
                 <Routes>
                     <Route path="/auth/login" element={<Login />} />
                     <Route path="/post" element={<CocktailSharePage/>}/>
