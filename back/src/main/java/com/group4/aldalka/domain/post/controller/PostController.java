@@ -2,7 +2,6 @@ package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.common.LoginUser;
 import com.group4.aldalka.domain.post.dto.request.PostCreateRequestDTO;
-import com.group4.aldalka.domain.post.dto.request.PostDeleteRequestDTO;
 import com.group4.aldalka.domain.post.dto.request.PostRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
@@ -42,7 +41,7 @@ public class PostController {
 
     // 게시글 삭제, @LoginUser를 유지시켜 삭제 권한 유저를 확인
     @DeleteMapping("/{postId}")
-    public ResponseEntity<PostDeleteRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
+    public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
         postService.deletePost(postId);             // 이미지 URL 삭제
         return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
     }
