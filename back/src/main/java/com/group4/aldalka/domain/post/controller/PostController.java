@@ -2,13 +2,13 @@ package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.common.LoginUser;
 import com.group4.aldalka.domain.post.dto.request.PostCreateRequestDTO;
-import com.group4.aldalka.domain.post.dto.response.PostRequestDTO;
+import com.group4.aldalka.domain.post.dto.request.PostDeleteRequestDTO;
+import com.group4.aldalka.domain.post.dto.request.PostRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.repository.UserRepository;
-import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     // 게시글 생성
-    @PostMapping
+    @PostMapping("/create") // 게시글 목록 조회와 중복으로 구분
     public ResponseEntity<PostRequestDTO> createPost(@RequestBody PostCreateRequestDTO postCreateDTO, @LoginUser String userName) {
         User userEntity = userRepository.findByUsername(userName).orElseThrow();
         return ResponseEntity.ok(postService.createPost(postCreateDTO, userEntity));
@@ -40,10 +40,10 @@ public class PostController {
         return ResponseEntity.ok(postService.updatePost(requestDTO, postId));
     }
 
-    // 게시글 삭제
+    // 게시글 삭제, @LoginUser를 유지시켜 삭제 권한 유저를 확인
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId, @LoginUser String userName) {
-        postService.deletePost(postId);
-        return ResponseEntity.ok("게시글이 성공적으로 삭제되었습니다.");
+    public ResponseEntity<PostDeleteRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
+        postService.deletePost(postId);             // 이미지 URL 삭제
+        return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
     }
 }

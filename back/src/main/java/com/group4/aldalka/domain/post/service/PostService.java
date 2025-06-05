@@ -1,7 +1,7 @@
 package com.group4.aldalka.domain.post.service;
 
 import com.group4.aldalka.domain.post.dto.request.PostCreateRequestDTO;
-import com.group4.aldalka.domain.post.dto.response.PostRequestDTO;
+import com.group4.aldalka.domain.post.dto.request.PostRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
 import com.group4.aldalka.domain.post.repository.*;
@@ -22,6 +22,7 @@ public class PostService {
     private final PostIngredientRepository postIngredientRepository;
     private final BaseLiquorRepository baseLiquorRepository;
     private final IngredientRepository ingredientRepository;
+    private final ImageService imageService;
 
     public PostRequestDTO createPost(PostCreateRequestDTO Request, User user) {
         // Request의 정보로 부터 Post 객체 생성
@@ -204,14 +205,25 @@ public class PostService {
                 .isShaken(updated.isShaken())
                 .isOfficial(updated.isOfficial())
                 .imageUrl(updated.getImageUrl())
-                .authorUsername(updated.getUser().getUsername())
-                .ingredientNames(ingredientNames)
-                .baseLiquorNames(baseLiquorNames)
+                .userId(updated.getUser().getUserId())
+                .ingredients(ingredientNames)
+                .baseLiquors(baseLiquorNames)
                 .build();
     }
 
     public void deletePost(Long postId) {
-        postRepository.deleteById(postId);
+        // 게시글 존재 여부 조회
+        Post post = postRepository.findById(postId)
+                .orElseThrow();
+
+        // 엔티티에 이미지 키(imageKey)를 저장했다고 가정
+        String imageKey = post.getImageUrl();
+        if (imageKey != null && !imageKey.isBlank()) {
+            imageService.deleteImage(post.getImageUrl());
+        }
+
+        // DB에서 게시글 삭제
+        postRepository.delete(post);
     }
 
 }
