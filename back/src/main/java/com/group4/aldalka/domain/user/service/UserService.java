@@ -25,14 +25,14 @@ public class UserService {
     public CreateUserResponse createUser(UserCreationRequest request) {
         //TODO: 새로운 ErrorCode 만들지 허가 받기
         userRepository
-                .findByUsername(request.getUsername())
+                .findByEmail(request.getEmail())
                 .ifPresent(
                         user -> {
                             throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
                         });
         User user =
                 User.builder()
-                        .username(request.getUsername())
+                        .email(request.getEmail())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .userRole(UserRole.USER)
                         .build();

@@ -62,18 +62,18 @@ class AuthServiceTest {
     @DisplayName("로그인 메서드 호출 시")
     class LoginTest {
 
-        private String username;
+        private String email;
         private String rawPassword;
         private User savedUser;
         private AuthService authService;
 
         @BeforeEach
         void setUp() {
-            username = "test";
+            email = "test";
             rawPassword = "test1234";
             String password = passwordEncoder.encode(rawPassword);
             UserRole userRole = UserRole.USER;
-            savedUser = new User(username, password, userRole, ZonedDateTime.now());
+            savedUser = new User(email, password, userRole, ZonedDateTime.now());
             authService = new AuthService(userRepository, passwordEncoder, jwtProvider);
         }
 
@@ -89,7 +89,7 @@ class AuthServiceTest {
             userRepository.save(savedUser);
 
             // when
-            LoginResponse response = authService.login(username, rawPassword);
+            LoginResponse response = authService.login(email, rawPassword);
 
             // then
             assertThat(response.getAccessToken()).isNotBlank();
@@ -105,7 +105,7 @@ class AuthServiceTest {
             userRepository.save(savedUser);
 
             // when
-            Exception exception = catchException(() -> authService.login(username, wrongPassword));
+            Exception exception = catchException(() -> authService.login(email, wrongPassword));
 
             // then
             assertThat(exception).isInstanceOf(NoSuchElementException.class);

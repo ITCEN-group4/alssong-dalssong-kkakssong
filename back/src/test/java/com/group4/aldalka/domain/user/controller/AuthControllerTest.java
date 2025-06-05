@@ -21,7 +21,6 @@ import com.group4.aldalka.domain.user.UserRole;
 import com.group4.aldalka.domain.user.dto.request.LoginRequest;
 import com.group4.aldalka.domain.user.dto.response.LoginResponse;
 import com.group4.aldalka.domain.user.repository.UserRepository;
-import com.group4.aldalka.domain.user.service.AuthService;
 import com.group4.aldalka.domain.user.service.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +35,7 @@ class AuthControllerTest {
 
     private RestTemplate restTemplate;
 
-    private String username;
+    private String email;
     private String rawPassword;
     private User savedUser;
 
@@ -70,11 +69,11 @@ class AuthControllerTest {
         restTemplate = new RestTemplate();
         baseUrl = "http://localhost:" + port + "/api/v1/login";
 
-        username = "test";
+        email = "test";
         rawPassword = "test1234";
         String password = passwordEncoder.encode(rawPassword);
         UserRole userRole = UserRole.USER;
-        savedUser = new User(username, password, userRole, ZonedDateTime.now());
+        savedUser = new User(email, password, userRole, ZonedDateTime.now());
         userRepository.saveAndFlush(savedUser);
     }
 

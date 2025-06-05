@@ -67,6 +67,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private JwtAuthentication authenticate(String accessToken) {
         CustomClaims customClaims = jwtProvider.parseAccessToken(accessToken);
         return new JwtAuthentication(
-                customClaims.getUsername(), customClaims.getUserRole(), accessToken);
+                customClaims.getEmail(), customClaims.getUserRole(), accessToken);
     }
 }

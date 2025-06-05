@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     private Long userId;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;
 
     @Column(nullable = false)
     private String password;
@@ -46,14 +46,14 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<Post>();
 
-    public User(String username, String password, UserRole userRole) {
-        this.username = username;
+    public User(String email, String password, UserRole userRole) {
+        this.email = email;
         this.password = password;
         this.userRole = userRole;
     }
 
-    public User(String username, String password, UserRole userRole, ZonedDateTime createdAt) {
-        this.username = username;
+    public User(String email, String password, UserRole userRole, ZonedDateTime createdAt) {
+        this.email = email;
         this.password = password;
         this.userRole = userRole;
     }
