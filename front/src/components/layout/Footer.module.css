@@ -19,18 +19,7 @@
     display: flex;
     align-items: center;
     width: 110px;
-    margin-right: 100px;
-}
-
-.github {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 130px;
-}
-
-.github img {
-    width: 50px;
+    margin-right: 120px;
 }
 
 .members {
@@ -64,7 +53,7 @@
         align-items: stretch;
     }
 
-    .logo, .github {
+    .logo {
         display: inline-flex;
         justify-content: space-between;
         align-items: center;
@@ -76,7 +65,4 @@
         margin-top: 1rem;
     }
 
-    .github{
-        display: none;
-    }
 }

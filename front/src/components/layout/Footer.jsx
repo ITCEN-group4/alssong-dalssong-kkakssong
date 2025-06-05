@@ -19,9 +19,6 @@ export default function Footer() {
                 <div><p>Jordan0216</p><p>jordandan216@gmail.com</p></div>
             </div>
 
-            <div className={styles.github}>
-                <img src={github_icon} alt="github"/>
-            </div>
         </footer>
 
 
