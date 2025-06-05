@@ -5,49 +5,65 @@ import { filterCocktails } from "../utils/filterCocktails";
 const CocktailContext = createContext();
 
 export function CocktailProvider({ children }) {
+    const [originalList, setOriginalList] = useState(testData); // 원본 고정
     const [cocktailList, setCocktailList] = useState(testData);
-    const [likedMap, setLikedMap] = useState({})
-    const [localLikes, setLocalLikes] = useState({});
+    const [likedMap, setLikedMap] = useState({});
+    const [shouldUpdateList, setShouldUpdateList] = useState(true);
+
+    const triggerListUpdate = () => {
+        setShouldUpdateList(true);
+    };
 
     const toggleLike = (id) => {
         const alreadyLiked = likedMap[id] || false;
 
+        // 좋아요 상태 업데이트
         setLikedMap(prev => ({
             ...prev,
             [id]: !alreadyLiked
         }));
 
-        setLocalLikes(prev => ({
-            ...prev,
-            [id]: (prev[id] ?? 0) + (alreadyLiked ? -1 : 1)
-        }));
-    };
-
-    const applyLocalLikes = () => {
-        setCocktailList(prev =>
-            prev.map(c => {
-                const localChange = localLikes[c.id] ?? 0;
-                return localChange !== 0 ? {
-                    ...c,
-                    likes: c.likes + localChange
-                } : c;
-            })
+        // 원본/현재 모두 업데이트
+        setOriginalList(prev =>
+            prev.map(cocktail =>
+                cocktail.id === id
+                    ? { ...cocktail, likes: cocktail.likes + (alreadyLiked ? -1 : 1) }
+                    : cocktail
+            )
         );
-        setLocalLikes({}); // 적용 후 초기화
-    };
-
-    const updateCocktail = (id, updated) => {
-        setCocktailList(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c));
+        setCocktailList(prev =>
+            prev.map(cocktail =>
+                cocktail.id === id
+                    ? { ...cocktail, likes: cocktail.likes + (alreadyLiked ? -1 : 1) }
+                    : cocktail
+            )
+        );
     };
 
     const filterList = (filters) => {
-        const result = filterCocktails(cocktailList, filters);
+        const result = filterCocktails(originalList, filters); // ✅ 원본 기준
         setCocktailList(result);
+        triggerListUpdate();
     };
 
     const searchList = (keyword) => {
-        const result = cocktailList.filter(cocktail => cocktail.name.includes(keyword));
-        setCocktailList(result);
+        if (!keyword.trim()) {
+            setCocktailList(originalList); // ✅ 빈 검색어면 원상복귀
+        } else {
+            const result = originalList.filter(cocktail => cocktail.name.includes(keyword));
+            setCocktailList(result);
+        }
+        triggerListUpdate();
+    };
+
+    const updateCocktail = (id, updated) => {
+        setOriginalList(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c));
+        setCocktailList(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c));
+    };
+
+    const deleteCocktail = (id) => {
+        setOriginalList(prev => prev.filter(cocktail => cocktail.id !== id));
+        setCocktailList(prev => prev.filter(cocktail => cocktail.id !== id));
     };
 
     return (
@@ -55,16 +71,19 @@ export function CocktailProvider({ children }) {
             cocktailList,
             toggleLike,
             likedMap,
-            localLikes,
-            applyLocalLikes,
             updateCocktail,
             filterList,
-            searchList
+            searchList,
+            deleteCocktail,
+            shouldUpdateList,
+            setShouldUpdateList,
+            triggerListUpdate
         }}>
             {children}
         </CocktailContext.Provider>
     );
 }
+
 
 export function useCocktailContext() {
     return useContext(CocktailContext);

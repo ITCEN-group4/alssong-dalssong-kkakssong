@@ -10,7 +10,7 @@ export default function FilterBar() {
         shaking: null,
     });
 
-    const {filterList, applyLocalLikes} = useCocktailContext()
+    const {filterList, triggerListUpdate} = useCocktailContext()
 
     function handleSelect(type, value) {
         setFilters(prev => {
@@ -113,7 +113,7 @@ export default function FilterBar() {
                     className={styles.submitButton}
                     onClick={() =>{
                         filterList(filters)
-                        applyLocalLikes()}
+                        triggerListUpdate()}
                     }
                 >
                     조합하기

@@ -7,10 +7,13 @@ import {useCocktailContext} from "../../context/CocktailContext.jsx";
 export default function CocktailCard({cocktail}) {
     const navigate = useNavigate();
     const {label, icon} = getAbvTag(cocktail.abv);
-    const {toggleLike, likedMap , localLikes} = useCocktailContext();
+    const {toggleLike, likedMap, cocktailList} = useCocktailContext();
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = likeAnimation();
-    const displayedLikes = cocktail.likes + (localLikes[cocktail.id] ?? 0);
+
+    // 실시간 좋아요 수 가져오기 (원본 데이터에서)
+    const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
+    const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
 
     const handleClick = () => {
         navigate(`/post/${cocktail.id}`);
@@ -19,10 +22,11 @@ export default function CocktailCard({cocktail}) {
     const handleLike = (e) => {
         e.stopPropagation();
         toggleLike(cocktail.id);
-        triggerAnimate()
+        triggerAnimate();
     };
 
-    return (<div className={styles.card} onClick={handleClick}>
+    return (
+        <div className={styles.card} onClick={handleClick}>
             <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage}/>
 
             <div className={styles.cardContent}>
@@ -42,7 +46,7 @@ export default function CocktailCard({cocktail}) {
                     {liked ? "❤️" : "🤍"}
                 </span>
                 <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
-                    {displayedLikes}
+                    {currentLikes}
                 </span>
             </button>
 
@@ -51,5 +55,6 @@ export default function CocktailCard({cocktail}) {
                 alt={label}
                 className={styles.abvBadge}
             />
-        </div>);
+        </div>
+    );
 }
