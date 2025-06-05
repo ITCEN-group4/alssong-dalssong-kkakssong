@@ -1,0 +1,35 @@
+name: front-pr-ci
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'front/**'  
+
+jobs:
+  front-ci:
+    name: front-ci
+    runs-on: ubuntu-22.04
+
+    defaults:
+      run:
+        working-directory: front
+
+    steps:
+      - name: 레포지토리 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 20 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: ESLint 코드 검사
+        run: npm run lint
+
+      - name: Vite 빌드 테스트
+        run: npm run build
