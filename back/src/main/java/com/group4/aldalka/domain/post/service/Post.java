@@ -26,10 +26,10 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 380)
+    @Column(nullable = false, length = 3800)
     private String title;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 210)
     private String content;
 
     @Column(length = 2200)
