@@ -22,7 +22,7 @@ export default function NavBar() {
     return (
         <nav className={styles.nav}>
             <div className={styles.left}>
-                <img src={logo} alt="logo" className={styles.logo} />
+                <img src={logo} alt="logo" className={styles.logo} onClick={handleCocktailPage}/>
                 <div className={styles.menu}>
                     <span onClick={handleCocktailPage}>칵테일</span>
                     <span onClick={handleOfficialPage}>공식 레시피</span>
