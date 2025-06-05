@@ -6,15 +6,23 @@ import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
 import com.group4.aldalka.domain.post.repository.*;
 import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.post.dto.PagedPostResponse;
+import com.group4.aldalka.domain.post.dto.PostResponse;
+import com.group4.aldalka.domain.post.dto.PostSearchRequest;
+import com.group4.aldalka.domain.post.dto.PostSearchResult;
+import com.group4.aldalka.domain.post.entity.*;
+import com.group4.aldalka.domain.post.repository.PostRepository;
+import com.group4.aldalka.domain.post.repository.UserLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
@@ -22,6 +30,7 @@ public class PostService {
     private final PostIngredientRepository postIngredientRepository;
     private final BaseLiquorRepository baseLiquorRepository;
     private final IngredientRepository ingredientRepository;
+    private final UserLikeRepository userLikeRepository;
     private final ImageService imageService;
 
     public PostRequestDTO createPost(PostCreateRequestDTO Request, User user) {
@@ -44,17 +53,13 @@ public class PostService {
         for (String ingredientName : Request.getIngredients()) {
             Ingredient ingredient = ingredientRepository.findByName(ingredientName)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid ingredient name: " + ingredientName));
-
-
             PostIngredient postIngredient = PostIngredient.builder()
                     .ingredient(ingredient)
                     .post(saved)
                     .build();
-
             postIngredientRepository.save(postIngredient);
             post.getPostIngredients().add(postIngredient);
         }
-
         // BaseLiquor List를 추출 하여 PostBaseLiquor 생성
         for (String baseLiquorName : Request.getBaseLiquors()) {
             BaseLiquor baseLiquor = baseLiquorRepository.findByName(baseLiquorName)
@@ -121,8 +126,7 @@ public class PostService {
                 .userName(author.getUsername())
                 .likeCount(likeCount)
                 .ingredients(ingredientNames)
-                .baseLiquors(baseLiquorNames)
-                .build();
+                .baseLiquors(baseLiquorNames).build();
     }
 
     @Transactional
@@ -179,22 +183,21 @@ public class PostService {
                         .baseLiquor(baseLiquor)
                         .post(newPost)      // 연관 대상은 newPost
                         .build();
-
                 postBaseLiquorRepository.save(pbl);
                 newPost.getPostBaseLiquors().add(pbl);
             }
         }
-
         // newPost를 save() → 기존 same ID 레코드를 merge(UPDATE), 새 관계들 저장
         Post updated = postRepository.save(newPost);
-
         // 최종 결과를 DTO로 변환하여 반환
         List<String> ingredientNames = updated.getPostIngredients().stream()
                 .map(pi -> pi.getIngredient().getName())
                 .collect(Collectors.toList());
+
         List<String> baseLiquorNames = updated.getPostBaseLiquors().stream()
                 .map(pbl -> pbl.getBaseLiquor().getName())
                 .collect(Collectors.toList());
+
 
         return PostResponseDTO.builder()
                 .postId(updated.getPostId())
@@ -224,6 +227,49 @@ public class PostService {
 
         // DB에서 게시글 삭제
         postRepository.delete(post);
+    }
+
+    public PagedPostResponse searchPosts(String userId, PostSearchRequest postSearchRequest) {
+
+        PostSearchResult result = postRepository.searchPosts(postSearchRequest);
+        int pageSize = 8;
+        int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
+
+
+        return PagedPostResponse.builder()
+                .posts(getPostsWithLikeInfo(userId, result.getPosts()))
+                .totalPages(totalPages)
+                .totalElements(result.getTotalElements())
+                .build();
+
+    }
+
+    public List<PostResponse> getPostsWithLikeInfo(String userId, List<Post> posts) {
+        List<Long> postIds = posts.stream().map(Post::getPostId).collect(Collectors.toList());
+
+        // 쿼리 1: 특정 유저가 좋아요 누른 포스트 목록
+        List<Long> likedPostIds = userId == null
+                ? Collections.emptyList() //userId가 null이면 isLiked는 항상 false임
+                : userLikeRepository.findLikedPostIdsByUserIdAndPostIds(userId, postIds);
+
+        Set<Long> likedSet = new HashSet<>(likedPostIds);
+
+        // 쿼리 2: 각 포스트의 좋아요 수
+        List<UserLikeRepository.LikeCountProjection> likeCounts = userLikeRepository.countLikesByPostIds(postIds);
+        Map<Long, Long> likeCountMap = likeCounts.stream()
+                .collect(Collectors.toMap(UserLikeRepository.LikeCountProjection::getPostId, UserLikeRepository.LikeCountProjection::getCount));
+
+        return mapToPostResponses(posts, likeCountMap, likedSet);
+    }
+
+    private List<PostResponse> mapToPostResponses(List<Post> posts, Map<Long, Long> likeCountMap, Set<Long> likedSet) {
+        return posts.stream()
+                .map(post -> PostResponse.from(
+                        post,
+                        likeCountMap.getOrDefault(post.getPostId(), 0L).intValue(),
+                        likedSet.contains(post.getPostId())
+                ))
+                .collect(Collectors.toList());
     }
 
 }
