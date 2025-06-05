@@ -1,12 +1,16 @@
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import styles from "./CocktailCard.module.css";
-import getAbvTag  from "../../utils/getAbvTag.js";
-import { useCocktailContext} from "../../context/CocktailContext.jsx";
+import getAbvTag from "../../utils/getAbvTag.js";
+import likeAnimation from "../../utils/likeAnimation.js";
+import {useCocktailContext} from "../../context/CocktailContext.jsx";
 
-export default function CocktailCard({ cocktail }) {
+export default function CocktailCard({cocktail}) {
     const navigate = useNavigate();
-    const { label, icon } = getAbvTag(cocktail.abv);
-    const {updateLikes} = useCocktailContext()
+    const {label, icon} = getAbvTag(cocktail.abv);
+    const {toggleLike, likedMap , localLikes} = useCocktailContext();
+    const liked = likedMap[cocktail.id] || false;
+    const [animate, triggerAnimate] = likeAnimation();
+    const displayedLikes = cocktail.likes + (localLikes[cocktail.id] ?? 0);
 
     const handleClick = () => {
         navigate(`/post/${cocktail.id}`);
@@ -14,12 +18,12 @@ export default function CocktailCard({ cocktail }) {
 
     const handleLike = (e) => {
         e.stopPropagation();
-        updateLikes(cocktail.id);
+        toggleLike(cocktail.id);
+        triggerAnimate()
     };
 
-    return (
-        <div className={styles.card} onClick={handleClick}>
-            <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage} />
+    return (<div className={styles.card} onClick={handleClick}>
+            <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage}/>
 
             <div className={styles.cardContent}>
                 <h3 className={styles.cardTitle}>{cocktail.name}</h3>
@@ -34,7 +38,12 @@ export default function CocktailCard({ cocktail }) {
             <p className={styles.description}>{cocktail.description}</p>
 
             <button className={styles.likeButton} onClick={handleLike}>
-                ❤️ {cocktail.likes}
+                <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
+                    {liked ? "❤️" : "🤍"}
+                </span>
+                <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                    {displayedLikes}
+                </span>
             </button>
 
             <img
@@ -42,6 +51,5 @@ export default function CocktailCard({ cocktail }) {
                 alt={label}
                 className={styles.abvBadge}
             />
-        </div>
-    );
+        </div>);
 }

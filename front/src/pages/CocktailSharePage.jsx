@@ -9,7 +9,7 @@ import SearchWriteBar from "../components/layout/SearchWriteBar.jsx";
 import {useCocktailContext} from "../context/CocktailContext.jsx";
 
 export default function CocktailSharePage() {
-    const { cocktailList, searchList } = useCocktailContext();
+    const { cocktailList, searchList , applyLocalLikes} = useCocktailContext();
     const [sortOption, setSortOption] = useState("likes");
     const [currentPage, setCurrentPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState("");
@@ -49,6 +49,7 @@ export default function CocktailSharePage() {
                     <SortBar
                         sortOption={sortOption}
                         setSortOption={(option) => {
+                            applyLocalLikes();
                             setSortOption(option);
                             setCurrentPage(1); // 정렬 변경 시 첫 페이지로
                         }}
