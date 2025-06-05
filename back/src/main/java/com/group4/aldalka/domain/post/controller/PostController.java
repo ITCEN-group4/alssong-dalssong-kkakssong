@@ -7,8 +7,6 @@ import com.group4.aldalka.domain.post.dto.request.PostRequestDTO;
 import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
 import com.group4.aldalka.domain.post.service.PostService;
-import com.group4.aldalka.domain.user.User;
-import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +19,10 @@ import static com.group4.aldalka.global.result.ResultCode.GET_POST_INFO_SUCCESS;
 @RequestMapping("/posts")
 public class PostController
 {
-    private final UserRepository userRepository;
     private final PostService postService;
 
     //비회원, 회원 모두 접근가능
-    @PostMapping("")
+    @PostMapping("/search")
     public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @RequestBody PostSearchRequest postRequest) {
         postRequest.applyDefaults();
         return ResponseEntity.ok(
@@ -34,10 +31,9 @@ public class PostController
     }
 
     // 게시글 생성
-    @PostMapping("/create") // 게시글 목록 조회와 중복으로 구분
+    @PostMapping ("/create")// 게시글 목록 조회와 중복으로 구분
     public ResponseEntity<PostRequestDTO> createPost(@RequestBody PostCreateRequestDTO postCreateDTO, @LoginUser String userName) {
-        User userEntity = userRepository.findByUsername(userName).orElseThrow();
-        return ResponseEntity.ok(postService.createPost(postCreateDTO, userEntity));
+        return ResponseEntity.ok(postService.createPost(postCreateDTO, userName));
     }
 
     // 게시글 불러오기
@@ -55,7 +51,7 @@ public class PostController
     // 게시글 삭제, @LoginUser를 유지시켜 삭제 권한 유저를 확인
     @DeleteMapping("/{postId}")
     public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
-        postService.deletePost(postId);             // 이미지 URL 삭제
+        postService.deletePost(postId);
         return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
     }
 }

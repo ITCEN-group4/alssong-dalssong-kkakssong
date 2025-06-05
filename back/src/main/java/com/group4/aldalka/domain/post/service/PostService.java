@@ -13,6 +13,7 @@ import com.group4.aldalka.domain.post.dto.PostSearchResult;
 import com.group4.aldalka.domain.post.entity.*;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
+import com.group4.aldalka.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,12 @@ public class PostService {
     private final BaseLiquorRepository baseLiquorRepository;
     private final IngredientRepository ingredientRepository;
     private final UserLikeRepository userLikeRepository;
+    private final UserRepository userRepository;
     private final ImageService imageService;
 
-    public PostRequestDTO createPost(PostCreateRequestDTO Request, User user) {
+    public PostRequestDTO createPost(PostCreateRequestDTO Request, String userName) {
+        User user = userRepository.findByUsername(userName).orElseThrow();
+
         // Request의 정보로 부터 Post 객체 생성
         Post post = Post.builder()
                 .user(user)

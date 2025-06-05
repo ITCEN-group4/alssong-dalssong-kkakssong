@@ -11,7 +11,6 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -36,10 +35,9 @@ public class ImageService {
         }
 
         // S3에 저장할 키 생성
-        String key = "images/%s/%s%s".formatted(
-                LocalDate.now(),                   // 날짜별 폴더 분리
-                UUID.randomUUID(),                 // 랜덤 UUID
-                ext
+        String key = "images/%s%s".formatted(
+                UUID.randomUUID(),  // 랜덤 UUID
+                ext                  // 파일 확장자 (예: ".jpg", ".png" 등)
         );
 
         // PutObjectRequest 생성

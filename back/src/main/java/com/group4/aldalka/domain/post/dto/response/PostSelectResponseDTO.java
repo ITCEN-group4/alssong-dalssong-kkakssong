@@ -36,7 +36,4 @@ public class PostSelectResponseDTO {
     @JsonProperty("base_liquors")
     private List<String> baseLiquors;
     private List<String> ingredients;
-
-    @JsonProperty("like_check")
-    boolean likeCheck;
 }
