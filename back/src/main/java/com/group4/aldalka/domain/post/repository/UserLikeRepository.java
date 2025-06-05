@@ -22,5 +22,7 @@ public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
         Long getCount();
     }
 
+    boolean existsByUserUserIdAndPostPostId(Long user_userId, Long post_postId);
+
 }
 
