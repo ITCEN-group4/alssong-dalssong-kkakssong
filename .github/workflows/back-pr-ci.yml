@@ -2,7 +2,7 @@ name: back-pr-ci
 
 on:
   pull_request:
-    branches: [main]
+    branches: [develop]
     paths:
       - 'back/**'
 
@@ -10,11 +10,11 @@ jobs:
   back-ci:
     name: back-ci
     runs-on: ubuntu-22.04
-		
+
     defaults:
       run:
         working-directory: back
-		
+
     permissions:
       checks: write
       pull-requests: write
