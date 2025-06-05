@@ -3,9 +3,6 @@ server:
     context-path: /api/v1
 
 spring:
-  config:
-    import:
-      - optional:application-secret.yml
 
   application:
     name: aldalka

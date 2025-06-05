@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.service;
+package com.group4.aldalka.domain.post.entity;
 
 import com.group4.aldalka.domain.BaseEntity;
 import com.group4.aldalka.domain.user.User;
@@ -40,9 +40,6 @@ public class Post extends BaseEntity {
 
     @Column(name = "is_shaken", nullable = false)
     private boolean isShaken;
-
-    @Column(name = "like_count", nullable = false)
-    private int likeCount;
 
     @Column(name = "is_official", nullable = false)
     private boolean isOfficial;

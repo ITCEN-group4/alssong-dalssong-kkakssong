@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.service;
+package com.group4.aldalka.domain.post.entity;
 
 import com.group4.aldalka.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -9,20 +9,20 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "ingredient")
+@Table(name = "base_liquior")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Ingredient extends BaseEntity {
+public class BaseLiquor extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ingredient_id")
-    private Long ingredientId;
+    @Column(name = "base_liquor_id")
+    private Long baseLiquorId;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIngredient> postIngredients = new ArrayList<>();
+    @OneToMany(mappedBy = "baseLiquor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostBaseLiquor> postBaseLiquors = new ArrayList<>();
 }

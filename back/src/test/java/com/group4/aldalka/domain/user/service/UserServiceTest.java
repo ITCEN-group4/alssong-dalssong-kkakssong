@@ -1,6 +1,6 @@
 package com.group4.aldalka.domain.user.service;
 
-import jdk.jshell.spi.ExecutionControl.UserException;
+import com.group4.aldalka.domain.user.config.TestQueryDslConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
@@ -17,9 +17,11 @@ import com.group4.aldalka.domain.user.dto.request.UserCreationRequest;
 import com.group4.aldalka.domain.user.dto.response.CreateUserResponse;
 import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.global.error.exception.BusinessException;
+import org.springframework.context.annotation.Import;
 
 
 @DataJpaTest
+@Import(TestQueryDslConfig.class)
 class UserServiceTest {
 
     private UserService userService;
