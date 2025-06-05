@@ -6,19 +6,24 @@ import baseIcon from "../assets/baseIcon.svg";
 import ingredientIcon from "../assets/ingredientIcon.svg";
 import getShakingIcon from "../utils/getShakingIcon.js";
 import getAbvIcon from "../utils/getAbcIcon.js";
+import likeAnimation from "../utils/likeAnimation.js";
 
 export default function CocktailDetailPage() {
     const { id } = useParams();
-    const { cocktailList, updateLikes } = useCocktailContext();
+    const { cocktailList, toggleLike, likedMap} = useCocktailContext();
     const cocktail = cocktailList.find((c) => String(c.id) === id);
-    const {label: abvLabel, icon: abvIcon} = getAbvIcon(cocktail.abv);
-    const {label: shakingLabel, icon: shakingIcon} = getShakingIcon(cocktail.shaking);
-
-    const handleLikeCount = () => {
-        updateLikes(cocktail.id);
-    };
 
     if (!cocktail) return <div>존재하지 않는 칵테일입니다.</div>;
+
+    const {label: abvLabel, icon: abvIcon} = getAbvIcon(cocktail.abv);
+    const {label: shakingLabel, icon: shakingIcon} = getShakingIcon(cocktail.shaking);
+    const liked = likedMap[cocktail.id] || false;
+    const [animate, triggerAnimate] = likeAnimation();
+
+    const handleLike = () => {
+        toggleLike(cocktail.id);
+        triggerAnimate()
+    };
 
     return (
         <div className={styles.detailPage}>
@@ -47,8 +52,13 @@ export default function CocktailDetailPage() {
                     <p className={styles.description}>{cocktail.description}</p>
 
                     <div className={styles.infoRow }>
-                        <button onClick={handleLikeCount} className={styles.likeButton}>
-                            ❤️ {cocktail.likes}
+                        <button className={styles.likeButton} onClick={handleLike}>
+                            <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
+                                {liked ? "❤️" : "🤍"}
+                            </span>
+                            <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                                {cocktail.likes}
+                            </span>
                         </button>
                         <span className={styles.date}>작성일 : {cocktail.date}</span>
                     </div>
