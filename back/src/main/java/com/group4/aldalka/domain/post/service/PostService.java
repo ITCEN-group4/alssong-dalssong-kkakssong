@@ -1,9 +1,6 @@
 package com.group4.aldalka.domain.post.service;
 
-import com.group4.aldalka.domain.post.dto.PagedPostResponse;
-import com.group4.aldalka.domain.post.dto.PostResponse;
-import com.group4.aldalka.domain.post.dto.PostSearchRequest;
-import com.group4.aldalka.domain.post.dto.PostSearchResult;
+import com.group4.aldalka.domain.post.dto.*;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
@@ -63,5 +60,19 @@ public class PostService {
                         likedSet.contains(post.getPostId())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public OfficialPostDetailResponse getOfficialPostDetail(String userId, Long postId) {
+
+
+
+
+
+
+
+
+
+
+
     }
 }
