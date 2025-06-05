@@ -23,7 +23,8 @@ public enum ErrorCode {
 
 
     //Post
-    POST_NOT_FOUND(404, "존재하지 않는 게시글입니다.");
+    POST_NOT_FOUND(404, "존재하지 않는 게시글입니다."),
+    LIKE_NOT_FOUND(404, "좋아요를 누르지 않은 게시글입니다.");
 
 
     private final int status;

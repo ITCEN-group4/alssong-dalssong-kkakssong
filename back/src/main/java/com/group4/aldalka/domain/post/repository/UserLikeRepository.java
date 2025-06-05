@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
 
@@ -17,12 +18,15 @@ public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
     @Query("SELECT ul.post.postId AS postId, COUNT(ul.likeId) AS count FROM UserLike ul WHERE ul.post.postId IN :postIds GROUP BY ul.post.postId")
     List<LikeCountProjection> countLikesByPostIds(@Param("postIds") List<Long> postIds);
 
+
     interface LikeCountProjection {
         Long getPostId();
         Long getCount();
     }
 
     boolean existsByUserUserIdAndPostPostId(Long user_userId, Long post_postId);
+
+    int deleteByUserIdAndPostId(Long userId, Long postId);
 
 }
 
