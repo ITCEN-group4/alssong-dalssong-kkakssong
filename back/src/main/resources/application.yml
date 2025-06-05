@@ -11,9 +11,9 @@ spring:
     time-zone: Asia/Seoul
 
   datasource:
-    url: jdbc:mysql://localhost:3306/aldalka?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
-    username: root
-    password: 1234
+    url: jdbc:mysql://${db.server_address}:3306/aldalka?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
+    username: ${db.username}
+    password: ${db.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 30000
