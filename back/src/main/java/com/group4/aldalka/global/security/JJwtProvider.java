@@ -39,9 +39,9 @@ public class JJwtProvider implements JwtProvider {
     public CustomClaims parseAccessToken(String accessToken) {
         try {
             Claims payload = accessTokenParser.parseSignedClaims(accessToken).getPayload();
-            String username = payload.getSubject();
+            String email = payload.getSubject();
             UserRole userRole = UserRole.find(payload.get(ROLE, String.class));
-            return new CustomClaims(username, userRole);
+            return new CustomClaims(email, userRole);
         } catch (ExpiredJwtException e) {
             // TODO: 새로운 ErrorCode 정의 필요. EXPIRED_TOKEN으로 하는게?
             throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
@@ -59,7 +59,7 @@ public class JJwtProvider implements JwtProvider {
         return Jwts.builder()
                 .issuer(issuer)
                 .issuedAt(now)
-                .subject(user.getUsername())
+                .subject(user.getEmail())
                 .expiration(expiresAt)
                 .claim(ROLE, user.getUserRole().getValue())
                 .signWith(secretKey)
