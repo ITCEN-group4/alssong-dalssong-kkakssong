@@ -88,4 +88,15 @@ public class UserService {
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
         return CreateUserResponse.from(user);
     }
+
+    public void deleteUser(String userEmail) {
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUNT));
+        userRepository.delete(user);
+    }
 }
