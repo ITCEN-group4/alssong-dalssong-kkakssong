@@ -74,4 +74,11 @@ public class User extends BaseEntity {
     public int hashCode() {
         return Objects.hashCode(userId);
     }
+
+    public void updateNickname(String nickname) {
+        if (nickname == null || nickname.isBlank()) {
+            throw new IllegalArgumentException("닉네임은 공백일 수 없습니다.");
+        }
+        this.nickname = nickname;
+    }
 }
