@@ -33,6 +33,7 @@ public class UserService {
         User user =
                 User.builder()
                         .email(request.getEmail())
+                        .nickname(request.getNickname())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .userRole(UserRole.USER)
                         .build();

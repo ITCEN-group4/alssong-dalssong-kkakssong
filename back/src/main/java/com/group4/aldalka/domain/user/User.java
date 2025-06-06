@@ -33,6 +33,9 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
     @Column(nullable = false)
     private String password;
 
@@ -52,8 +55,9 @@ public class User extends BaseEntity {
         this.userRole = userRole;
     }
 
-    public User(String email, String password, UserRole userRole, ZonedDateTime createdAt) {
+    public User(String email, String nickname, String password, UserRole userRole, ZonedDateTime createdAt) {
         this.email = email;
+        this.nickname = nickname;
         this.password = password;
         this.userRole = userRole;
     }

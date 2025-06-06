@@ -55,8 +55,9 @@ class UserServiceTest {
         void createUser() {
             // given
             String email = "username@gmail.com";
+            String nickname = "nickname";
             String password = "password";
-            UserCreationRequest request = new UserCreationRequest(email, password);
+            UserCreationRequest request = new UserCreationRequest(email,nickname, password);
 
             // when
             CreateUserResponse response = userService.createUser(request);
@@ -79,16 +80,18 @@ class UserServiceTest {
         void duplicateResource_WhenDuplicateEmail() {
             // given
             String duplicateEmail = "duplicate@gmail.com";
+            String nickname = "abcd";
             String password = "password";
             User user =
                     User.builder()
                             .email(duplicateEmail)
+                            .nickname(nickname)
                             .password(password)
                             .userRole(UserRole.USER)
                             .build();
             userRepository.save(user);
 
-            UserCreationRequest request = new UserCreationRequest(duplicateEmail, password);
+            UserCreationRequest request = new UserCreationRequest(duplicateEmail, nickname, password);
 
             // when
             Exception exception = catchException(() -> userService.createUser(request));

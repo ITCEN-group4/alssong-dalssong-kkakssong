@@ -63,17 +63,19 @@ class AuthServiceTest {
     class LoginTest {
 
         private String email;
+        private String nickname;
         private String rawPassword;
         private User savedUser;
         private AuthService authService;
 
         @BeforeEach
         void setUp() {
-            email = "test";
+            email = "test@gmail.com";
+            nickname = "nickname";
             rawPassword = "test1234";
             String password = passwordEncoder.encode(rawPassword);
             UserRole userRole = UserRole.USER;
-            savedUser = new User(email, password, userRole, ZonedDateTime.now());
+            savedUser = new User(email, nickname, password, userRole, ZonedDateTime.now());
             authService = new AuthService(userRepository, passwordEncoder, jwtProvider);
         }
 

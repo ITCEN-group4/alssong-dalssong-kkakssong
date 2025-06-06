@@ -36,6 +36,7 @@ class AuthControllerTest {
     private RestTemplate restTemplate;
 
     private String email;
+    private String nickname;
     private String rawPassword;
     private User savedUser;
 
@@ -69,11 +70,12 @@ class AuthControllerTest {
         restTemplate = new RestTemplate();
         baseUrl = "http://localhost:" + port + "/api/v1/login";
 
-        email = "test";
+        email = "test@gmail.com";
+        nickname = "test";
         rawPassword = "test1234";
         String password = passwordEncoder.encode(rawPassword);
         UserRole userRole = UserRole.USER;
-        savedUser = new User(email, password, userRole, ZonedDateTime.now());
+        savedUser = new User(email, nickname, password, userRole, ZonedDateTime.now());
         userRepository.saveAndFlush(savedUser);
     }
 
@@ -81,7 +83,7 @@ class AuthControllerTest {
     @DisplayName("로그인 API 호출 시 RestTemplate 테스트")
     void login() {
         // given
-        LoginRequest request = new LoginRequest("test", "test1234");
+        LoginRequest request = new LoginRequest("test@gmail.com", "test1234");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
