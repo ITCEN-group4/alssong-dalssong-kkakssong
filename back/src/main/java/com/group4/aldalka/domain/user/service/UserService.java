@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.UserRole;
+import com.group4.aldalka.domain.user.dto.UserInfoResponse;
+import com.group4.aldalka.domain.user.dto.request.ChangePasswordRequest;
 import com.group4.aldalka.domain.user.dto.request.UserCreationRequest;
 import com.group4.aldalka.domain.user.dto.request.UserUpdateRequest;
 import com.group4.aldalka.domain.user.dto.response.CreateUserResponse;
@@ -59,6 +61,31 @@ public class UserService {
         }
 
         user.updateNickname(request.getNickname());
+        return CreateUserResponse.from(user);
+    }
+
+    public UserInfoResponse getUser(String userEmail) {
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUNT));
+        return UserInfoResponse.fromUser(user);
+    }
+
+    public CreateUserResponse updatePassword(String userEmail, ChangePasswordRequest request) {
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUNT));
+        passwordEncoder.checkMatches(user, request.getCurrentPassword());
+
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
         return CreateUserResponse.from(user);
     }
 }

@@ -81,4 +81,11 @@ public class User extends BaseEntity {
         }
         this.nickname = nickname;
     }
+
+    public void updatePassword(String encode) {
+        if (encode == null || encode.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 공백일 수 없습니다.");
+        }
+        this.password = encode;
+    }
 }
