@@ -14,7 +14,7 @@ public class UserCreationRequest {
     @Email(message = "유효하지 않은 이메일 형식입니다.")
     private String email;
 
-    @NotBlank(message = "비밀번호는 공백일 수 없습니다.")
+    @NotBlank(message = "닉네임은 공백일 수 없습니다.")
     private String nickname;
 
     @NotBlank(message = "비밀번호는 공백일 수 없습니다.")
