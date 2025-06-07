@@ -5,7 +5,7 @@ import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
 import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
 import com.group4.aldalka.domain.post.dto.response.MypagePostResponse;
 import com.group4.aldalka.domain.post.dto.response.OfficialPostDetailResponse;
-import com.group4.aldalka.domain.post.dto.response.PagedPostResponse;
+import com.group4.aldalka.domain.post.dto.response.PagedResponse;
 import com.group4.aldalka.domain.post.dto.response.PostResponse;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
@@ -30,7 +30,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
 
-    public PagedPostResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
+    public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
@@ -40,7 +40,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 
-        return PagedPostResponse.builder()
+        return PagedResponse.<PostResponse> builder()
                 .posts(getPostsWithLikeInfo(userId, result.getPosts()))
                 .totalPages(totalPages)
                 .totalElements(result.getTotalElements())
@@ -119,18 +119,33 @@ public class PostService {
     }
 
 
-    public List<MypagePostResponse> getMypagePosts(String userEmail, MypagePostSearchRequest searchRequest) {
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS));
+    public PagedResponse getMypagePosts(String userEmail, MypagePostSearchRequest mypagePostSearchRequest) {
+        Long userId = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS)).getUserId();
 
-        List<Post> posts = postRepository.findPostsByUserAndCondition(user.getUserId(), searchRequest);
-        List<Long> likedPostIds = userLikeRepository.findLikedPostIdsByUserIdAndPostIds(user.getUserId(), posts.stream()
-                .map(Post::getPostId)
-                .collect(Collectors.toList()));
+        PostSearchResult posts = postRepository.findPostsByUserAndCondition(userId, mypagePostSearchRequest);
+        List<Long> likedPostIds = userLikeRepository.findLikedPostIdsByUserIdAndPostIds(
+                userId,
+                posts.getPosts().stream()
+                        .map(Post::getPostId)
+                        .collect(Collectors.toList())
+        );
+
 
         Set<Long> likedPostIdSet = new HashSet<>(likedPostIds);
 
+        PostSearchResult result = postRepository.findPostsByUserAndCondition(userId, mypagePostSearchRequest);
+        int pageSize = 8;
+        int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
 
+        return PagedResponse.<MypagePostResponse>builder()
+                .totalElements(result.getTotalElements())
+                .totalPages(totalPages)
+                .posts(mapToMypagePostResponses(posts.getPosts(), likedPostIdSet))
+                .build();
+    }
+
+    private List<MypagePostResponse> mapToMypagePostResponses(List<Post> posts, Set<Long> likedPostIdSet) {
         return posts.stream()
                 .map(post -> MypagePostResponse.builder()
                         .postId(post.getPostId())
@@ -142,4 +157,5 @@ public class PostService {
                         .build())
                 .toList();
     }
+
 }

@@ -11,5 +11,5 @@ public interface  PostRepositoryCustom {
 
     PostSearchResult searchPosts(PostSearchRequest postSearchRequest);
 
-    List<Post> findPostsByUserAndCondition(Long userId, MypagePostSearchRequest searchRequest);
+    PostSearchResult findPostsByUserAndCondition(Long userId, MypagePostSearchRequest searchRequest);
 }

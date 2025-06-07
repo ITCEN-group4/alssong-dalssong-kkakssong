@@ -140,7 +140,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
     }
 
-    public List<Post> findPostsByUserAndCondition(Long userId, MypagePostSearchRequest mypagePostSearchRequest) {
+    public PostSearchResult findPostsByUserAndCondition(Long userId, MypagePostSearchRequest mypagePostSearchRequest) {
 
         BooleanBuilder builder= new BooleanBuilder();
 
@@ -155,7 +155,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .sort(mypagePostSearchRequest.getSort()).
                 build();
 
-        return fetchPosts(postSearchCondition, builder);
+        long totalCount = fetchTotalPostCount(builder);
+        List<Post> posts = fetchPosts(postSearchCondition, builder);
+        return new PostSearchResult(posts, totalCount);
 
     }
 
