@@ -2,6 +2,7 @@ package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.common.LoginUser;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
+import com.group4.aldalka.domain.post.service.PostLikeService;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.global.result.ResultResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +18,34 @@ public class PostController
 {
 
     private final PostService postService;
+    private final PostLikeService postLikeService;
 
     //비회원, 회원 모두 접근가능
     @PostMapping("/search")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String email, @RequestBody PostSearchRequest postRequest) {
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userEmail, @RequestBody PostSearchRequest postRequest) {
         postRequest.applyDefaults();
         return ResponseEntity.ok(
-                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(email, postRequest))
+                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userEmail, postRequest))
         );
     }
 
     //비회원, 회원 모두 접근가능
     @GetMapping("/{postId}")
-    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String email, @PathVariable Long postId){
+    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String userEmail, @PathVariable Long postId){
         return ResponseEntity.ok(
-                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(email, postId))
+                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(userEmail, postId))
         );
+    }
+
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<ResultResponse> likePost(@LoginUser String userEmail, @PathVariable Long postId){
+        return ResponseEntity.ok(
+                ResultResponse.of(POST_LIKE_SUCCESS, postLikeService.addLike(userEmail, postId)));
+    }
+
+    @DeleteMapping("/{postId}/likes")
+    public ResponseEntity<ResultResponse> unlikePost(@LoginUser String userEmail, @PathVariable Long postId){
+        return ResponseEntity.ok(
+                ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(userEmail, postId)));
     }
 }

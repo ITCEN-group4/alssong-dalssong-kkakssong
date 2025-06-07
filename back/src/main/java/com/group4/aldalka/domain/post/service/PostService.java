@@ -4,6 +4,7 @@ import com.group4.aldalka.domain.post.dto.*;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
+import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.global.error.ErrorCode;
 import com.group4.aldalka.global.error.exception.BusinessException;
@@ -23,22 +24,25 @@ public class PostService {
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
 
-    public PagedPostResponse searchPosts(String email, PostSearchRequest postSearchRequest) {
+    public PagedPostResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
         int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
 
+        Long userId = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
+                .getUserId();
 
         return PagedPostResponse.builder()
-                .posts(getPostsWithLikeInfo(email, result.getPosts()))
+                .posts(getPostsWithLikeInfo(userId, result.getPosts()))
                 .totalPages(totalPages)
                 .totalElements(result.getTotalElements())
                 .build();
 
     }
 
-    public List<PostResponse> getPostsWithLikeInfo(String userId, List<Post> posts) {
+    public List<PostResponse> getPostsWithLikeInfo(Long userId, List<Post> posts) {
         List<Long> postIds = posts.stream().map(Post::getPostId).collect(Collectors.toList());
 
         // 쿼리 1: 특정 유저가 좋아요 누른 포스트 목록
@@ -66,9 +70,9 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public OfficialPostDetailResponse getOfficialPostDetail(String email, Long postId) {
+    public OfficialPostDetailResponse getOfficialPostDetail(String userEmail, Long postId) {
 
-        Long userId = userRepository.findByEmail(email)
+        Long userId = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 
