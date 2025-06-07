@@ -23,7 +23,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
 
-    public PagedPostResponse searchPosts(String username, PostSearchRequest postSearchRequest) {
+    public PagedPostResponse searchPosts(String email, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
@@ -31,7 +31,7 @@ public class PostService {
 
 
         return PagedPostResponse.builder()
-                .posts(getPostsWithLikeInfo(username, result.getPosts()))
+                .posts(getPostsWithLikeInfo(email, result.getPosts()))
                 .totalPages(totalPages)
                 .totalElements(result.getTotalElements())
                 .build();
@@ -66,9 +66,9 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public OfficialPostDetailResponse getOfficialPostDetail(String username, Long postId) {
+    public OfficialPostDetailResponse getOfficialPostDetail(String email, Long postId) {
 
-        Long userId = userRepository.findByUsername(username)
+        Long userId = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 

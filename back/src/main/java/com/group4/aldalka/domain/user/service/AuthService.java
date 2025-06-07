@@ -21,10 +21,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public LoginResponse login(String username, String rawPassword) {
+    public LoginResponse login(String email, String rawPassword) {
         User user =
                 userRepository
-                        .findByUsername(username)
+                        .findByEmail(email)
                         .orElseThrow(() -> new NoSuchElementException("이메일/비밀번호가 일치하지 않습니다."));
         passwordEncoder.checkMatches(user, rawPassword);
         String accessToken = jwtProvider.createAccessToken(user);
