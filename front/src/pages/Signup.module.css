@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle&family=Jua&display=swap');
+
+.signupPage {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom, #FFE4EC, #FFE9C9);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titleWrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
+.logoIcon {
+    width: 25px;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #FC619C;
+    font-family: "Dongle", sans-serif;
+}
+
+.formWrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+    width: 320px;
+    margin-bottom: 80px;
+}
+
+.signup_title_form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.login_img {
+    width: 20px;
+    height: 20px;
+}
+
+.formTitle {
+    font-size: 1rem;
+    text-align: center;
+    font-family: "Jua", sans-serif;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.input_label {
+    font-size: 0.74rem;
+    font-weight: bold;
+}
+
+.input_wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input_wrapper input {
+    width: 100%;
+    padding: 13px 40px 13px 13px;
+    border-radius: 8px;
+    border: 1px solid #FFB0CE;
+    font-size: 0.8rem;
+    color: #2b2b2b;
+    margin-top: 3px;
+    box-sizing: border-box;
+}
+
+.rightIcon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+}
+
+input::placeholder {
+    color: #ADAEBC;
+    font-size: 0.85rem;
+}
+
+.signupButton {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to right, #FC82AB, #FEC58F, #FBDFC0);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-family: "Jua", sans-serif;
+}
+
+.signupButton:hover {
+    filter: brightness(0.95);
+}
+
+.cancelLink {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+    cursor: pointer;
+}
+
+.cloudImg {
+    position: absolute;
+    bottom: -180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    pointer-events: none;
+    object-fit: cover;
+}
+
+.errorMessage {
+    color: #ff93bd;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    font-family: 'Jua', sans-serif;
+    text-align: center;
+    z-index: 2;
+    position: absolute;
+
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
