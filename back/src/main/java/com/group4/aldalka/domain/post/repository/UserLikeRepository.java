@@ -10,8 +10,8 @@ import java.util.List;
 public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
 
     // 특정 user가 좋아요 누른 post 목록
-    @Query("SELECT ul.post.postId FROM UserLike ul WHERE ul.user.username = :userName AND ul.post.postId IN :postIds")
-    List<Long> findLikedPostIdsByUserIdAndPostIds(@Param("userName") String userName, @Param("postIds") List<Long> postIds);
+    @Query("SELECT ul.post.postId FROM UserLike ul WHERE ul.user.userId = :userId AND ul.post.postId IN :postIds")
+    List<Long> findLikedPostIdsByUserIdAndPostIds(@Param("userId") Long userId, @Param("postIds") List<Long> postIds);
 
     // 각 post의 좋아요 수
     @Query("SELECT ul.post.postId AS postId, COUNT(ul.likeId) AS count FROM UserLike ul WHERE ul.post.postId IN :postIds GROUP BY ul.post.postId")
@@ -23,7 +23,7 @@ public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
         Long getCount();
     }
 
-    boolean existsByUserUserIdAndPostPostId(Long user_userId, Long post_postId);
+    boolean existsByUserUserIdAndPostPostId(Long userId, Long postId);
 
     int deleteByUser_UserIdAndPost_PostId(Long userId, Long postId);
 

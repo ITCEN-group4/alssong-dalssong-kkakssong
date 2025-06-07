@@ -21,9 +21,9 @@ public class PostLikeService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public boolean addLike(String username, Long postId) {
+    public boolean addLike(String userEmail, Long postId) {
 
-        Long userId = userRepository.findByUsername(username)
+        Long userId = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 
@@ -45,8 +45,8 @@ public class PostLikeService {
 
     }
 
-    public boolean removeLike(String username, Long postId) {
-        Long userId = userRepository.findByUsername(username)
+    public boolean removeLike(String userEmail, Long postId) {
+        Long userId = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 
