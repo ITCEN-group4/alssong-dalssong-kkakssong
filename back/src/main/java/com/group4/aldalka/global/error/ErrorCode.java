@@ -19,8 +19,11 @@ public enum ErrorCode {
     IS_NOT_IMAGE(400, "이미지가 아닙니다."),
 
     //User
-    USER_NOT_EXISTS(404, "존재하지 않는 회원입니다.");
+    USER_NOT_EXISTS(404, "존재하지 않는 회원입니다."),
 
+
+    //Post
+    POST_NOT_FOUND(404, "존재하지 않는 게시글입니다.");
 
 
     private final int status;

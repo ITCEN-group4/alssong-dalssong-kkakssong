@@ -49,12 +49,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Post> posts = new ArrayList<Post>();
 
-    public User(String email, String password, UserRole userRole) {
-        this.email = email;
-        this.password = password;
-        this.userRole = userRole;
-    }
-
     public User(String email, String nickname, String password, UserRole userRole, ZonedDateTime createdAt) {
         this.email = email;
         this.nickname = nickname;

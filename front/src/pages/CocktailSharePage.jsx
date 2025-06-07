@@ -7,6 +7,8 @@ import { paginate } from "../utils/paginate.js";
 import styles from './CocktailSharePage.module.css';
 import SearchWriteBar from "../components/layout/SearchWriteBar.jsx";
 import {useCocktailContext} from "../context/CocktailContext.jsx";
+import NavBar from "../components/layout/NavBar.jsx";
+import Footer from "../components/layout/Footer.jsx";
 
 export default function CocktailSharePage() {
     const { cocktailList, searchList } = useCocktailContext();
@@ -31,6 +33,7 @@ export default function CocktailSharePage() {
 
     return (
         <>
+            <NavBar/>
             <div className={styles.header}>
                 <h2 className={styles.title}>칵테일 정보 공유</h2>
                 <h4 className={styles.subtitle}>
@@ -67,6 +70,7 @@ export default function CocktailSharePage() {
                     />
                 )}
             </div>
+            <Footer/>
         </>
     );
 }

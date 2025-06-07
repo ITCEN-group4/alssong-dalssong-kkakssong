@@ -1,12 +1,12 @@
 package com.group4.aldalka.domain.post.service;
 
-import com.group4.aldalka.domain.post.dto.PagedPostResponse;
-import com.group4.aldalka.domain.post.dto.PostResponse;
-import com.group4.aldalka.domain.post.dto.PostSearchRequest;
-import com.group4.aldalka.domain.post.dto.PostSearchResult;
+import com.group4.aldalka.domain.post.dto.*;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
+import com.group4.aldalka.domain.user.repository.UserRepository;
+import com.group4.aldalka.global.error.ErrorCode;
+import com.group4.aldalka.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +20,10 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
 
-    public PagedPostResponse searchPosts(String userId, PostSearchRequest postSearchRequest) {
+    public PagedPostResponse searchPosts(String username, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
@@ -30,7 +31,7 @@ public class PostService {
 
 
         return PagedPostResponse.builder()
-                .posts(getPostsWithLikeInfo(userId, result.getPosts()))
+                .posts(getPostsWithLikeInfo(username, result.getPosts()))
                 .totalPages(totalPages)
                 .totalElements(result.getTotalElements())
                 .build();
@@ -64,4 +65,48 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public OfficialPostDetailResponse getOfficialPostDetail(String username, Long postId) {
+
+        Long userId = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
+                .getUserId();
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        boolean isLiked = false;
+        if (userId != null) isLiked = userLikeRepository.existsByUserUserIdAndPostPostId(userId, postId);
+
+        int likeCount = post.getLikes().size();
+
+        return buildOfficialPostDetailResponse(post, likeCount, isLiked);
+    }
+
+    private OfficialPostDetailResponse buildOfficialPostDetailResponse(Post post, int likeCount, boolean isLiked) {
+        List<String> ingredients = post.getPostIndgredients().stream()
+                .map(p -> p.getIngredient().getName())
+                .toList();
+
+        List<String> baseLiqueurs = post.getPostBaseLiquors().stream()
+                .map(b -> b.getBaseLiquor().getName())
+                .toList();
+
+        return OfficialPostDetailResponse.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .recipe(post.getRecipe())
+                .difficulty(post.getDifficulty())
+                .isShaken(post.isShaken())
+                .createdAt(post.getCreatedAt().toLocalDate())
+                .likeCount(likeCount)
+                .isLiked(isLiked)
+                .imageUrl(post.getImageUrl())
+                .baseLiqueurs(baseLiqueurs)
+                .ingredients(ingredients)
+                .build();
+    }
+
+
 }
