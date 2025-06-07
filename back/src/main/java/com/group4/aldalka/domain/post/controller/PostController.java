@@ -20,18 +20,18 @@ public class PostController
 
     //비회원, 회원 모두 접근가능
     @PostMapping("/search")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String username, @RequestBody PostSearchRequest postRequest) {
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String email, @RequestBody PostSearchRequest postRequest) {
         postRequest.applyDefaults();
         return ResponseEntity.ok(
-                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(username, postRequest))
+                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(email, postRequest))
         );
     }
 
     //비회원, 회원 모두 접근가능
     @GetMapping("/{postId}")
-    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String username, @PathVariable Long postId){
+    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String email, @PathVariable Long postId){
         return ResponseEntity.ok(
-                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(username, postId))
+                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(email, postId))
         );
     }
 }

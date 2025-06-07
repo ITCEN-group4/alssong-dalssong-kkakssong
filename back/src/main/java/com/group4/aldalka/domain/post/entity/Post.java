@@ -48,11 +48,11 @@ public class Post extends BaseEntity {
     private String imageUrl;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIngredient> postIndgredients = new ArrayList<PostIngredient>();
+    private final List<PostIngredient> postIndgredients = new ArrayList<PostIngredient>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserLike> likes = new ArrayList<UserLike>();
+    private final List<UserLike> likes = new ArrayList<UserLike>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
+    private final List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
 }

@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.UserRole;
+import com.group4.aldalka.domain.user.dto.UserInfoResponse;
+import com.group4.aldalka.domain.user.dto.request.ChangePasswordRequest;
 import com.group4.aldalka.domain.user.dto.request.UserCreationRequest;
+import com.group4.aldalka.domain.user.dto.request.UserUpdateRequest;
 import com.group4.aldalka.domain.user.dto.response.CreateUserResponse;
 import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.global.error.ErrorCode;
@@ -39,5 +42,73 @@ public class UserService {
                         .build();
         userRepository.save(user);
         return CreateUserResponse.from(user);
+    }
+
+    public CreateUserResponse updateUser(String userEmail, UserUpdateRequest request) {
+        if(userEmail == null){
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUND));
+        User existingUser =
+                userRepository
+                        .findByNickname(request.getNickname())
+                        .orElse(null);
+        if (existingUser != null && !existingUser.getEmail().equals(userEmail)) {
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
+        user.updateNickname(request.getNickname());
+        return CreateUserResponse.from(user);
+    }
+
+    public UserInfoResponse getUser(String userEmail) {
+        if(userEmail == null){
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUND));
+        return UserInfoResponse.fromUser(user);
+    }
+
+    public CreateUserResponse updatePassword(String userEmail, ChangePasswordRequest request) {
+        if(userEmail == null){
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUND));
+        passwordEncoder.checkMatches(user, request.getCurrentPassword());
+
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+        return CreateUserResponse.from(user);
+    }
+
+    public void deleteUser(String userEmail) {
+        User user =
+                userRepository
+                        .findByEmail(userEmail)
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.ENTITY_NOT_FOUND));
+        userRepository.delete(user);
     }
 }

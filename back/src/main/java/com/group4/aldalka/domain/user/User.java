@@ -44,10 +44,10 @@ public class User extends BaseEntity {
     private UserRole userRole;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserLike> likes = new ArrayList<UserLike>();
+    private final List<UserLike> likes = new ArrayList<UserLike>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts = new ArrayList<Post>();
+    private final List<Post> posts = new ArrayList<Post>();
 
     public User(String email, String nickname, String password, UserRole userRole, ZonedDateTime createdAt) {
         this.email = email;
@@ -67,5 +67,19 @@ public class User extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hashCode(userId);
+    }
+
+    public void updateNickname(String nickname) {
+        if (nickname == null || nickname.isBlank()) {
+            throw new IllegalArgumentException("닉네임은 공백일 수 없습니다.");
+        }
+        this.nickname = nickname;
+    }
+
+    public void updatePassword(String encode) {
+        if (encode == null || encode.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 공백일 수 없습니다.");
+        }
+        this.password = encode;
     }
 }

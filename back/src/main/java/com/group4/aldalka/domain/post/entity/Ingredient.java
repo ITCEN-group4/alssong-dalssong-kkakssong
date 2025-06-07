@@ -24,5 +24,5 @@ public class Ingredient extends BaseEntity {
     private String name;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIngredient> postIngredients = new ArrayList<>();
+    private final List<PostIngredient> postIngredients = new ArrayList<>();
 }
