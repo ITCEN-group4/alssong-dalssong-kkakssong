@@ -37,14 +37,15 @@ public class PostController
         );
     }
 
-    @PostMapping("/posts/{postId}/likes")
+    @PostMapping("/{postId}/likes")
     public ResponseEntity<ResultResponse> likePost(@LoginUser String username, @PathVariable Long postId){
         return ResponseEntity.ok(
                 ResultResponse.of(POST_LIKE_SUCCESS, postLikeService.addLike(username, postId)));
     }
 
-    @DeleteMapping("/posts/{postId}/likes")
+    @DeleteMapping("/{postId}/likes")
     public ResponseEntity<ResultResponse> unlikePost(@LoginUser String username, @PathVariable Long postId){
-        return ResponseEntity.ok( ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(username, postId)));
+        return ResponseEntity.ok(
+                ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(username, postId)));
     }
 }

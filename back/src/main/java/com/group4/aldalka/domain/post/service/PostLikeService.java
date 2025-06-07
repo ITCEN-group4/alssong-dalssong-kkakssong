@@ -12,8 +12,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -52,7 +50,7 @@ public class PostLikeService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 
-        int deletedCount = userLikeRepository.deleteByUserIdAndPostId(userId, postId);
+        int deletedCount = userLikeRepository.deleteByUser_UserIdAndPost_PostId(userId, postId);
 
         if (deletedCount == 0) throw new BusinessException(ErrorCode.LIKE_NOT_FOUND);
         return true;
