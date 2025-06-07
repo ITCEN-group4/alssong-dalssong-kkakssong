@@ -1,22 +1,20 @@
 package com.group4.aldalka.domain.post.repository;
 
-import com.group4.aldalka.domain.post.service.Post;
-import com.group4.aldalka.domain.user.User;
+import com.group4.aldalka.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom{
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+//    @Modifying
+//    @Query(
+//            value =
+//                    "insert into Users (" +
+//                            ") values (:name, :age, :email, :status)",
+//            nativeQuery = true)
+//    void insertUser(Post post);
 
-    @Modifying
-    @Query(
-            value =
-                    "insert into Users (" +
-                            ") values (:name, :age, :email, :status)",
-            nativeQuery = true)
-    void insertUser(Post post);
+    
 
 }
 

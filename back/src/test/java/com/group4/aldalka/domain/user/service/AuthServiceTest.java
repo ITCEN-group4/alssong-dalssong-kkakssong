@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.catchException;
 import java.time.ZonedDateTime;
 import java.util.NoSuchElementException;
 
-import org.aspectj.lang.annotation.After;
+import com.group4.aldalka.domain.user.config.TestQueryDslConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Import;
 
 import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.UserRole;
@@ -23,6 +23,7 @@ import com.group4.aldalka.global.security.JJwtProvider;
 
 
 @DataJpaTest
+@Import(TestQueryDslConfig.class)
 class AuthServiceTest {
 
     @Autowired private UserRepository userRepository;
