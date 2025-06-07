@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './Footer.module.css';
 import logo from "../../assets/footer_logo.svg";
-import github_icon from "../../assets/github_icon.svg";
 
 export default function Footer() {
     return (
