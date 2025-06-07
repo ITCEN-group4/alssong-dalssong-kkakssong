@@ -50,13 +50,5 @@ public class PostController
                 ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(userEmail, postId)));
     }
 
-    @GetMapping("/mypage/posts")
-    public ResponseEntity<ResultResponse> getMyPosts(@LoginUser String userEmail, @RequestBody MypagePostSearchRequest mypagePostSearchRequest){
-        mypagePostSearchRequest.applyDefaults();
-        return ResponseEntity.ok(
-                ResultResponse.of(GET_MYPAGE_POSTS_INFO_SUCCESS, postService.getMypagePosts(userEmail, mypagePostSearchRequest))
-        );
-    }
-
 
 }

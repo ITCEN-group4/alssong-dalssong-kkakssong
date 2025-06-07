@@ -11,7 +11,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
