@@ -1,6 +1,12 @@
 package com.group4.aldalka.domain.post.service;
 
 import com.group4.aldalka.domain.post.dto.*;
+import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
+import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
+import com.group4.aldalka.domain.post.dto.response.MypagePostResponse;
+import com.group4.aldalka.domain.post.dto.response.OfficialPostDetailResponse;
+import com.group4.aldalka.domain.post.dto.response.PagedPostResponse;
+import com.group4.aldalka.domain.post.dto.response.PostResponse;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
@@ -113,4 +119,27 @@ public class PostService {
     }
 
 
+    public List<MypagePostResponse> getMypagePosts(String userEmail, MypagePostSearchRequest searchRequest) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS));
+
+        List<Post> posts = postRepository.findPostsByUserAndCondition(user.getUserId(), searchRequest);
+        List<Long> likedPostIds = userLikeRepository.findLikedPostIdsByUserIdAndPostIds(user.getUserId(), posts.stream()
+                .map(Post::getPostId)
+                .collect(Collectors.toList()));
+
+        Set<Long> likedPostIdSet = new HashSet<>(likedPostIds);
+
+
+        return posts.stream()
+                .map(post -> MypagePostResponse.builder()
+                        .postId(post.getPostId())
+                        .title(post.getTitle())
+                        .likeCount(post.getLikes().size())
+                        .isLiked(likedPostIdSet.contains(post.getPostId()))
+                        .createdAt(post.getCreatedAt().toLocalDate())
+                        .imageUrl(post.getImageUrl())
+                        .build())
+                .toList();
+    }
 }
