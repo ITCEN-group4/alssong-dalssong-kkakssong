@@ -29,7 +29,7 @@ export default function NavBar() {
                 </div>
             </div>
             <div className={styles.profile}>
-                <img src={user_profile} alt="profile" className={styles.profile} onClick={handleMyPage}/>
+                <img src={user_profile} alt="profile" className={styles.user_profile} onClick={handleMyPage}/>
                 <div className={styles.username}>
                     <span onClick={handleMyPage}>사용자</span>
                 </div>

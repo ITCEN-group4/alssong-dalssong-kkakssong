@@ -59,7 +59,7 @@
     flex-shrink: 0;
 }
 
-.profile img {
+.user_profile {
     width: 32px;
     height: 32px;
     object-fit: cover;
@@ -102,7 +102,7 @@
         font-size: 0.8rem;
     }
 
-    .profile img {
+    .user_profile {
         width: 28px;
         height: 28px;
         cursor: pointer;
