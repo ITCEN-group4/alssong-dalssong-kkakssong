@@ -45,6 +45,10 @@ public class UserService {
     }
 
     public CreateUserResponse updateUser(String userEmail, UserUpdateRequest request) {
+        if(userEmail == null){
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
         User user =
                 userRepository
                         .findByEmail(userEmail)
@@ -65,6 +69,10 @@ public class UserService {
     }
 
     public UserInfoResponse getUser(String userEmail) {
+        if(userEmail == null){
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
         User user =
                 userRepository
                         .findByEmail(userEmail)
@@ -76,6 +84,10 @@ public class UserService {
     }
 
     public CreateUserResponse updatePassword(String userEmail, ChangePasswordRequest request) {
+        if(userEmail == null){
+            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+        }
+
         User user =
                 userRepository
                         .findByEmail(userEmail)
