@@ -44,10 +44,10 @@ public class User extends BaseEntity {
     private UserRole userRole;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserLike> likes = new ArrayList<UserLike>();
+    private final List<UserLike> likes = new ArrayList<UserLike>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts = new ArrayList<Post>();
+    private final List<Post> posts = new ArrayList<Post>();
 
     public User(String email, String password, UserRole userRole) {
         this.email = email;
