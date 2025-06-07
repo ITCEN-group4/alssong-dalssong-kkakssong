@@ -51,7 +51,7 @@ public class UserService {
                         .orElseThrow(
                                 () ->
                                         new BusinessException(
-                                                ErrorCode.ENTITY_NOT_FOUNT));
+                                                ErrorCode.ENTITY_NOT_FOUND));
         User existingUser =
                 userRepository
                         .findByNickname(request.getNickname())
@@ -71,7 +71,7 @@ public class UserService {
                         .orElseThrow(
                                 () ->
                                         new BusinessException(
-                                                ErrorCode.ENTITY_NOT_FOUNT));
+                                                ErrorCode.ENTITY_NOT_FOUND));
         return UserInfoResponse.fromUser(user);
     }
 
@@ -82,7 +82,7 @@ public class UserService {
                         .orElseThrow(
                                 () ->
                                         new BusinessException(
-                                                ErrorCode.ENTITY_NOT_FOUNT));
+                                                ErrorCode.ENTITY_NOT_FOUND));
         passwordEncoder.checkMatches(user, request.getCurrentPassword());
 
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
@@ -96,7 +96,7 @@ public class UserService {
                         .orElseThrow(
                                 () ->
                                         new BusinessException(
-                                                ErrorCode.ENTITY_NOT_FOUNT));
+                                                ErrorCode.ENTITY_NOT_FOUND));
         userRepository.delete(user);
     }
 }
