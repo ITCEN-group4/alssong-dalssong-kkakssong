@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.group4.aldalka.global.result.ResultCode.GET_POST_INFO_SUCCESS;
+import static com.group4.aldalka.global.result.ResultCode.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,11 +19,19 @@ public class PostController
     private final PostService postService;
 
     //비회원, 회원 모두 접근가능
-    @PostMapping("")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userId, @RequestBody PostSearchRequest postRequest) {
+    @PostMapping("/search")
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String username, @RequestBody PostSearchRequest postRequest) {
         postRequest.applyDefaults();
         return ResponseEntity.ok(
-                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userId, postRequest))
+                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(username, postRequest))
+        );
+    }
+
+    //비회원, 회원 모두 접근가능
+    @GetMapping("/{postId}")
+    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String username, @PathVariable Long postId){
+        return ResponseEntity.ok(
+                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(username, postId))
         );
     }
 }
