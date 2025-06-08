@@ -10,8 +10,8 @@ import com.group4.aldalka.domain.post.dto.response.PostResponse;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
-import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.repository.UserRepository;
+import com.group4.aldalka.domain.user.service.UserService;
 import com.group4.aldalka.global.error.ErrorCode;
 import com.group4.aldalka.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -29,18 +29,16 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
+    private final UserService userService;
 
     public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
         postSearchRequest.applyDefaults();
+        Long userId = userService.getUserIdByEmail(userEmail);
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
         int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
-
-        Long userId = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
-                .getUserId();
 
         return PagedResponse.<PostResponse> builder()
                 .posts(getPostsWithLikeInfo(userId, result.getPosts()))
@@ -125,8 +123,7 @@ public class PostService {
 
         mypagePostSearchRequest.applyDefaults();
 
-        Long userId = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS)).getUserId();
+        Long userId = userService.getUserIdByEmail(userEmail);
 
         PostSearchResult posts = postRepository.findPostsByUserAndCondition(userId, mypagePostSearchRequest);
         List<Long> likedPostIds = userLikeRepository.findLikedPostIdsByUserIdAndPostIds(
