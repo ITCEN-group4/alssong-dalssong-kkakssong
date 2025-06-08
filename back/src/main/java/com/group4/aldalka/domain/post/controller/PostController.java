@@ -22,10 +22,9 @@ public class PostController
 
     //비회원, 회원 모두 접근가능
     @PostMapping("/search")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userEmail, @RequestBody PostSearchRequest postRequest) {
-        postRequest.applyDefaults();
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userEmail, @RequestBody PostSearchRequest postSearchRequest) {
         return ResponseEntity.ok(
-                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userEmail, postRequest))
+                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userEmail, postSearchRequest))
         );
     }
 

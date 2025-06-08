@@ -32,6 +32,8 @@ public class PostService {
 
     public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
+        postSearchRequest.applyDefaults();
+
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
         int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
@@ -120,6 +122,9 @@ public class PostService {
 
 
     public PagedResponse getMypagePosts(String userEmail, MypagePostSearchRequest mypagePostSearchRequest) {
+
+        mypagePostSearchRequest.applyDefaults();
+
         Long userId = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS)).getUserId();
 
