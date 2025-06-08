@@ -14,8 +14,8 @@ public class PostSelectResponseDTO {
     @JsonProperty("post_id")
     private Long postId;
 
-    @JsonProperty("user_name")
-    private String userName;
+    @JsonProperty("user_nickname")
+    private String userNickname;
     private String title;
     private String content;
     private String recipe;

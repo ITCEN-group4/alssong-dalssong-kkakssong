@@ -25,5 +25,5 @@ public class Ingredient extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIngredient> postIngredients = new ArrayList<>();
+    private final List<PostIngredient> postIngredients = new ArrayList<>();
 }

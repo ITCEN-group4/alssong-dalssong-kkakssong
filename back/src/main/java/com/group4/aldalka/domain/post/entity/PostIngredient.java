@@ -6,7 +6,12 @@ import lombok.*;
 
 @Getter
 @Entity
-@Table(name = "post_ingredient")
+@Table(
+        name = "post_ingredient",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"post_id", "ingredient_id"})
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder

@@ -11,9 +11,13 @@ import com.group4.aldalka.domain.post.dto.PostResponse;
 import com.group4.aldalka.domain.post.dto.PostSearchRequest;
 import com.group4.aldalka.domain.post.dto.PostSearchResult;
 import com.group4.aldalka.domain.post.entity.*;
+import com.group4.aldalka.domain.post.dto.*;
+import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
 import com.group4.aldalka.domain.user.repository.UserRepository;
+import com.group4.aldalka.global.error.ErrorCode;
+import com.group4.aldalka.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,12 +34,12 @@ public class PostService {
     private final PostIngredientRepository postIngredientRepository;
     private final BaseLiquorRepository baseLiquorRepository;
     private final IngredientRepository ingredientRepository;
-    private final UserLikeRepository userLikeRepository;
     private final UserRepository userRepository;
+    private final UserLikeRepository userLikeRepository;
     private final ImageService imageService;
 
-    public PostRequestDTO createPost(PostCreateRequestDTO Request, String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow();
+    public PostRequestDTO createPost(PostCreateRequestDTO Request, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
 
         // Request의 정보로 부터 Post 객체 생성
         Post post = Post.builder()
@@ -126,7 +130,7 @@ public class PostService {
                 .isShaken(post.isShaken())
                 .isOfficial(post.isOfficial())
                 .imageUrl(post.getImageUrl())
-                .userName(author.getUsername())
+                .userNickname(author.getNickname())
                 .likeCount(likeCount)
                 .ingredients(ingredientNames)
                 .baseLiquors(baseLiquorNames).build();
@@ -232,12 +236,15 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public PagedPostResponse searchPosts(String userId, PostSearchRequest postSearchRequest) {
+    public PagedPostResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
         int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
 
+        Long userId = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
+                .getUserId();
 
         return PagedPostResponse.builder()
                 .posts(getPostsWithLikeInfo(userId, result.getPosts()))
@@ -247,7 +254,7 @@ public class PostService {
 
     }
 
-    public List<PostResponse> getPostsWithLikeInfo(String userId, List<Post> posts) {
+    public List<PostResponse> getPostsWithLikeInfo(Long userId, List<Post> posts) {
         List<Long> postIds = posts.stream().map(Post::getPostId).collect(Collectors.toList());
 
         // 쿼리 1: 특정 유저가 좋아요 누른 포스트 목록
@@ -274,5 +281,49 @@ public class PostService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    public OfficialPostDetailResponse getOfficialPostDetail(String userEmail, Long postId) {
+
+        Long userId = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
+                .getUserId();
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+
+        boolean isLiked = false;
+        if (userId != null) isLiked = userLikeRepository.existsByUserUserIdAndPostPostId(userId, postId);
+
+        int likeCount = post.getLikes().size();
+
+        return buildOfficialPostDetailResponse(post, likeCount, isLiked);
+    }
+
+    private OfficialPostDetailResponse buildOfficialPostDetailResponse(Post post, int likeCount, boolean isLiked) {
+        List<String> ingredients = post.getPostIngredients().stream()
+                .map(p -> p.getIngredient().getName())
+                .toList();
+
+        List<String> baseLiqueurs = post.getPostBaseLiquors().stream()
+                .map(b -> b.getBaseLiquor().getName())
+                .toList();
+
+        return OfficialPostDetailResponse.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .recipe(post.getRecipe())
+                .difficulty(post.getDifficulty())
+                .isShaken(post.isShaken())
+                .createdAt(post.getCreatedAt().toLocalDate())
+                .likeCount(likeCount)
+                .isLiked(isLiked)
+                .imageUrl(post.getImageUrl())
+                .baseLiqueurs(baseLiqueurs)
+                .ingredients(ingredients)
+                .build();
+    }
+
+
 
 }

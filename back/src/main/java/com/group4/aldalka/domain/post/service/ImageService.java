@@ -37,7 +37,7 @@ public class ImageService {
         // S3에 저장할 키 생성
         String key = "images/%s%s".formatted(
                 UUID.randomUUID(),  // 랜덤 UUID
-                ext                  // 파일 확장자 (예: ".jpg", ".png" 등)
+                ext                 // 파일 확장자 (예: ".jpg", ".png" 등)
         );
 
         // PutObjectRequest 생성

@@ -54,9 +54,10 @@ class UserServiceTest {
         @DisplayName("사용자를 생성한다.")
         void createUser() {
             // given
-            String username = "username";
+            String email = "username@gmail.com";
+            String nickname = "nickname";
             String password = "password";
-            UserCreationRequest request = new UserCreationRequest(username, password);
+            UserCreationRequest request = new UserCreationRequest(email,nickname, password);
 
             // when
             CreateUserResponse response = userService.createUser(request);
@@ -67,7 +68,7 @@ class UserServiceTest {
                     .get()
                     .satisfies(
                             user -> {
-                                assertThat(user.getUsername()).isEqualTo(username);
+                                assertThat(user.getEmail()).isEqualTo(email);
                                 assertThat(user.getPassword())
                                         .isEqualTo(passwordEncoder.encode(password));
                                 assertThat(user.getUserRole()).isEqualTo(UserRole.USER);
@@ -75,20 +76,22 @@ class UserServiceTest {
         }
 
         @Test
-        @DisplayName("예외(duplicateResource): 중복된 username을 가진 사용자가 있으면")
-        void duplicateResource_WhenDuplicateUsername() {
+        @DisplayName("예외(duplicateResource): 중복된 email을 가진 사용자가 있으면")
+        void duplicateResource_WhenDuplicateEmail() {
             // given
-            String duplicateUsername = "duplicate";
+            String duplicateEmail = "duplicate@gmail.com";
+            String nickname = "abcd";
             String password = "password";
             User user =
                     User.builder()
-                            .username(duplicateUsername)
+                            .email(duplicateEmail)
+                            .nickname(nickname)
                             .password(password)
                             .userRole(UserRole.USER)
                             .build();
             userRepository.save(user);
 
-            UserCreationRequest request = new UserCreationRequest(duplicateUsername, password);
+            UserCreationRequest request = new UserCreationRequest(duplicateEmail, nickname, password);
 
             // when
             Exception exception = catchException(() -> userService.createUser(request));

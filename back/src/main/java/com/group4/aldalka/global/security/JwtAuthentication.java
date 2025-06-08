@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthentication {
 
-    private final String username;
+    private final String email;
     private final UserRole userRole;
     private final String accessToken;
 
     public String getPrincipal() {
-        return username;
+        return email;
     }
 
     public String getAuthority() {
