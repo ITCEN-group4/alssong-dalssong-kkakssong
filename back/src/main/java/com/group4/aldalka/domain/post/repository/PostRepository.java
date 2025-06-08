@@ -6,15 +6,5 @@ import org.springframework.stereotype.Repository;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom{
 
-//    @Modifying
-//    @Query(
-//            value =
-//                    "insert into Users (" +
-//                            ") values (:name, :age, :email, :status)",
-//            nativeQuery = true)
-//    void insertUser(Post post);
-
-    
-
 }
 

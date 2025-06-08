@@ -33,7 +33,6 @@ public class PostService {
 
     public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
-        postSearchRequest.applyDefaults();
         Long userId = userService.getUserIdByEmail(userEmail);
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
@@ -120,8 +119,6 @@ public class PostService {
 
 
     public PagedResponse getMypagePosts(String userEmail, MypagePostSearchRequest mypagePostSearchRequest) {
-
-        mypagePostSearchRequest.applyDefaults();
 
         Long userId = userService.getUserIdByEmail(userEmail);
 

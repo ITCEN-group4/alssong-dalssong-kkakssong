@@ -9,13 +9,13 @@ import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.domain.user.service.UserService;
 import com.group4.aldalka.global.error.ErrorCode;
 import com.group4.aldalka.global.error.exception.BusinessException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class PostLikeService {
 
     private final UserLikeRepository userLikeRepository;
@@ -23,6 +23,7 @@ public class PostLikeService {
     private final PostRepository postRepository;
     private final UserService userService;
 
+    @Transactional
     public boolean addLike(String userEmail, Long postId) {
 
         Long userId = userService.getUserIdByEmail(userEmail);
@@ -45,6 +46,7 @@ public class PostLikeService {
 
     }
 
+    @Transactional
     public boolean removeLike(String userEmail, Long postId) {
         Long userId = userService.getUserIdByEmail(userEmail);
 
