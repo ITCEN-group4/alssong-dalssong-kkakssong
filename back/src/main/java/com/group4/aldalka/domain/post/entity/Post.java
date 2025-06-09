@@ -50,13 +50,13 @@ public class Post extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<PostIngredient> postIngredients = new ArrayList<PostIngredient>();
+    private List<PostIngredient> postIngredients = new ArrayList<PostIngredient>();
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<UserLike> likes = new ArrayList<UserLike>();
+    private List<UserLike> likes = new ArrayList<UserLike>();
 
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
+    private List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
 }
