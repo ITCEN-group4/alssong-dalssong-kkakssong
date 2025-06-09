@@ -8,8 +8,10 @@ import CocktailWritePage from "./pages/CocktailWritePage.jsx";
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import MyPage from "./pages/MyPage.jsx";
-import MyInfoPage from "./pages/MyInfoPage.jsx";
+// import MyInfoPage from "./pages/MyInfoPage.jsx";
 import MyPostViewPage from "./pages/MyPostViewPage.jsx";
+import OfficialCocktailPage from "./pages/OfficialCocktailPage.jsx"
+import OfficialCocktailDetailPage from "./pages/OfficialCocktailDetailPage.jsx";
 
 function App() {
     return (
@@ -27,6 +29,8 @@ function App() {
                     {/*    <Route index element={<MyInfoPage />} />*/}
                     {/*    <Route path="posts" element={<MyPostViewPage />} />*/}
                     {/*</Route>*/}
+                    <Route path="/posts" element={<OfficialCocktailPage/>}/>
+                    <Route path="/posts/:id" element={<OfficialCocktailDetailPage/>}/>
                 </Routes>
             </CocktailProvider>
         </BrowserRouter>
