@@ -21,11 +21,14 @@ export default function OfficialDetailPage() {
     return (
         <>
             <NavBar/>
-            <div className={styles.pageWrapper}>
+            <div className={styles.headerSection}>
                 <h2 className={styles.pageTitle}>칵테일 상세 정보</h2>
                 <p className={styles.pageSubtitle}>
                     다양한 재료와 화려한 가니쉬가 어우러진 칵테일을 한눈에 확인해보세요.
                 </p>
+            </div>
+
+            <div className={styles.pageWrapper}>
 
                 <div className={styles.detailGrid}>
                     <div className={styles.imageCard}>
