@@ -7,6 +7,7 @@ import {CocktailProvider} from "./context/CocktailContext.jsx";
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import OfficialCocktailPage from "./pages/OfficialCocktailPage.jsx"
+import OfficialDetailPage from "./pages/OfficialDetailPage.jsx";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     {/*<Route path="/post/:id" element={<CocktailDetailPage/>}/>*/}
                     {/*<Route path="/post/userId" element={<CocktailWritePage/>}/>*/}
                     <Route path="/posts" element={<OfficialCocktailPage/>}/>
+                    <Route path="/posts/:id" element={<OfficialDetailPage/>}/>
                 </Routes>
             </CocktailProvider>
         </BrowserRouter>
