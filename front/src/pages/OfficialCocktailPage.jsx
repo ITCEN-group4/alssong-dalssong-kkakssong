@@ -5,7 +5,7 @@ import OfficialCardList from "../components/cards/OfficialCardList.jsx";
 import Pagination from "../components/layout/Pagination.jsx";
 import { paginate } from "../utils/paginate.js";
 import styles from './OfficialCocktailPage.module.css';
-import SearchWriteBar from "../components/layout/SearchWriteBar.jsx";
+import SearchBar from "../components/layout/SearchBar.jsx";
 import {useCocktailContext} from "../context/CocktailContext.jsx";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
@@ -44,7 +44,7 @@ export default function CocktailSharePage() {
 
             <div className={styles.container}>
                 <div className={styles.topSection}>
-                    <SearchWriteBar
+                    <SearchBar
                         searchKeyword={searchKeyword}
                         setSearchKeyword={setSearchKeyword}
                         onSearch={handleSearch}
