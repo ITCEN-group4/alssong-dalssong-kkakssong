@@ -1,5 +1,7 @@
 package com.group4.aldalka.global.security;
 
+import java.time.ZonedDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,6 +31,7 @@ public class JJwtProviderTest {
 
     @BeforeEach
     void setUp() {
+        SecurityContextHolder.clearContext();
         jwtProvider = new JJwtProvider("test", 3600, "thisisjusttestaccesssecretsodontworry");
         authenticationFilter = new AuthenticationFilter(jwtProvider);
         filterChain = new MockFilterChain();
@@ -56,7 +59,7 @@ public class JJwtProviderTest {
 
             @BeforeEach
             void setUp() {
-                user = new User("abcd", "password", UserRole.USER);
+                user = new User("abcd@gmail.com", "abcd", "password", UserRole.USER, ZonedDateTime.now());
                 accessToken = jwtProvider.createAccessToken(user);
             }
 
@@ -81,7 +84,7 @@ public class JJwtProviderTest {
                         .satisfies(
                                 auth -> {
                                     assertThat(auth.getPrincipal())
-                                            .isEqualTo(customClaims.getUsername());
+                                            .isEqualTo(customClaims.getEmail());
                                     assertThat(auth.getAuthorities())
                                             .map(GrantedAuthority::getAuthority)
                                             .containsExactlyElementsOf(
