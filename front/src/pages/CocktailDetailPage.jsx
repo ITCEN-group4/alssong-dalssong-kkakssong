@@ -23,6 +23,7 @@ export default function CocktailDetailPage() {
     const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = likeAnimation();
+    const formattedDate = cocktail.createdAt?.slice(0, 10).replace(/-/g, ".") || "작성일 미상";
 
     //더미데이터 테스트용 유저 아이디
     const currentUserId = "123";
@@ -88,7 +89,7 @@ export default function CocktailDetailPage() {
                                 {currentLikes}
                             </span>
                         </button>
-                        <span className={styles.date}>작성일 : {cocktail.date}</span>
+                        <span className={styles.date}>작성일 : {formattedDate}</span>
                     </div>
                 </div>
 
