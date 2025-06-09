@@ -1,10 +1,12 @@
 package com.group4.aldalka.domain.post.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -32,6 +34,14 @@ public class PostSelectResponseDTO {
 
     @JsonProperty("image_url")
     private String imageUrl;
+
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdAt;
+
+    @JsonProperty("updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate updatedAt;
 
     @JsonProperty("base_liquors")
     private List<String> baseLiquors;

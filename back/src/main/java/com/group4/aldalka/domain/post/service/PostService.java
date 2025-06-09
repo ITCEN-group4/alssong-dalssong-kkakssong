@@ -1,19 +1,14 @@
 package com.group4.aldalka.domain.post.service;
 
-import com.group4.aldalka.domain.post.dto.request.PostCreateRequestDTO;
-import com.group4.aldalka.domain.post.dto.request.PostRequestDTO;
-import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
-import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
-import com.group4.aldalka.domain.post.repository.*;
-import com.group4.aldalka.domain.user.User;
-import com.group4.aldalka.domain.post.dto.response.PagedResponse;
-import com.group4.aldalka.domain.post.dto.response.PostResponse;
+import com.group4.aldalka.domain.post.dto.OfficialPostDetailResponse;
+import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
 import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
 import com.group4.aldalka.domain.post.dto.PostSearchResult;
 import com.group4.aldalka.domain.post.entity.*;
-import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
-import com.group4.aldalka.domain.post.dto.response.MypagePostResponse;
-import com.group4.aldalka.domain.post.dto.response.OfficialPostDetailResponse;
+import com.group4.aldalka.domain.post.dto.request.*;
+import com.group4.aldalka.domain.post.dto.response.*;
+import com.group4.aldalka.domain.post.repository.*;
+import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
@@ -26,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -139,6 +135,8 @@ public class PostService {
                 .imageUrl(post.getImageUrl())
                 .userNickname(author.getNickname())
                 .likeCount(likeCount)
+                .createdAt(LocalDate.from(post.getCreatedAt()))
+                .updatedAt(LocalDate.from(post.getUpdatedAt()))
                 .ingredients(ingredientNames)
                 .baseLiquors(baseLiquorNames).build();
     }
