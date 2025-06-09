@@ -1,0 +1,158 @@
+.pageWrapper {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 1rem;
+}
+
+.pageTitle,
+.pageSubtitle {
+    text-align: left;
+}
+
+.pageTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    margin-top: 25px;
+}
+
+.pageSubtitle {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 2rem;
+    margin-top: 0;
+}
+
+.detailGrid {
+    display: flex;
+    gap: 2rem;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.imageCard {
+    width: 300px;
+    height: 500px;
+    min-width: 300px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+}
+
+.infoCard {
+    width: 700px;
+    height: 500px;
+    background: #fff;
+    padding: 2rem 2.5rem 2.5rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+.title {
+    font-size: 1.7rem;
+    color: #EC4899;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.description {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 15px;
+}
+
+.tag {
+    background-color: #f5f5f5;
+    color: #444;
+    padding: 0.4rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.recipe {
+    margin-bottom: 1rem;
+}
+
+.recipe h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    margin-top: 30px;
+}
+
+.recipe ul {
+    padding-left: 1.2rem;
+    font-size: 0.9rem;
+    list-style: none;
+}
+
+.likes {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .detailGrid {
+        flex-direction: column;
+    }
+
+    .imageCard{
+        width: 100%;
+        height: 200px;
+    }
+
+    .infoCard {
+        width: 100%;
+        height: 500px;
+    }
+
+    .title{
+        font-size: 1.5rem;
+    }
+
+    .description{
+        font-size: 0.9rem;
+    }
+
+    .tag{
+        font-size: 0.8rem;
+    }
+
+    .recipe h4{
+        font-size: 0.9rem;
+    }
+
+    .recipe ul{
+        font-size: 0.8rem;
+    }
+
+    .likes{
+        font-size: 0.9rem;
+    }
+}
