@@ -57,19 +57,14 @@ public class PostService {
 
         Set<Long> likedSet = new HashSet<>(likedPostIds);
 
-        // 쿼리 2: 각 포스트의 좋아요 수
-        List<UserLikeRepository.LikeCountProjection> likeCounts = userLikeRepository.countLikesByPostIds(postIds);
-        Map<Long, Long> likeCountMap = likeCounts.stream()
-                .collect(Collectors.toMap(UserLikeRepository.LikeCountProjection::getPostId, UserLikeRepository.LikeCountProjection::getCount));
-
-        return mapToPostResponses(posts, likeCountMap, likedSet);
+        return mapToPostResponses(posts, likedSet);
     }
 
-    private List<PostResponse> mapToPostResponses(List<Post> posts, Map<Long, Long> likeCountMap, Set<Long> likedSet) {
+    private List<PostResponse> mapToPostResponses(List<Post> posts, Set<Long> likedSet) {
         return posts.stream()
                 .map(post -> PostResponse.from(
                         post,
-                        likeCountMap.getOrDefault(post.getPostId(), 0L).intValue(),
+                        post.getLikes().size(),
                         likedSet.contains(post.getPostId())
                 ))
                 .collect(Collectors.toList());
