@@ -6,26 +6,17 @@ import com.group4.aldalka.domain.post.dto.response.PostResponseDTO;
 import com.group4.aldalka.domain.post.dto.response.PostSelectResponseDTO;
 import com.group4.aldalka.domain.post.repository.*;
 import com.group4.aldalka.domain.user.User;
-import com.group4.aldalka.domain.post.dto.PagedPostResponse;
-import com.group4.aldalka.domain.post.dto.PostResponse;
-import com.group4.aldalka.domain.post.dto.PostSearchRequest;
-import com.group4.aldalka.domain.post.dto.PostSearchResult;
-import com.group4.aldalka.domain.post.entity.*;
-import com.group4.aldalka.domain.post.dto.*;
-import com.group4.aldalka.domain.post.dto.*;
-import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
-import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
-import com.group4.aldalka.domain.post.dto.response.MypagePostResponse;
-import com.group4.aldalka.domain.post.dto.response.OfficialPostDetailResponse;
 import com.group4.aldalka.domain.post.dto.response.PagedResponse;
 import com.group4.aldalka.domain.post.dto.response.PostResponse;
+import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
+import com.group4.aldalka.domain.post.dto.PostSearchResult;
+import com.group4.aldalka.domain.post.entity.*;
+import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
+import com.group4.aldalka.domain.post.dto.response.MypagePostResponse;
+import com.group4.aldalka.domain.post.dto.response.OfficialPostDetailResponse;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
-import com.group4.aldalka.domain.user.repository.UserRepository;
-import com.group4.aldalka.global.error.ErrorCode;
-import com.group4.aldalka.global.error.exception.BusinessException;
-import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.global.error.ErrorCode;
 import com.group4.aldalka.global.error.exception.BusinessException;
@@ -45,7 +36,6 @@ public class PostService {
     private final PostIngredientRepository postIngredientRepository;
     private final BaseLiquorRepository baseLiquorRepository;
     private final IngredientRepository ingredientRepository;
-    private final UserRepository userRepository;
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
     private final ImageService imageService;
@@ -248,7 +238,6 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public PagedPostResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
     public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
@@ -314,51 +303,6 @@ public class PostService {
 
     private OfficialPostDetailResponse buildOfficialPostDetailResponse(Post post, int likeCount, boolean isLiked) {
         List<String> ingredients = post.getPostIngredients().stream()
-                .map(p -> p.getIngredient().getName())
-                .toList();
-
-        List<String> baseLiqueurs = post.getPostBaseLiquors().stream()
-                .map(b -> b.getBaseLiquor().getName())
-                .toList();
-
-        return OfficialPostDetailResponse.builder()
-                .postId(post.getPostId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .recipe(post.getRecipe())
-                .difficulty(post.getDifficulty())
-                .isShaken(post.isShaken())
-                .createdAt(post.getCreatedAt().toLocalDate())
-                .likeCount(likeCount)
-                .isLiked(isLiked)
-                .imageUrl(post.getImageUrl())
-                .baseLiqueurs(baseLiqueurs)
-                .ingredients(ingredients)
-                .build();
-    }
-
-
-
-
-    public OfficialPostDetailResponse getOfficialPostDetail(String userEmail, Long postId) {
-
-        Long userId = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
-                .getUserId();
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
-
-        boolean isLiked = false;
-        if (userId != null) isLiked = userLikeRepository.existsByUserUserIdAndPostPostId(userId, postId);
-
-        int likeCount = post.getLikes().size();
-
-        return buildOfficialPostDetailResponse(post, likeCount, isLiked);
-    }
-
-    private OfficialPostDetailResponse buildOfficialPostDetailResponse(Post post, int likeCount, boolean isLiked) {
-        List<String> ingredients = post.getPostIndgredients().stream()
                 .map(p -> p.getIngredient().getName())
                 .toList();
 
