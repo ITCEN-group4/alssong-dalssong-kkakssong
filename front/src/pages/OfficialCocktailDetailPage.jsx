@@ -80,10 +80,9 @@ export default function OfficialDetailPage() {
                             <div className={styles.recipe}>
                                 <h4>레시피</h4>
                                 <ul>
-                                    <li>술의 양: {cocktail.amount || "45ml"}</li>
-                                    <li>주스: {cocktail.juice || "25ml"}</li>
-                                    <li>설탕: {cocktail.sugar || "10ml"}</li>
-                                    <li>기타 재료: {cocktail.ingredients.join(", ")}</li>
+                                    {cocktail.recipe && cocktail.recipe.map((step, index) => (
+                                        <li key={index}>{step}</li>
+                                    ))}
                                 </ul>
                             </div>
 
