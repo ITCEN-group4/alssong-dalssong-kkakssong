@@ -7,7 +7,7 @@ export default function OfficialCard({ cocktail }) {
     const {updateLikes} = useCocktailContext()
 
     const handleClick = () => {
-        navigate(`/post/${cocktail.id}`);
+        navigate(`/posts/${cocktail.id}`);
     };
 
     const handleLike = (e) => {
