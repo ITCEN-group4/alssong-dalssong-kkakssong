@@ -9,12 +9,15 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.group4.aldalka.domain.post.entity.QPost.post;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
@@ -31,11 +34,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         }
 
         if (postSearchRequest.getIngredients() != null && !postSearchRequest.getIngredients().isEmpty()) {
-            boolean hasOnlyOthers = postSearchRequest.getIngredients().size() == 1 && postSearchRequest.getIngredients().contains("기타");
-            {
+            boolean hasOnlyOthers = postSearchRequest.getIngredients().size() == 1
+                    && postSearchRequest.getIngredients().contains("기타");
+
+            if (hasOnlyOthers) {
                 builder.and(buildOnlyEtcIngredientsFilter());
-            }
-            if (!hasOnlyOthers) {
+            } else {
                 builder.and(buildIngredientsFilter(postSearchRequest));
             }
         }
@@ -103,8 +107,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         .from(post)
                         .join(post.postIndgredients, pi)
                         .join(pi.ingredient, ingredient)
-                        .where(ingredient.name.eq(ETC))
+                        .groupBy(post.postId)
+                        .having(
+                                ingredient.name.count().eq(1L) // ingredient가 딱 1개이고
+                                        .and(ingredient.name.max().eq(ETC)) // 그게 "기타"일 때만
+                        )
         );
+
     }
 
     private BooleanExpression buildIngredientsFilter(PostSearchRequest postSearchRequest) {
@@ -114,6 +123,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         List<String> filteredIngredients = postSearchRequest.getIngredients().stream()
                 .filter(ing -> !ETC.equals(ing))
                 .toList();
+
+        log.info(Arrays.toString(filteredIngredients.toArray()));
 
         return post.postId.in(
                 JPAExpressions
