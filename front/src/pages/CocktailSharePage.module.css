@@ -10,8 +10,7 @@
 .header {
     background: linear-gradient(to right, #ffa1c5, #ffc58f);
     text-align: center;
-    padding: 2rem 0;
-    padding-top: 6.25rem;
+    padding: 6.25rem 0 2rem;
     margin-bottom: 0.1rem;
     width: 100%;
 }

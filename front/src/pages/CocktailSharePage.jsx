@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import FilterBar from "../components/layout/FilterBar.jsx";
 import SortBar from "../components/layout/SortBar.jsx";
 import CocktailCardList from "../components/cards/CocktailCardList.jsx";
@@ -11,11 +11,17 @@ import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
 
 export default function CocktailSharePage() {
-    const { cocktailList, searchList } = useCocktailContext();
+    const { cocktailList, searchList, shouldUpdateList, setShouldUpdateList, triggerListUpdate } = useCocktailContext();
     const [sortOption, setSortOption] = useState("likes");
     const [currentPage, setCurrentPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState("");
+    const [currentPageList, setCurrentPageList] = useState([]); // 현재 페이지의 고정된 리스트
     const pageSize = 8;   //한 페이지에 보여줄 카드 수
+
+    useEffect(() => {
+        // 페이지가 처음 렌더링될 때 목록을 초기화 (뒤로가기도 포함)
+        triggerListUpdate();
+    }, []);
 
     const sortedList = [...cocktailList].sort((a, b) => {
         if (sortOption === "likes") return b.likes - a.likes;
@@ -24,11 +30,31 @@ export default function CocktailSharePage() {
     });
 
     const usePagination = sortedList.length > pageSize;
-    const { pagedList: currentList, totalPages } = paginate(sortedList, currentPage, pageSize);
+    const { pagedList, totalPages } = paginate(sortedList, currentPage, pageSize);
+
+    // 플래그가 true일 때만 currentPageList 업데이트
+    useEffect(() => {
+        if (shouldUpdateList) {
+            setCurrentPageList(pagedList);
+            setShouldUpdateList(false); // 업데이트 후 플래그 리셋
+        }
+    }, [pagedList, shouldUpdateList]);
 
     const handleSearch = () => {
         searchList(searchKeyword);
-        setCurrentPage(1)
+        setCurrentPage(1);
+        triggerListUpdate(); // 검색 시 플래그 설정
+    };
+
+    const handleSortChange = (option) => {
+        setSortOption(option);
+        setCurrentPage(1);
+        triggerListUpdate(); // 정렬 변경시 플래그 설정
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        triggerListUpdate(); // 페이지 변경시 플래그 설정
     };
 
     return (
@@ -51,22 +77,19 @@ export default function CocktailSharePage() {
                     />
                     <SortBar
                         sortOption={sortOption}
-                        setSortOption={(option) => {
-                            setSortOption(option);
-                            setCurrentPage(1); // 정렬 변경 시 첫 페이지로
-                        }}
+                        setSortOption={handleSortChange}
                     />
                     <FilterBar/>
                 </div>
             </div>
 
             <div className={styles.bottomSection}>
-                <CocktailCardList cocktailList={currentList} />
+                <CocktailCardList cocktailList={currentPageList} />
                 {usePagination && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
-                        onPageChange={(page) => setCurrentPage(page)}
+                        onPageChange={handlePageChange}
                     />
                 )}
             </div>

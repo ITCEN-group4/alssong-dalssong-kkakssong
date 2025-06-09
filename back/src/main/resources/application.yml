@@ -11,9 +11,10 @@ spring:
     time-zone: Asia/Seoul
 
   datasource:
-    url: jdbc:mysql://${db.server_address}:3306/aldalka?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
-    username: ${db.username}
-    password: ${db.password}
+    url: jdbc:mysql://${DB_ADDRESS}:3306/aldalka?serverTimezone=Asia/Seoul&useUnicode=yes&characterEncoding=UTF-8
+    
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 30000
@@ -47,3 +48,11 @@ jwt:
   expiry-seconds: 1800
   # TODO: 이건 꼭 바꿔야함
   secret: thisisjusttestaccesssecretsodontworry
+
+cloud:
+  aws:
+    region: ${AWS_REGION}
+    bucket: ${AWS_BUCKET}
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}

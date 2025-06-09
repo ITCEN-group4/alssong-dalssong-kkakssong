@@ -32,3 +32,11 @@ jwt:
   expiry-seconds: 1800
   # TODO: 이건 꼭 바꿔야함
   secret: thisisjusttestaccesssecretsodontworry
+
+cloud:
+  aws:
+    region: ${AWS_REGION}
+    bucket: ${AWS_BUCKET}
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}

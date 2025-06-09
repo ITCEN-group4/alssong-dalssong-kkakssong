@@ -130,7 +130,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 JPAExpressions
                         .select(post.postId)
                         .from(post)
-                        .join(post.postIndgredients, pi)
+                        .join(post.postIngredients, pi)
                         .join(pi.ingredient, ingredient)
                         .where(ingredient.name.in(filteredIngredients))
                         .groupBy(post.postId)

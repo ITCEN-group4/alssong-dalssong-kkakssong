@@ -1,0 +1,332 @@
+.detailPage {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 64px);
+    height: auto;
+    padding: 2rem 80px;
+    max-width: 1300px;
+    width: 100%;
+    margin: 0 auto;
+    gap: 2rem;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    overflow: auto;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pageHeaderLeft {
+    flex: 1;
+}
+
+.pageHeader h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.pageHeader p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.editButtonGroup {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    height: 32px;
+}
+
+.editButton,
+.deleteButton {
+    background-color: #f3f3f3;
+    border: none;
+    font-size: 0.95rem;
+    padding: 15px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.editButton {
+    background-color: #e0ecff;
+}
+
+.deleteButton {
+    background-color: #ffe0e0;
+}
+
+.topSection {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: flex-start;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+.leftContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.titleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 2rem;
+    color: #e84f93;
+    margin-bottom: 1rem;
+}
+
+.UserWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.UserIcon {
+    width: 32px;
+    height: 32px;
+    background-color: #ffd3d3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.UserName {
+    font-weight: bold;
+}
+
+.description {
+    white-space: pre-wrap;
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-height: none;
+    overflow: visible;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8rem;
+    font-size: 1rem;
+}
+
+.date {
+    color: #888;
+}
+
+.likeButton {
+    background-color: rgba(255, 230, 240, 0.5);
+    border: 1px solid #e84f93;
+    border-radius: 999px;
+    color: #e84f93;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.3rem 1rem;
+    transition: background-color 0.2s ease;
+    overflow: visible;
+}
+
+.likeButton:hover {
+    background-color: #ffe6ef;
+}
+
+.heartIcon {
+    font-size: 1rem;
+    line-height: 1;
+    display: inline-block;
+    will-change: transform;
+}
+
+.likeCount {
+    font-size: 0.95rem;
+    line-height: 1;
+    display: inline-block;
+    will-change: transform;
+}
+
+@keyframes bump {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.4); }
+    60%  { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.bump {
+    animation: bump 0.3s ease;
+}
+
+.imageWrapper {
+    width: 300px;
+    height: 300px;
+    flex-shrink: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    position: relative;
+}
+
+.imageWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.bottomSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: nowrap;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    min-height: 0;
+    overflow: hidden;
+}
+
+.recipeBox {
+    flex: 1;
+    min-width: 300px;
+}
+
+.recipeBox ul {
+    padding-left: 1.2rem;
+    list-style-type: decimal;
+    font-size: 1rem;
+}
+
+.iconGrid {
+    flex: 1;
+    min-width: 320px;
+    max-width: 480px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    flex-shrink: 0;
+}
+
+.iconItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.iconLabel {
+    font-size: 0.95rem;
+    color: #999;
+}
+
+.infoIcon {
+    width: 60px;
+    height: 60px;
+}
+
+.iconValue {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 1024px) {
+    .topSection {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .leftContent {
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .imageWrapper {
+        width: 220px;
+        height: 220px;
+    }
+
+    .bottomSection {
+        flex-direction: column;
+    }
+
+    .infoRow {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .detailPage {
+        padding: 1rem 1.5rem;
+    }
+
+    .iconGrid {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .infoIcon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .iconValue {
+        font-size: 1rem;
+    }
+
+    .iconLabel {
+        font-size: 0.85rem;
+    }
+
+    .pageHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .editButtonGroup {
+        align-self: flex-end;
+    }
+}
