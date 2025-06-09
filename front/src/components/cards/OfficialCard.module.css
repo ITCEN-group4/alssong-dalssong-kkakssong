@@ -74,10 +74,16 @@
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.1s ease;
+    border: none;
+    outline: none;
 }
 
 .likeButton:hover {
     transform: scale(1.1);
+}
+
+.likeButton:focus {
+    outline: none;
 }
 
 .shakingTag {

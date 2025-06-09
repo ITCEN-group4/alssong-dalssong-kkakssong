@@ -9,8 +9,14 @@ export default function OfficialDetailPage() {
     const { id } = useParams();
     const { cocktailList } = useCocktailContext();
     const cocktail = cocktailList.find((item) => item.id.toString() === id);
+    const {updateLikes} = useCocktailContext()
 
     if (!cocktail) return <p>해당 칵테일을 찾을 수 없습니다.</p>;
+
+    const handleLike = (e) => {
+        e.stopPropagation();
+        updateLikes(cocktail.id);
+    };
 
     return (
         <>
@@ -49,7 +55,7 @@ export default function OfficialDetailPage() {
                             </ul>
                         </div>
 
-                        <div className={styles.likes}>❤️ {cocktail.likes}</div>
+                        <div className={styles.likes} onClick={handleLike}>❤️ {cocktail.likes} </div>
                     </div>
                 </div>
             </div>
