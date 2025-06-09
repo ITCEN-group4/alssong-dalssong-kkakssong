@@ -48,16 +48,17 @@ jobs:
         with:
           host: ${{ secrets.BACK_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          port: "2022"
+          port: ${{ secrets.BACK_PORT }}                        
           key: ${{ secrets.EC2_SSH_KEY }}
 
-          proxy_host: ${{ secrets.BASTION_HOST }} 
+          proxy_host: ${{ secrets.BASTION_HOST }}
           proxy_username: ${{ secrets.EC2_USERNAME }}
-          proxy_key: ${{ secrets.EC2_SSH_KEY }} 
-          proxy_port: "22"
+          proxy_key: ${{ secrets.EC2_SSH_KEY }}
+          proxy_port: ${{ secrets.BASTION_PORT }}                   
+
           script: |
             set -e
-            cd ~/test
+            cd ~/back
             ./deploy.sh backend
 
       - name: Discord Notification
