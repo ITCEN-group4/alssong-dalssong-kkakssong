@@ -48,13 +48,13 @@ jobs:
         with:
           host: ${{ secrets.BACK_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          port: ${{ secrets.BACK_PORT }}
+          port: "2022"
           key: ${{ secrets.EC2_SSH_KEY }}
 
           proxy_host: ${{ secrets.BASTION_HOST }} 
           proxy_username: ${{ secrets.EC2_USERNAME }}
           proxy_key: ${{ secrets.EC2_SSH_KEY }} 
-          proxy_port: ${{ secrets.BASTION_PORT }}
+          proxy_port: "22"
           script: |
             set -e
             cd ~/test
