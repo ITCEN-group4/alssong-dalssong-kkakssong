@@ -12,7 +12,7 @@ export default function NavBar() {
     };
 
     const handleOfficialPage = () => {
-        navigate('/post');
+        navigate('/posts');
     };
 
     const handleMyPage = () => {
