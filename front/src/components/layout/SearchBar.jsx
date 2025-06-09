@@ -1,11 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./SearchWriteBar.module.css";
 import searchIcon from "../../assets/search.svg";
 
-export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSearch}) {
-    const navigate = useNavigate();
-
+export default function SearchBar({ searchKeyword, setSearchKeyword ,onSearch}) {
 
     return (
         <div className={styles.barContainer}>
