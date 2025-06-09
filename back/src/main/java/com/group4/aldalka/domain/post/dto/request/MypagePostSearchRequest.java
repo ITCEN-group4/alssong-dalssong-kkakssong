@@ -2,10 +2,7 @@ package com.group4.aldalka.domain.post.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 
 @Getter

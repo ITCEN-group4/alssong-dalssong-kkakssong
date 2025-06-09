@@ -1,6 +1,5 @@
 package com.group4.aldalka.domain.post.repository;
 
-import com.group4.aldalka.domain.post.dto.PostSearchCondition;
 import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
 import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
 import com.group4.aldalka.domain.post.dto.PostSearchResult;
@@ -21,6 +20,7 @@ import static com.group4.aldalka.domain.post.entity.QPost.post;
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private static final String ETC = "기타";
 
     @Override
     public PostSearchResult searchPosts(PostSearchRequest postSearchRequest) {
@@ -32,21 +32,21 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         if (postSearchRequest.getIngredients() != null && !postSearchRequest.getIngredients().isEmpty()) {
             boolean hasOnlyOthers = postSearchRequest.getIngredients().size() == 1 && postSearchRequest.getIngredients().contains("기타");
+            {
+                builder.and(buildOnlyEtcIngredientsFilter());
+            }
             if (!hasOnlyOthers) {
                 builder.and(buildIngredientsFilter(postSearchRequest));
             }
         }
 
         long totalCount = fetchTotalPostCount(builder);
-        PostSearchCondition postSearchCondition = PostSearchCondition.builder()
-                .page(postSearchRequest.getPage())
-                .sort(postSearchRequest.getSort())
-                .build();
 
-        List<Post> posts = fetchPosts(postSearchCondition, builder);
+        List<Post> posts = fetchPosts(postSearchRequest.getPage(), postSearchRequest.getSort(), builder);
 
         return new PostSearchResult(posts, totalCount);
     }
+
 
     public BooleanBuilder buildCommonConditions(PostSearchRequest postSearchRequest) {
         BooleanBuilder builder = new BooleanBuilder();
@@ -82,11 +82,28 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         QBaseLiquor liquor = QBaseLiquor.baseLiquor;
 
         return post.postId.in(
-                JPAExpressions.select(post.postId).distinct()
+                JPAExpressions
+                        .select(post.postId)
                         .from(post)
                         .join(post.postBaseLiquors, pbl)
                         .join(pbl.baseLiquor, liquor)
                         .where(liquor.name.in(postSearchRequest.getBaseLiqueurs()))
+                        .groupBy(post.postId)
+                        .having(liquor.name.countDistinct().eq((long) postSearchRequest.getBaseLiqueurs().size()))
+        );
+    }
+    private BooleanExpression buildOnlyEtcIngredientsFilter() {
+
+        QPostIngredient pi = QPostIngredient.postIngredient;
+        QIngredient ingredient = QIngredient.ingredient;
+
+        return post.postId.in(
+                JPAExpressions
+                        .select(post.postId)
+                        .from(post)
+                        .join(post.postIndgredients, pi)
+                        .join(pi.ingredient, ingredient)
+                        .where(ingredient.name.eq(ETC))
         );
     }
 
@@ -94,23 +111,31 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         QPostIngredient pi = QPostIngredient.postIngredient;
         QIngredient ingredient = QIngredient.ingredient;
 
+        List<String> filteredIngredients = postSearchRequest.getIngredients().stream()
+                .filter(ing -> !ETC.equals(ing))
+                .toList();
+
         return post.postId.in(
-                JPAExpressions.select(post.postId).distinct()
+                JPAExpressions
+                        .select(post.postId)
                         .from(post)
                         .join(post.postIndgredients, pi)
                         .join(pi.ingredient, ingredient)
-                        .where(ingredient.name.in(postSearchRequest.getIngredients()))
+                        .where(ingredient.name.in(filteredIngredients))
+                        .groupBy(post.postId)
+                        .having(ingredient.name.countDistinct().eq((long) filteredIngredients.size()))
         );
-    }
 
-    private List<Post> fetchPosts(PostSearchCondition postSearchCondition, BooleanBuilder builder) {
+    }
+    private List<Post> fetchPosts(Integer page, String sort, BooleanBuilder builder) {
+
         QUserLike userLike = QUserLike.userLike;
 
-        int page = Math.max(postSearchCondition.getPage(), 1);
+        int pages = Math.max(page, 1);
         int pageSize = 8;
-        long offset = (long) (page - 1) * pageSize;
+        long offset = (long) (pages - 1) * pageSize;
 
-        if ("like".equals(postSearchCondition.getSort())) {
+        if ("like".equals(sort)) {
             return queryFactory
                     .selectFrom(post)
                     .leftJoin(userLike).on(userLike.post.eq(post))
@@ -142,7 +167,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     public PostSearchResult findPostsByUserAndCondition(Long userId, MypagePostSearchRequest mypagePostSearchRequest) {
 
-        BooleanBuilder builder= new BooleanBuilder();
+        BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(post.user.userId.eq(userId));
 
@@ -150,13 +175,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             buildQueryCondition(mypagePostSearchRequest.getQuery(), builder);
         }
 
-        PostSearchCondition postSearchCondition= PostSearchCondition.builder()
-                .page(mypagePostSearchRequest.getPage())
-                .sort(mypagePostSearchRequest.getSort()).
-                build();
-
         long totalCount = fetchTotalPostCount(builder);
-        List<Post> posts = fetchPosts(postSearchCondition, builder);
+        List<Post> posts = fetchPosts(mypagePostSearchRequest.getPage(), mypagePostSearchRequest.getSort(), builder);
         return new PostSearchResult(posts, totalCount);
 
     }
