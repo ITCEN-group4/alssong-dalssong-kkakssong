@@ -46,9 +46,9 @@ jobs:
       - name: Deploy via Bastion Host
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.DEV_HOST }}
+          host: ${{ secrets.BACK_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          port: ${{ secrets.DEV_PORT }}
+          port: ${{ secrets.BACK_PORT }}
           key: ${{ secrets.EC2_SSH_KEY }}        
           proxy_host: ${{ secrets.BASTION_HOST }} 
           proxy_username: ${{ secrets.EC2_USERNAME }}
