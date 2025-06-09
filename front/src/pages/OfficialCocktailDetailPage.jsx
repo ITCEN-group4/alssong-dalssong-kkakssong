@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useCocktailContext } from "../context/CocktailContext";
-import styles from "./OfficialDetailPage.module.css";
+import styles from "./OfficialCocktailDetailPage.module.css";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
 
