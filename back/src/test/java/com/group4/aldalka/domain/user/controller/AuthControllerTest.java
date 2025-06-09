@@ -21,7 +21,6 @@ import com.group4.aldalka.domain.user.UserRole;
 import com.group4.aldalka.domain.user.dto.request.LoginRequest;
 import com.group4.aldalka.domain.user.dto.response.LoginResponse;
 import com.group4.aldalka.domain.user.repository.UserRepository;
-import com.group4.aldalka.domain.user.service.AuthService;
 import com.group4.aldalka.domain.user.service.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +35,8 @@ class AuthControllerTest {
 
     private RestTemplate restTemplate;
 
-    private String username;
+    private String email;
+    private String nickname;
     private String rawPassword;
     private User savedUser;
 
@@ -70,11 +70,12 @@ class AuthControllerTest {
         restTemplate = new RestTemplate();
         baseUrl = "http://localhost:" + port + "/api/v1/login";
 
-        username = "test";
+        email = "test@gmail.com";
+        nickname = "test";
         rawPassword = "test1234";
         String password = passwordEncoder.encode(rawPassword);
         UserRole userRole = UserRole.USER;
-        savedUser = new User(username, password, userRole, ZonedDateTime.now());
+        savedUser = new User(email, nickname, password, userRole, ZonedDateTime.now());
         userRepository.saveAndFlush(savedUser);
     }
 
@@ -82,7 +83,7 @@ class AuthControllerTest {
     @DisplayName("로그인 API 호출 시 RestTemplate 테스트")
     void login() {
         // given
-        LoginRequest request = new LoginRequest("test", "test1234");
+        LoginRequest request = new LoginRequest("test@gmail.com", "test1234");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

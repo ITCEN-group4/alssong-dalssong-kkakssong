@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.service;
+package com.group4.aldalka.domain.post.entity;
 
 import com.group4.aldalka.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -6,7 +6,12 @@ import lombok.*;
 
 @Getter
 @Entity
-@Table(name = "post_ingredient")
+@Table(
+        name = "post_ingredient",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"post_id", "ingredient_id"})
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder

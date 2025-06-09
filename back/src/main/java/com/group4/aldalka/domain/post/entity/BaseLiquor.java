@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.service;
+package com.group4.aldalka.domain.post.entity;
 
 import com.group4.aldalka.domain.BaseEntity;
 import jakarta.persistence.*;
@@ -23,6 +23,7 @@ public class BaseLiquor extends BaseEntity {
     @Column(name = "name")
     private String name;
 
+    @Builder.Default
     @OneToMany(mappedBy = "baseLiquor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostBaseLiquor> postBaseLiquors = new ArrayList<>();
 }

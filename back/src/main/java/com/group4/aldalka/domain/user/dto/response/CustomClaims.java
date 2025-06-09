@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class CustomClaims {
-    private final String username;
+    private final String email;
     private final UserRole userRole;
 }

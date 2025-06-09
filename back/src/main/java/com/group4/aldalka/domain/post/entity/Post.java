@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.service;
+package com.group4.aldalka.domain.post.entity;
 
 import com.group4.aldalka.domain.BaseEntity;
 import com.group4.aldalka.domain.user.User;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,21 +42,21 @@ public class Post extends BaseEntity {
     @Column(name = "is_shaken", nullable = false)
     private boolean isShaken;
 
-    @Column(name = "like_count", nullable = false)
-    private int likeCount;
-
     @Column(name = "is_official", nullable = false)
     private boolean isOfficial;
 
     @Column(name = "image_url", length = 2083)
     private String imageUrl;
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostIngredient> postIndgredients = new ArrayList<PostIngredient>();
+    private List<PostIngredient> postIngredients = new ArrayList<PostIngredient>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLike> likes = new ArrayList<UserLike>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
 }

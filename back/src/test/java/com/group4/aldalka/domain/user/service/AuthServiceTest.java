@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.catchException;
 import java.time.ZonedDateTime;
 import java.util.NoSuchElementException;
 
-import org.aspectj.lang.annotation.After;
+import com.group4.aldalka.domain.user.config.TestQueryDslConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Import;
 
 import com.group4.aldalka.domain.user.User;
 import com.group4.aldalka.domain.user.UserRole;
@@ -23,6 +23,7 @@ import com.group4.aldalka.global.security.JJwtProvider;
 
 
 @DataJpaTest
+@Import(TestQueryDslConfig.class)
 class AuthServiceTest {
 
     @Autowired private UserRepository userRepository;
@@ -61,18 +62,20 @@ class AuthServiceTest {
     @DisplayName("로그인 메서드 호출 시")
     class LoginTest {
 
-        private String username;
+        private String email;
+        private String nickname;
         private String rawPassword;
         private User savedUser;
         private AuthService authService;
 
         @BeforeEach
         void setUp() {
-            username = "test";
+            email = "test@gmail.com";
+            nickname = "nickname";
             rawPassword = "test1234";
             String password = passwordEncoder.encode(rawPassword);
             UserRole userRole = UserRole.USER;
-            savedUser = new User(username, password, userRole, ZonedDateTime.now());
+            savedUser = new User(email, nickname, password, userRole, ZonedDateTime.now());
             authService = new AuthService(userRepository, passwordEncoder, jwtProvider);
         }
 
@@ -88,7 +91,7 @@ class AuthServiceTest {
             userRepository.save(savedUser);
 
             // when
-            LoginResponse response = authService.login(username, rawPassword);
+            LoginResponse response = authService.login(email, rawPassword);
 
             // then
             assertThat(response.getAccessToken()).isNotBlank();
@@ -104,7 +107,7 @@ class AuthServiceTest {
             userRepository.save(savedUser);
 
             // when
-            Exception exception = catchException(() -> authService.login(username, wrongPassword));
+            Exception exception = catchException(() -> authService.login(email, wrongPassword));
 
             // then
             assertThat(exception).isInstanceOf(NoSuchElementException.class);
