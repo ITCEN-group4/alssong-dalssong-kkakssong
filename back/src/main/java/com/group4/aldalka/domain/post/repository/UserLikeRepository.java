@@ -17,7 +17,6 @@ public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
     @Query("SELECT ul.post.postId AS postId, COUNT(ul.likeId) AS count FROM UserLike ul WHERE ul.post.postId IN :postIds GROUP BY ul.post.postId")
     List<LikeCountProjection> countLikesByPostIds(@Param("postIds") List<Long> postIds);
 
-
     interface LikeCountProjection {
         Long getPostId();
         Long getCount();
@@ -26,7 +25,6 @@ public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
     boolean existsByUserUserIdAndPostPostId(Long userId, Long postId);
 
     int deleteByUser_UserIdAndPost_PostId(Long userId, Long postId);
-
 
 }
 

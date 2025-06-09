@@ -1,4 +1,4 @@
-package com.group4.aldalka.domain.post.dto;
+package com.group4.aldalka.domain.post.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
