@@ -97,7 +97,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return post.postId.in(
                 JPAExpressions.select(post.postId).distinct()
                         .from(post)
-                        .join(post.postIndgredients, pi)
+                        .join(post.postIngredients, pi)
                         .join(pi.ingredient, ingredient)
                         .where(ingredient.name.in(postSearchRequest.getIngredients()))
         );

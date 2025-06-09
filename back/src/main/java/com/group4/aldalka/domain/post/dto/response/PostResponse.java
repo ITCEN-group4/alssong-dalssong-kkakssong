@@ -48,7 +48,7 @@ public class PostResponse {
                 post.getPostBaseLiquors().stream()
                         .map(pbl -> pbl.getBaseLiquor().getName())
                         .toList(),
-                post.getPostIndgredients().stream()
+                post.getPostIngredients().stream()
                         .map(pi -> pi.getIngredient().getName())
                         .toList()
         );
