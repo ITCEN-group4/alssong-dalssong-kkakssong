@@ -20,7 +20,9 @@ import com.group4.aldalka.domain.post.repository.UserLikeRepository;
 import com.group4.aldalka.domain.user.repository.UserRepository;
 import com.group4.aldalka.global.error.ErrorCode;
 import com.group4.aldalka.global.error.exception.BusinessException;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +41,9 @@ public class PostService {
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
     private final ImageService imageService;
+
+    @Autowired
+    private EntityManager em;
 
     public PostRequestDTO createPost(PostCreateRequestDTO Request, String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
@@ -139,87 +144,70 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDTO updatePost(PostRequestDTO requestDTO, Long postId) {
+    public PostResponseDTO updatePost(PostRequestDTO dto, Long postId) {
 
-        Post postEntity = postRepository.findById(postId).orElse(null);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(null);
 
-        // 새 Post 객체를 빌더로 생성 (기존 postId, user만 복사하고, 나머지는 requestDTO에서 가져옴)
-        Post newPost = Post.builder()
-                .postId(postEntity.getPostId())
-                .user(postEntity.getUser())
-                .title(requestDTO.getTitle())
-                .content(requestDTO.getContent())
-                .recipe(requestDTO.getRecipe())
-                .difficulty(requestDTO.getDifficulty())
-                .isShaken(requestDTO.isShaken())
-                .isOfficial(requestDTO.isOfficial())
-                .imageUrl(requestDTO.getImageUrl())
-                .build();
+        // 2) 필드 덮어쓰기
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
+        post.setRecipe(dto.getRecipe());
+        post.setDifficulty(dto.getDifficulty());
+        post.setShaken(dto.isShaken());
+        post.setOfficial(dto.isOfficial());
+        post.setImageUrl(dto.getImageUrl());
 
-        // 원본 연관 PostIngredient, PostBaseLiquor 모두 삭제
-        // (cascade=ALL, orphanRemoval=true가 붙어 있어도 명시적으로 삭제)
-        postIngredientRepository.deleteAll(postEntity.getPostIngredients());
-        postEntity.getPostIngredients().clear();
+        // 3) 자식(PostIngredient) 완전 삭제
+        postIngredientRepository.deleteByPostId(postId);  // @Modifying @Query 로 직접 삭제
+        postBaseLiquorRepository.deleteByPostId(postId);
+        em.flush();  // ★ 여기서 DELETE 쿼리를 DB에 바로 실행
 
-        postBaseLiquorRepository.deleteAll(postEntity.getPostBaseLiquors());
-        postEntity.getPostBaseLiquors().clear();
-
-        // 요청 DTO에 담긴 재료 이름 리스트를 순회하며, 새 PostIngredient 생성 → newPost 에 연관
-        List<String> newIngredients = requestDTO.getIngredients();
-        if (newIngredients != null) {
-            for (String ingName : newIngredients) {
-                Ingredient ingredient = ingredientRepository.findByName(ingName)
-                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료: " + ingName));
-
+        // 4) 재삽입
+        if (dto.getIngredients() != null) {
+            for (String name : dto.getIngredients().stream().distinct().toList()) {
+                Ingredient ing = ingredientRepository.findByName(name)
+                        .orElseThrow();
                 PostIngredient pi = PostIngredient.builder()
-                        .ingredient(ingredient)
-                        .post(newPost)
+                        .post(post)
+                        .ingredient(ing)
                         .build();
-
-                postIngredientRepository.save(pi);
-                newPost.getPostIngredients().add(pi);
+                post.getPostIngredients().add(pi);
             }
         }
-
-        //요청 DTO에 담긴 베이스 주류 이름 리스트를 순회하며, 새 PostBaseLiquor 생성 → newPost 에 연관
-        List<String> newBaseLiquors = requestDTO.getBaseLiquors();
-        if (newBaseLiquors != null) {
-            for (String blName : newBaseLiquors) {
-                BaseLiquor baseLiquor = baseLiquorRepository.findByName(blName)
-                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 베이스 주류: " + blName));
-
+        // 베이스 주류도 동일…
+        if (dto.getBaseLiquors() != null) {
+            for (String name : dto.getBaseLiquors()) {
+                BaseLiquor bl = baseLiquorRepository.findByName(name)
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주류: " + name));
                 PostBaseLiquor pbl = PostBaseLiquor.builder()
-                        .baseLiquor(baseLiquor)
-                        .post(newPost)      // 연관 대상은 newPost
+                        .post(post)
+                        .baseLiquor(bl)
                         .build();
-                postBaseLiquorRepository.save(pbl);
-                newPost.getPostBaseLiquors().add(pbl);
+                post.getPostBaseLiquors().add(pbl);
             }
         }
-        // newPost를 save() → 기존 same ID 레코드를 merge(UPDATE), 새 관계들 저장
-        Post updated = postRepository.save(newPost);
-        // 최종 결과를 DTO로 변환하여 반환
-        List<String> ingredientNames = updated.getPostIngredients().stream()
+        // 5) 트랜잭션 커밋 시 INSERT가 실행
+
+        List<String> ingNames = post.getPostIngredients().stream()
                 .map(pi -> pi.getIngredient().getName())
-                .collect(Collectors.toList());
-
-        List<String> baseLiquorNames = updated.getPostBaseLiquors().stream()
-                .map(pbl -> pbl.getBaseLiquor().getName())
-                .collect(Collectors.toList());
-
+                .toList();
+        List<String> baseNames = post.getPostBaseLiquors().stream()
+                .map(pb -> pb.getBaseLiquor().getName())
+                .toList();
 
         return PostResponseDTO.builder()
-                .postId(updated.getPostId())
-                .title(updated.getTitle())
-                .content(updated.getContent())
-                .recipe(updated.getRecipe())
-                .difficulty(updated.getDifficulty())
-                .isShaken(updated.isShaken())
-                .isOfficial(updated.isOfficial())
-                .imageUrl(updated.getImageUrl())
-                .userId(updated.getUser().getUserId())
-                .ingredients(ingredientNames)
-                .baseLiquors(baseLiquorNames)
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .recipe(post.getRecipe())
+                .difficulty(post.getDifficulty())
+                .isShaken(post.isShaken())
+                .isOfficial(post.isOfficial())
+                .imageUrl(post.getImageUrl())
+                .userId(post.getUser().getUserId())
+                .ingredients(ingNames)
+                .baseLiquors(baseNames)
                 .build();
     }
 

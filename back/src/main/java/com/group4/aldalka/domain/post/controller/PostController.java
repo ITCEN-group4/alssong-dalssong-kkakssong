@@ -60,19 +60,19 @@ public class PostController
     }
 
     // 게시글 불러오기
-    @GetMapping("/{postId}")
+    @GetMapping("/select/{postId}")
     public ResponseEntity<PostSelectResponseDTO> selectPost(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.selectPost(postId));
     }
 
     // 게시글 수정
-    @PutMapping("/{postId}")
+    @PutMapping("/update/{postId}")
     public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO) {
         return ResponseEntity.ok(postService.updatePost(requestDTO, postId));
     }
 
     // 게시글 삭제, @LoginUser를 유지시켜 삭제 권한 유저를 확인
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/remove/{postId}")
     public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
