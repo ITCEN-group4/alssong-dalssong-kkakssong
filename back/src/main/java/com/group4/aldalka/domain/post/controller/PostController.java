@@ -1,7 +1,7 @@
 package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.common.LoginUser;
-import com.group4.aldalka.domain.post.dto.PostSearchRequest;
+import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
 import com.group4.aldalka.domain.post.service.PostLikeService;
 import com.group4.aldalka.domain.post.service.PostService;
 import com.group4.aldalka.global.result.ResultResponse;
@@ -48,4 +48,6 @@ public class PostController
         return ResponseEntity.ok(
                 ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(userEmail, postId)));
     }
+
+
 }

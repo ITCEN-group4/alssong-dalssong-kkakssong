@@ -1,6 +1,12 @@
 package com.group4.aldalka.domain.post.service;
 
 import com.group4.aldalka.domain.post.dto.*;
+import com.group4.aldalka.domain.post.dto.request.MypagePostSearchRequest;
+import com.group4.aldalka.domain.post.dto.request.PostSearchRequest;
+import com.group4.aldalka.domain.post.dto.response.MypagePostResponse;
+import com.group4.aldalka.domain.post.dto.response.OfficialPostDetailResponse;
+import com.group4.aldalka.domain.post.dto.response.PagedResponse;
+import com.group4.aldalka.domain.post.dto.response.PostResponse;
 import com.group4.aldalka.domain.post.entity.Post;
 import com.group4.aldalka.domain.post.repository.PostRepository;
 import com.group4.aldalka.domain.post.repository.UserLikeRepository;
@@ -24,7 +30,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
 
-    public PagedPostResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
+    public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
@@ -34,7 +40,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
                 .getUserId();
 
-        return PagedPostResponse.builder()
+        return PagedResponse.<PostResponse> builder()
                 .posts(getPostsWithLikeInfo(userId, result.getPosts()))
                 .totalPages(totalPages)
                 .totalElements(result.getTotalElements())
@@ -112,5 +118,44 @@ public class PostService {
                 .build();
     }
 
+
+    public PagedResponse getMypagePosts(String userEmail, MypagePostSearchRequest mypagePostSearchRequest) {
+        Long userId = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS)).getUserId();
+
+        PostSearchResult posts = postRepository.findPostsByUserAndCondition(userId, mypagePostSearchRequest);
+        List<Long> likedPostIds = userLikeRepository.findLikedPostIdsByUserIdAndPostIds(
+                userId,
+                posts.getPosts().stream()
+                        .map(Post::getPostId)
+                        .collect(Collectors.toList())
+        );
+
+
+        Set<Long> likedPostIdSet = new HashSet<>(likedPostIds);
+
+        PostSearchResult result = postRepository.findPostsByUserAndCondition(userId, mypagePostSearchRequest);
+        int pageSize = 8;
+        int totalPages = Math.max(1, (int) Math.ceil((double) result.getTotalElements() / pageSize));
+
+        return PagedResponse.<MypagePostResponse>builder()
+                .totalElements(result.getTotalElements())
+                .totalPages(totalPages)
+                .posts(mapToMypagePostResponses(posts.getPosts(), likedPostIdSet))
+                .build();
+    }
+
+    private List<MypagePostResponse> mapToMypagePostResponses(List<Post> posts, Set<Long> likedPostIdSet) {
+        return posts.stream()
+                .map(post -> MypagePostResponse.builder()
+                        .postId(post.getPostId())
+                        .title(post.getTitle())
+                        .likeCount(post.getLikes().size())
+                        .isLiked(likedPostIdSet.contains(post.getPostId()))
+                        .createdAt(post.getCreatedAt().toLocalDate())
+                        .imageUrl(post.getImageUrl())
+                        .build())
+                .toList();
+    }
 
 }

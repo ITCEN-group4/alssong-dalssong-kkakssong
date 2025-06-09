@@ -1,35 +1,21 @@
-package com.group4.aldalka.domain.post.dto;
+package com.group4.aldalka.domain.post.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Jackson 역직렬화를 위해 기본생성자 필요, 외부 호출 차단
 @AllArgsConstructor
 @Builder
-public class OfficialPostDetailResponse {
+public class MypagePostResponse {
 
     @JsonProperty("post_id")
     private Long postId;
 
     private String title;
-
-    private String content;
-
-    private String recipe;
-
-    private Integer difficulty;
-
-    @JsonProperty("is_shaken")
-    private Boolean isShaken;
-
-    @JsonProperty("created_at")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createdAt;
 
     @JsonProperty("like_count")
     private Integer likeCount;
@@ -37,12 +23,13 @@ public class OfficialPostDetailResponse {
     @JsonProperty("is_liked")
     private Boolean isLiked;
 
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdAt;
+
     @JsonProperty("image_url")
     private String imageUrl;
 
-    @JsonProperty("base_liqueurs")
-    private List<String> baseLiqueurs;
-
-    private List<String> ingredients;
-
 }
+
+
