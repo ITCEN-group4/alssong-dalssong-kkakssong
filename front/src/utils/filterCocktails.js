@@ -23,8 +23,6 @@ export function filterCocktails(data, filters) {
 
         if (filters.abv && getAbvTag(cocktail.abv).label !== filters.abv) return false;
 
-        if (filters.shaking !== null && cocktail.shaking !== filters.shaking) return false;
-
-        return true;
+        return !(filters.shaking !== null && cocktail.shaking !== filters.shaking);
     });
 }
