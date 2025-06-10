@@ -2,7 +2,7 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-COPY front/package.json front/package-lock.json ./
+COPY package.json package-lock.json ./
 
 RUN apk add --no-cache bash
 
