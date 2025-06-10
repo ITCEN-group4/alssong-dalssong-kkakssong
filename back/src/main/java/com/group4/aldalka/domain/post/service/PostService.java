@@ -41,8 +41,8 @@ public class PostService {
     @Autowired
     private EntityManager em;
 
-    public PostRequestDTO createPost(PostCreateRequestDTO Request, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public PostRequestDTO createPost(PostCreateRequestDTO Request, String useremail) {
+        User user = userRepository.findByEmail(useremail).orElseThrow();
 
         // Request의 정보로 부터 Post 객체 생성
         Post post = Post.builder()
