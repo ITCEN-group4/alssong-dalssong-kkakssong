@@ -7,7 +7,7 @@ export default function CocktailTagBox({ filters, setFilters }) {
 
     const handleCheckbox = (type, value) => {
         setFilters(prev => {
-            const list = prev[type];
+            const list = Array.isArray(prev[type]) ? prev[type] : [];
             const newList = list.includes(value)
                 ? list.filter(item => item !== value)
                 : [...list, value];
@@ -65,7 +65,7 @@ export default function CocktailTagBox({ filters, setFilters }) {
                         const value = Math.min(Number(e.target.value), 100);
                         setFilters(prev => ({ ...prev, abv: value }));
                     }}
-                    className={styles.input}
+                    className={styles.abvInput}
                 />
             </fieldset>
 
