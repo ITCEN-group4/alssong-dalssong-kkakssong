@@ -9,7 +9,6 @@ import getAbvIcon from "../utils/getAbcIcon.js";
 import useLikeAnimation from "../utils/useLikeAnimation.js";
 import testData from "../data/cocktailTestData.js";
 import NavBar from "../components/layout/NavBar.jsx";
-import Footer from "../components/layout/Footer.jsx";
 
 export default function CocktailDetailPage() {
     const navigate = useNavigate();
@@ -140,7 +139,6 @@ export default function CocktailDetailPage() {
                 </div>
             </div>
         </div>
-            <Footer/>
         </>
     );
 }

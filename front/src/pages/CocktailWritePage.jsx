@@ -1,4 +1,4 @@
- import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from "./CocktailWritePage.module.css";
 import CocktailTagBox from "../components/boxs/CocktailTagBox.jsx";
 import ImageUploadBox from '../components/boxs/ImageUploadBox.jsx';
@@ -6,8 +6,7 @@ import RecipeInputBox from "../components/boxs/RecipeInputBox.jsx";
 import {UNSAFE_NavigationContext, useNavigate, useParams} from "react-router-dom";
 import cocktailTestData from "../data/cocktailTestData.js";
 import { ingredientCategoryMap } from "../utils/ingredientCategoryMap.js";
- import NavBar from "../components/layout/NavBar.jsx";
- import Footer from "../components/layout/Footer.jsx";
+import NavBar from "../components/layout/NavBar.jsx";
 
 export default function CocktailWritePage({ mode = "create" }) {
     const { id } = useParams();
@@ -109,7 +108,7 @@ export default function CocktailWritePage({ mode = "create" }) {
                 setRecipeList(parsedRecipe);
 
                 setFilters({
-                    baseLiquors: data.baseLiquors,
+                    baseLiquors: Array.isArray(data.baseLiquors) ? data.baseLiquors : [data.baseLiquors],
                     ingredients: mapIngredientsToCategories(data.ingredients),
                     abv: data.abv,
                     shaking: data.shaking,
@@ -148,7 +147,7 @@ export default function CocktailWritePage({ mode = "create" }) {
             setRecipeList(parsedRecipe);
 
             setFilters({
-                baseLiquors: found.baseLiquors,
+                baseLiquors: Array.isArray(found.baseLiquors) ? found.baseLiquors : [found.baseLiquors],
                 ingredients: mapIngredientsToCategories(found.ingredients),
                 abv: found.abv,
                 shaking: found.shaking,
@@ -237,7 +236,6 @@ export default function CocktailWritePage({ mode = "create" }) {
                 </div>
             </section>
         </div>
-            <Footer/>
         </>
     );
 }
