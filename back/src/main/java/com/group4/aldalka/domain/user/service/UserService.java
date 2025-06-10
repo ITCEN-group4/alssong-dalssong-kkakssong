@@ -111,4 +111,10 @@ public class UserService {
                                                 ErrorCode.ENTITY_NOT_FOUND));
         userRepository.delete(user);
     }
+
+    public Long getUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_EXISTS))
+                .getUserId();
+    }
 }

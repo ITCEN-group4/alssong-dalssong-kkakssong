@@ -21,4 +21,5 @@ public class PagedResponse<T> {
 
     @JsonProperty("posts")
     private List<T> posts;
+
 }
