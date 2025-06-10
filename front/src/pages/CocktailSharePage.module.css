@@ -6,27 +6,28 @@
     padding: 2rem 1rem;
     box-sizing: border-box;
 }
-
 .header {
-    background: linear-gradient(to right, #ffa1c5, #ffc58f);
+    background: linear-gradient(to right, #FC82AB, #FEC58F, #FFEDD9);
     text-align: center;
-    padding: 6.25rem 0 2rem;
+    padding: 1rem 0;
+    padding-top: 5rem;
     margin-bottom: 0.1rem;
     width: 100%;
 }
 
 .title {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 600;
+    font-family: "Jua", sans-serif;
     color: white;
-    margin-bottom: 0.3rem;
+    margin-bottom: 1.5rem;
     width: 100%;
 }
 
 .subtitle {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
+    font-family: "Nanum Gothic", sans-serif;
     color: white;
-    margin-top: 0.5rem;
 }
 
 .topSection {
