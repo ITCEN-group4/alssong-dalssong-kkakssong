@@ -1,6 +1,7 @@
 package com.group4.aldalka.domain.post.service;
 
 import com.group4.aldalka.domain.post.dto.ImageUploadRecord;
+import com.group4.aldalka.domain.post.dto.request.ImageUploadRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.UUID;
 
 @Service
@@ -60,26 +63,66 @@ public class ImageService {
         return new ImageUploadRecord(key, url);
     }
 
+
+    public ImageUploadRecord uploadImageTest(ImageUploadRequestDTO dto) {
+        byte[] bytes = decodeBase64(dto.getBase64Data());
+        String filename = sanitizeFilename(dto.getFilename());
+        String ext = extractExtension(filename);
+        String key = generateKey(ext);
+        uploadToS3(key, bytes, dto.getContentType());
+        return buildRecord(key);
+    }
+
+    private byte[] decodeBase64(String dataUri) {
+        String base64 = dataUri.contains(",")
+                ? dataUri.split(",", 2)[1]
+                : dataUri;
+        return Base64.getDecoder().decode(base64);
+    }
+
+    private String sanitizeFilename(String raw) {
+        return Paths.get(raw).getFileName().toString();
+    }
+
+    private String extractExtension(String filename) {
+        int idx = filename.lastIndexOf('.');
+        return idx > 0 ? filename.substring(idx) : "";
+    }
+
+    private String generateKey(String ext) {
+        return "images/" + UUID.randomUUID() + ext;
+    }
+
+    private void uploadToS3(String key, byte[] data, String contentType) {
+        PutObjectRequest req = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .contentType(contentType)
+                .build();
+        s3Client.putObject(req, RequestBody.fromBytes(data));
+    }
+
+    private ImageUploadRecord buildRecord(String key) {
+        String url = String.format("https://%s.s3.%s.amazonaws.com/%s",
+                bucket, regionName, key);
+        return new ImageUploadRecord(key, url);
+    }
+
     public void deleteImage(String key) {
-        String bucketDomainPrefix = "https://" + bucket + ".s3." + regionName + ".amazonaws.com/";
-        if (key.startsWith(bucketDomainPrefix)) {
-            // URL 전체 → Key 부분만 남김
-            key = key.substring(bucketDomainPrefix.length());
-        }
 
-        System.out.println("Delete Image: " + key);
-
-        // Key가 빈 문자열이거나 null이 아니면 삭제 요청
-        if (key.isBlank()) {
+        if (key == null || key.isBlank()) {
             return;
         }
 
+        // S3 오브젝트 키는 "images/{uuid}.png" 형태로 되어 있으므로 prefix 추가
+        String objectKey = "images/" + key;
+
         DeleteObjectRequest deleteReq = DeleteObjectRequest.builder()
                 .bucket(bucket)
-                .key(key)
+                .key(objectKey)
                 .build();
 
-        System.out.println(s3Client.deleteObject(deleteReq));
+        s3Client.deleteObject(deleteReq);
     }
 }
 

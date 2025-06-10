@@ -26,37 +26,37 @@ public class PostController
 
     //비회원, 회원 모두 접근가능
     @PostMapping("/search")
-    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String userEmail, @RequestBody PostSearchRequest postRequest) {
+    public ResponseEntity<ResultResponse> searchPosts(@LoginUser String email, @RequestBody PostSearchRequest postRequest) {
         postRequest.applyDefaults();
         return ResponseEntity.ok(
-                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(userEmail, postRequest))
+                ResultResponse.of(GET_POST_INFO_SUCCESS, postService.searchPosts(email, postRequest))
         );
     }
 
     //비회원, 회원 모두 접근가능
     @GetMapping("/{postId}")
-    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String userEmail, @PathVariable Long postId){
+    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String email, @PathVariable Long postId){
         return ResponseEntity.ok(
-                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(userEmail, postId))
+                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(email, postId))
         );
     }
 
     @PostMapping("/{postId}/likes")
-    public ResponseEntity<ResultResponse> likePost(@LoginUser String userEmail, @PathVariable Long postId){
+    public ResponseEntity<ResultResponse> likePost(@LoginUser String email, @PathVariable Long postId){
         return ResponseEntity.ok(
-                ResultResponse.of(POST_LIKE_SUCCESS, postLikeService.addLike(userEmail, postId)));
+                ResultResponse.of(POST_LIKE_SUCCESS, postLikeService.addLike(email, postId)));
     }
 
     @DeleteMapping("/{postId}/likes")
-    public ResponseEntity<ResultResponse> unlikePost(@LoginUser String userEmail, @PathVariable Long postId){
+    public ResponseEntity<ResultResponse> unlikePost(@LoginUser String email, @PathVariable Long postId){
         return ResponseEntity.ok(
-                ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(userEmail, postId)));
+                ResultResponse.of(DELETE_LIKE_SUCCESS, postLikeService.removeLike(email, postId)));
     }
 
     // 게시글 생성
     @PostMapping ("/create")// 게시글 목록 조회와 중복으로 구분
-    public ResponseEntity<PostRequestDTO> createPost(@RequestBody PostCreateRequestDTO postCreateDTO, @LoginUser String userName) {
-        return ResponseEntity.ok(postService.createPost(postCreateDTO, userName));
+    public ResponseEntity<PostRequestDTO> createPost(@RequestBody PostCreateRequestDTO postCreateDTO, @LoginUser String email) {
+        return ResponseEntity.ok(postService.createPost(postCreateDTO, email));
     }
 
     // 게시글 불러오기
@@ -73,7 +73,7 @@ public class PostController
 
     // 게시글 삭제, @LoginUser를 유지시켜 삭제 권한 유저를 확인
     @DeleteMapping("/remove/{postId}")
-    public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
+    public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String email) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
     }

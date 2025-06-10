@@ -106,7 +106,7 @@ public class PostService {
                 .orElseThrow();
 
         // 작성자 정보 추출
-        User author = post.getUser();
+        User user = post.getUser();
 
         // 연관된 PostIngredient 엔티티들로부터 Ingredient 이름만 추출
         List<String> ingredientNames = post.getPostIngredients()
@@ -133,7 +133,7 @@ public class PostService {
                 .isShaken(post.isShaken())
                 .isOfficial(post.isOfficial())
                 .imageUrl(post.getImageUrl())
-                .userNickname(author.getNickname())
+                .userNickname(user.getNickname())
                 .likeCount(likeCount)
                 .createdAt(LocalDate.from(post.getCreatedAt()))
                 .updatedAt(LocalDate.from(post.getUpdatedAt()))

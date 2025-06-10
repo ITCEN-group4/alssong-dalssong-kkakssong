@@ -1,6 +1,7 @@
 package com.group4.aldalka.domain.post.controller;
 
 import com.group4.aldalka.domain.post.dto.ImageUploadRecord;
+import com.group4.aldalka.domain.post.dto.request.ImageUploadRequestDTO;
 import com.group4.aldalka.domain.post.service.ImageService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,16 @@ public class ImageController {
     @PostMapping("/upload")
     public ResponseEntity<ImageUploadRecord> upload(@RequestPart("file") @NotNull MultipartFile file) throws IOException {
         return ResponseEntity.ok(imageService.uploadImage(file));
+    }
+
+    @DeleteMapping("/delete/{key}")
+    public ResponseEntity<Void> deleteImage(@PathVariable("key") String key) {
+        imageService.deleteImage(key);
+        return ResponseEntity.noContent().build();  // 204 No Content
+    }
+
+    @PostMapping("/upload/json")
+    public ResponseEntity<ImageUploadRecord> uploadJson(@RequestBody ImageUploadRequestDTO imagedto) {
+        return ResponseEntity.ok(imageService.uploadImageTest(imagedto));
     }
 }
