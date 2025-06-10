@@ -1,0 +1,69 @@
+.uploadBox {
+    width: 100%;
+    min-height: 280px;
+    background-color: white;
+    border: 2px dashed #ffb6c1;
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    position: relative;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.imagePlaceholder {
+    font-weight: bold;
+    color: #ff6f91;
+    font-size: 1rem;
+}
+
+.imagePlaceholder span {
+    margin-left: 0.5rem;
+}
+
+.imageSubtext {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.uploadText {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.previewWrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.previewImage {
+    max-width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.deleteButton {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    background-color: rgba(231, 231, 231, 0.71);
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
