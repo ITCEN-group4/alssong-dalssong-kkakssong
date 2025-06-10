@@ -1,6 +1,6 @@
 import React from 'react';
 import SignupForm from './SignupForm';
-import styles from './signup.module.css';
+import styles from './Signup.module.css';
 import clouds from '../assets/cloud.svg';
 
 export default function SignupPage() {
