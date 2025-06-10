@@ -43,7 +43,15 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Gradle로 테스트만 실행
-        run: ./gradlew test # build가 아니라 test만 수행
+        run: |
+          ./gradlew test \
+          -DAWS_REGION=${AWS_REGION} \
+          -DAWS_BUCKET=${AWS_BUCKET} \
+          -DAWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+          -DAWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+          -DDB_ADDRESS=${DB_ADDRESS} \
+          -DDB_USERNAME=${DB_USERNAME} \
+          -DDB_PASSWORD=${DB_PASSWORD}
 
       - name: 테스트 결과를 PR 코멘트로 출력
         uses: EnricoMi/publish-unit-test-result-action@v2
