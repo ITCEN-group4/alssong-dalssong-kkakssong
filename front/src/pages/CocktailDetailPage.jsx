@@ -6,7 +6,7 @@ import baseIcon from "../assets/baseIcon.svg";
 import ingredientIcon from "../assets/ingredientIcon.svg";
 import getShakingIcon from "../utils/getShakingIcon.js";
 import getAbvIcon from "../utils/getAbcIcon.js";
-import likeAnimation from "../utils/likeAnimation.js";
+import useLikeAnimation from "../utils/useLikeAnimation.js";
 import testData from "../data/cocktailTestData.js";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
@@ -15,6 +15,7 @@ export default function CocktailDetailPage() {
     const navigate = useNavigate();
     const {id} = useParams();
     const {cocktailList, toggleLike, likedMap, deleteCocktail} = useCocktailContext();
+    const [animate, triggerAnimate] = useLikeAnimation();
     const cocktail = testData.find((c) => String(c.id) === id);
 
     if (!cocktail) return <div>존재하지 않는 칵테일입니다.</div>;
@@ -24,7 +25,7 @@ export default function CocktailDetailPage() {
     const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
     const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
     const liked = likedMap[cocktail.id] || false;
-    const [animate, triggerAnimate] = likeAnimation();
+
     const formattedDate = cocktail.createdAt?.slice(0, 10).replace(/-/g, ".") || "작성일 미상";
 
     //더미데이터 테스트용 유저 아이디
