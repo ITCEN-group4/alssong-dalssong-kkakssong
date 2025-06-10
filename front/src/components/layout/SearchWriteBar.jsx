@@ -28,7 +28,7 @@ export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSear
                     <img src={searchIcon} alt="search" className={styles.searchIcon}/>
                 </button>
             </div>
-            <button className={styles.writeButton} onClick={() => navigate("/post/userId")}>
+            <button className={styles.writeButton} onClick={() => navigate("/post/create")}>
                 + 게시글 작성
             </button>
         </div>
