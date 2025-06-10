@@ -19,6 +19,15 @@ jobs:
       checks: write
       pull-requests: write
 
+    env:
+      DB_ADDRESS: ${{ secrets.DB_ADDRESS }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
     steps:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v4
@@ -29,12 +38,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle # Gradle 종속성 캐싱으로 속도 향상
-
+      
+      - name: 현재 환경 변수 출력
+        run: env
+        
       - name: Gradle 실행 권한 부여
         run: chmod +x ./gradlew
 
-      - name: Gradle로 테스트만 실행
-        run: ./gradlew test # build가 아니라 test만 수행
+      - name: ✅Gradle로 테스트 실행
+        run: ./gradlew test 
 
       - name: 테스트 결과를 PR 코멘트로 출력
         uses: EnricoMi/publish-unit-test-result-action@v2

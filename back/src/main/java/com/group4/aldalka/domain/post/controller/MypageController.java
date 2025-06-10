@@ -21,7 +21,6 @@ public class MypageController {
     private final PostService postService;
     @GetMapping("/posts")
     public ResponseEntity<ResultResponse> getMyPosts(@LoginUser String userEmail, @RequestBody MypagePostSearchRequest mypagePostSearchRequest){
-        mypagePostSearchRequest.applyDefaults();
         return ResponseEntity.ok(
                 ResultResponse.of(GET_MYPAGE_POSTS_INFO_SUCCESS, postService.getMypagePosts(userEmail, mypagePostSearchRequest))
         );
