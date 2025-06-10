@@ -1,11 +1,9 @@
-import testData from "./cocktailTestData.js";
-
 const cocktailData= [
     {
         "id": 1,
         "name": "모히또",
         "userId": "305",
-        "image": "https://example.com/image1.jpg",
+        "image": "https://img.freepik.com/premium-photo/fresh-mojito-cocktail_522560-1141.jpg",
         "abv": 23,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -23,7 +21,7 @@ const cocktailData= [
         "id": 2,
         "name": "마가리타",
         "userId": "552",
-        "image": "https://example.com/image2.jpg",
+        "image": "https://i.namu.wiki/i/yJaFpjscI2TdeOeVQGoTXG5_IAm_lBZ9iEPgF_kTbSQyajvQRx9Gd1hkG0IWK9YW-YVr42JabFv7j_TuYDoR7Q.webp",
         "abv": 28,
         "baseLiquors": "진",
         "ingredients": [
@@ -41,7 +39,7 @@ const cocktailData= [
         "id": 3,
         "name": "마티니",
         "userId": "143",
-        "image": "https://example.com/image3.jpg",
+        "image": "https://i.namu.wiki/i/R4bgfGvsWx8B-f9sku6c8Cu6myRSNopILEtvEAsKtLdRjy4weB6Oe7XgmSZ1Y3jLTFV1BWEZDZkLV1tHqj7wxw.webp",
         "abv": 17,
         "baseLiquors": "진",
         "ingredients": [
@@ -59,7 +57,7 @@ const cocktailData= [
         "id": 4,
         "name": "블러디 메리",
         "userId": "439",
-        "image": "https://example.com/image4.jpg",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtFmECZSrzorFzfJr35zVzDfC9wC6WFpOtiw&s",
         "abv": 26,
         "baseLiquors": "럼",
         "ingredients": [
@@ -77,7 +75,7 @@ const cocktailData= [
         "id": 5,
         "name": "피나 콜라다",
         "userId": "350",
-        "image": "https://example.com/image5.jpg",
+        "image": "https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Ft1.daumcdn.net%2Fcfile%2Ftistory%2F243B90475759FB5401",
         "abv": 15,
         "baseLiquors": "럼",
         "ingredients": [
@@ -95,7 +93,7 @@ const cocktailData= [
         "id": 6,
         "name": "롱 아일랜드 아이스티",
         "userId": "443",
-        "image": "https://example.com/image6.jpg",
+        "image": "https://lh4.googleusercontent.com/proxy/UY9NQ6Kz1x5LETrUqm1DUbV0H2tu7JN6uFr_Zg9Q1A6RskF9zVr5C6mNpmg4K5ihyIsnk8IxQFxmSeokWa3ZS_0eLtkVUh4v19zPq9M9",
         "abv": 16,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -113,7 +111,7 @@ const cocktailData= [
         "id": 7,
         "name": "네그로니",
         "userId": "104",
-        "image": "https://example.com/image7.jpg",
+        "image": "https://blog.kakaocdn.net/dn/BKrVQ/btqzkkY3Y4D/3sR5kfjqtuzauLMUCzqCt0/img.jpg",
         "abv": 14,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -131,7 +129,7 @@ const cocktailData= [
         "id": 8,
         "name": "다이키리",
         "userId": "336",
-        "image": "https://example.com/image8.jpg",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKgENc0TJoEhNWZTRjxGDPZD8iGL1jAUZoVw&s",
         "abv": 26,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -149,7 +147,7 @@ const cocktailData= [
         "id": 9,
         "name": "코스모폴리탄",
         "userId": "805",
-        "image": "https://example.com/image9.jpg",
+        "image": "https://blog.kakaocdn.net/dn/dq2jqp/btssHgt4TNy/m57kJb0VLpVKh6XDq4GZt1/img.jpg",
         "abv": 29,
         "baseLiquors": "럼",
         "ingredients": [
@@ -167,7 +165,7 @@ const cocktailData= [
         "id": 10,
         "name": "화이트 러시안",
         "userId": "875",
-        "image": "https://example.com/image10.jpg",
+        "image": "https://i.namu.wiki/i/6TgK7AkvV8e9A0z2PMbnMnmf5R3OA4-ISlAk2zoMi-vb7l4DWBg-yrMjndWJnX1Jy6_6X7i747xECI7VQ8ABzg.webp",
         "abv": 30,
         "baseLiquors": "데킬라",
         "ingredients": [
@@ -185,7 +183,7 @@ const cocktailData= [
         "id": 11,
         "name": "맨해튼",
         "userId": "737",
-        "image": "https://example.com/image11.jpg",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqWexf9xwbJBdYqU2V3v8I_NU5b-PEqfy8pw&s",
         "abv": 7,
         "baseLiquors": "데킬라",
         "ingredients": [
@@ -203,7 +201,7 @@ const cocktailData= [
         "id": 12,
         "name": "올드 패션드",
         "userId": "537",
-        "image": "https://example.com/image12.jpg",
+        "image": "https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2F7cd2s%2FbtqPDIbbAkM%2FSafFdDvFpsmg003vIFMprk%2Fimg.jpg",
         "abv": 24,
         "baseLiquors": "럼",
         "ingredients": [
@@ -221,7 +219,7 @@ const cocktailData= [
         "id": 13,
         "name": "싱가포르 슬링",
         "userId": "849",
-        "image": "https://example.com/image13.jpg",
+        "image": "https://mblogthumb-phinf.pstatic.net/20150807_87/newnnew7985_1438937769540eFGTX_JPEG/%BD%CC%B0%A1%C6%FA%BD%BD%B8%B51.jpg?type=w420",
         "abv": 11,
         "baseLiquors": "럼",
         "ingredients": [
@@ -239,7 +237,7 @@ const cocktailData= [
         "id": 14,
         "name": "쿠바 리브레",
         "userId": "368",
-        "image": "https://example.com/image14.jpg",
+        "image": "https://img.freepik.com/premium-photo/fresh-made-cuba-libre-isolated-white_846485-7892.jpg",
         "abv": 11,
         "baseLiquors": "리큐르",
         "ingredients": [
@@ -257,7 +255,7 @@ const cocktailData= [
         "id": 15,
         "name": "프렌치 75",
         "userId": "458",
-        "image": "https://example.com/image15.jpg",
+        "image": "https://blog.kakaocdn.net/dn/SLY5Y/btqyqT22ml9/yaItosMCKbzw5McKRcaGCK/img.jpg",
         "abv": 6,
         "baseLiquors": "데킬라",
         "ingredients": [
@@ -275,7 +273,7 @@ const cocktailData= [
         "id": 16,
         "name": "애플 마티니",
         "userId": "632",
-        "image": "https://example.com/image16.jpg",
+        "image": "https://i.namu.wiki/i/9BwYstdd9s74N-KLuMmF-VMh1gzrErnOLlJSn0QO3QkZqFjnStqYOVAbahiLJ6mD4zdANZHJNhhPeiqeXbRF_w.webp",
         "abv": 11,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -293,7 +291,7 @@ const cocktailData= [
         "id": 17,
         "name": "블루 하와이",
         "userId": "330",
-        "image": "https://example.com/image17.jpg",
+        "image": "https://blog.kakaocdn.net/dn/rMkKb/btqzkmiChJU/7OpYk5BI8MmgBVSo9pSxc1/img.jpg",
         "abv": 26,
         "baseLiquors": "럼",
         "ingredients": [
@@ -311,7 +309,7 @@ const cocktailData= [
         "id": 18,
         "name": "슬로 진 피즈",
         "userId": "615",
-        "image": "https://example.com/image18.jpg",
+        "image": "https://blog.kakaocdn.net/dn/d57Ngu/btqGUNk8neK/l26w3UEPvKzMy6kozDr9D0/img.png",
         "abv": 10,
         "baseLiquors": "데킬라",
         "ingredients": [
@@ -329,7 +327,7 @@ const cocktailData= [
         "id": 19,
         "name": "씨 브리즈",
         "userId": "697",
-        "image": "https://example.com/image19.jpg",
+        "image": "https://masileng-bucket.s3.ap-northeast-2.amazonaws.com/TB_COCK_MASTER/62d2a292-f27c-4e19-a76b-ad79f2dab644ea053c866a14f685269d74505.jpg",
         "abv": 5,
         "baseLiquors": "럼",
         "ingredients": [
@@ -345,9 +343,9 @@ const cocktailData= [
     },
     {
         "id": 20,
-        "name": "라스베리 모히또",
+        "name": "라즈베리 모히또",
         "userId": "149",
-        "image": "https://example.com/image20.jpg",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlcg9l_2LS_p5EkLOnHtp9eOSwmK0HO5omUQ&s",
         "abv": 22,
         "baseLiquors": "진",
         "ingredients": [
@@ -365,7 +363,7 @@ const cocktailData= [
         "id": 21,
         "name": "준 벅",
         "userId": "319",
-        "image": "https://example.com/image21.jpg",
+        "image": "https://masileng-bucket.s3.ap-northeast-2.amazonaws.com/TB_COCK_MASTER/20735dd2-3db9-4be5-a4cc-090867b36b41scaled_img.jpg",
         "abv": 25,
         "baseLiquors": "진",
         "ingredients": [
@@ -383,7 +381,7 @@ const cocktailData= [
         "id": 22,
         "name": "테킬라 선라이즈",
         "userId": "977",
-        "image": "https://example.com/image22.jpg",
+        "image": "https://i.namu.wiki/i/KmjVOe0akFdNjBe65_RtAYsGAyajRHSCobn3bb96eygbQXfUsh4Neobp5MStOjXnT12NxarEUZ9GCK2n6-9y2w.webp",
         "abv": 9,
         "baseLiquors": "진",
         "ingredients": [
@@ -401,7 +399,7 @@ const cocktailData= [
         "id": 23,
         "name": "섹스 온 더 비치",
         "userId": "480",
-        "image": "https://example.com/image23.jpg",
+        "image": "https://i.namu.wiki/i/MLLs93lXZ-t9fkemk-sRyU9-viUNQjYNxGV8yd34rdrnujPLtILESfX6DjtAz9TDE7XgMTAOarqKLz-7l4ec_g.webp",
         "abv": 5,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -419,7 +417,7 @@ const cocktailData= [
         "id": 24,
         "name": "베일리스 밀크",
         "userId": "266",
-        "image": "https://example.com/image24.jpg",
+        "image": "https://blog.kakaocdn.net/dn/mBwEs/btrMxTutYx8/PhGCuVMj6Pa8EjUyggUsLk/img.jpg",
         "abv": 14,
         "baseLiquors": "리큐르",
         "ingredients": [
@@ -437,7 +435,7 @@ const cocktailData= [
         "id": 25,
         "name": "캄파리 오렌지",
         "userId": "768",
-        "image": "https://example.com/image25.jpg",
+        "image": "https://us.123rf.com/450wm/geribody/geribody1407/geribody140700012/29602598-campari-orange-cocktail-isolated-on-white.jpg",
         "abv": 10,
         "baseLiquors": "럼",
         "ingredients": [
@@ -455,7 +453,7 @@ const cocktailData= [
         "id": 26,
         "name": "코코넛 크러시",
         "userId": "678",
-        "image": "https://example.com/image26.jpg",
+        "image": "https://reciup.com/assets/recipe/202412/a1b9b48c-7f9d-4f17-b45f-133286de8057.jpg",
         "abv": 11,
         "baseLiquors": "럼",
         "ingredients": [
@@ -473,7 +471,7 @@ const cocktailData= [
         "id": 27,
         "name": "카이피리냐",
         "userId": "264",
-        "image": "https://example.com/image27.jpg",
+        "image": "https://i.namu.wiki/i/Tg42qeZTPKUzhDrHntPSWoXH6nM_BYO295fQMiU6apnD7qhd1jTLOrZamjfYDRWN-mfkvA_9Y9YgldGZ0hPJVA.webp",
         "abv": 13,
         "baseLiquors": "리큐르",
         "ingredients": [
@@ -491,7 +489,7 @@ const cocktailData= [
         "id": 28,
         "name": "블랙 러시안",
         "userId": "274",
-        "image": "https://example.com/image28.jpg",
+        "image": "https://blog.kakaocdn.net/dn/cp8JV0/btqzkb2uSkL/K9A5JSxd9MGoEH2d0QBbZ1/img.jpg",
         "abv": 14,
         "baseLiquors": "럼",
         "ingredients": [
@@ -509,7 +507,7 @@ const cocktailData= [
         "id": 29,
         "name": "레몬 드롭",
         "userId": "820",
-        "image": "https://example.com/image29.jpg",
+        "image": "https://i.namu.wiki/i/j0TPLOW5zKjz67zmHDsujTha5NRoGkeDop0SRM3Dwwm1eeeFCX8IlRI29RAYfTn-PoOGNEsWtjePf5YX7DzOEA.webp",
         "abv": 22,
         "baseLiquors": "위스키",
         "ingredients": [
@@ -527,7 +525,7 @@ const cocktailData= [
         "id": 30,
         "name": "러시안 스프링 펀치",
         "userId": "811",
-        "image": "https://example.com/image30.jpg",
+        "image": "https://cdn.diffordsguide.com/cocktail/GRoYNr/default/0/512x.webp",
         "abv": 28,
         "baseLiquors": "위스키",
         "ingredients": [
@@ -545,7 +543,7 @@ const cocktailData= [
         "id": 31,
         "name": "미도리 사워",
         "userId": "506",
-        "image": "https://example.com/image31.jpg",
+        "image": "https://i.namu.wiki/i/UHRyyWTmRE211VndEwp_1l8OfNQLcoCOP5YHDjll5V1llan7sspZvlJxG-nBYz_UxAXiGqKo-mfQKpcLFVtJ9g.webp",
         "abv": 14,
         "baseLiquors": "보드카",
         "ingredients": [
@@ -561,9 +559,9 @@ const cocktailData= [
     },
     {
         "id": 32,
-        "name": "베리니",
+        "name": "벨리니",
         "userId": "520",
-        "image": "https://example.com/image32.jpg",
+        "image": "https://blog.kakaocdn.net/dn/cwo0LT/btqOxsnIdqq/x1VF5EKVwH47rbJOAgRykK/img.png",
         "abv": 28,
         "baseLiquors": "보드카",
         "ingredients": [
