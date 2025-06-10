@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function likeAnimation() {
+export default function useLikeAnimation() {
     const [animate, setAnimate] = useState(false);
 
     const trigger = () => setAnimate(true);

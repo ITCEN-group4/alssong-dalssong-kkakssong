@@ -1,0 +1,35 @@
+.tagSelectorWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.checkboxRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: 0.25rem;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    font-size: 0.88rem;
+}
+
+.input {
+    width: 100px;
+    padding: 4px 6px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 0.25rem;
+}

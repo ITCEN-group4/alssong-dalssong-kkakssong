@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import styles from "./CocktailCard.module.css";
 import getAbvTag from "../../utils/getAbvTag.js";
-import likeAnimation from "../../utils/likeAnimation.js";
+import useLikeAnimation from "../../utils/useLikeAnimation.js";
 import {useCocktailContext} from "../../context/CocktailContext.jsx";
 
 export default function CocktailCard({cocktail}) {
@@ -9,7 +9,7 @@ export default function CocktailCard({cocktail}) {
     const {label, icon} = getAbvTag(cocktail.abv);
     const {toggleLike, likedMap, cocktailList} = useCocktailContext();
     const liked = likedMap[cocktail.id] || false;
-    const [animate, triggerAnimate] = likeAnimation();
+    const [animate, triggerAnimate] = useLikeAnimation();
 
     // 실시간 좋아요 수 가져오기 (원본 데이터에서)
     const currentCocktail = cocktailList.find(c => c.id === cocktail.id);

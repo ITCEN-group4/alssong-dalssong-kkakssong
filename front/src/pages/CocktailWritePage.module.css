@@ -1,0 +1,160 @@
+.pageWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 100%;
+    padding: 7rem 5vw 2rem;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.leftSection {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.rightSection {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputBox {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-weight: bold;
+    color: #ff6f91;
+    font-size: 0.95rem;
+}
+
+.input {
+    height: 30px;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+.textarea {
+    min-height: 140px;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+    outline: none;
+}
+
+.input,
+.textarea {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #333;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #aaa;
+    opacity: 1;
+}
+
+.imageBox {
+    background-color: #fff;
+    border: 2px dashed #ffb6c1;
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+.imagePlaceholder {
+    font-weight: bold;
+    color: #ff6f91;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.imagePlaceholder span {
+    margin-left: 0.5rem;
+}
+
+.imageSubtext {
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.imageFilename {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+
+.propertyBox {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.cancelButton,
+.submitButton {
+    padding: 0.8rem 2.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cancelButton {
+    background-color: #ddd;
+    color: #333;
+}
+
+.submitButton {
+    background-color: #ff6f91;
+    color: white;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .pageWrapper {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .leftSection,
+    .rightSection {
+        flex: 1;
+        width: 100%;
+    }
+}
+

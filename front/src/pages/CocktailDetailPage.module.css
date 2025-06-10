@@ -1,12 +1,12 @@
 .detailPage {
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - 60px);
     height: auto;
     padding: 2rem 80px;
     max-width: 1300px;
     width: 100%;
-    margin: 0 auto;
     gap: 2rem;
     box-sizing: border-box;
     background-color: #f9f9f9;
