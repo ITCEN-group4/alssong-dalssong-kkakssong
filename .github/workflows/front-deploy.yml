@@ -1,7 +1,11 @@
 name: Front CI/CD
 
 on:
-  workflow_dispatch
+  push:
+    paths:
+      - 'front/**'
+    branches:
+      - develop
 
 jobs:
   build-and-deploy-frontend:
