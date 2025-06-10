@@ -54,8 +54,8 @@ public class PostController
 
     // 게시글 생성
     @PostMapping ("/create")// 게시글 목록 조회와 중복으로 구분
-    public ResponseEntity<PostRequestDTO> createPost(@RequestBody PostCreateRequestDTO postCreateDTO, @LoginUser String userName) {
-        return ResponseEntity.ok(postService.createPost(postCreateDTO, userName));
+    public ResponseEntity<PostRequestDTO> createPost(@RequestBody PostCreateRequestDTO postCreateDTO, @LoginUser String email) {
+        return ResponseEntity.ok(postService.createPost(postCreateDTO, email));
     }
 
     // 게시글 불러오기
@@ -72,7 +72,7 @@ public class PostController
 
     // 게시글 삭제, @LoginUser를 유지시켜 삭제 권한 유저를 확인
     @DeleteMapping("/remove/{postId}")
-    public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String userName) {
+    public ResponseEntity<PostRequestDTO> deletePost(@PathVariable Long postId, @LoginUser String email) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
     }

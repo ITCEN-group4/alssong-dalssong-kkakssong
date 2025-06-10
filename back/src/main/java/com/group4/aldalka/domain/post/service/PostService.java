@@ -44,8 +44,8 @@ public class PostService {
     @Autowired
     private EntityManager em;
 
-    public PostRequestDTO createPost(PostCreateRequestDTO Request, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public PostRequestDTO createPost(PostCreateRequestDTO Request, String useremail) {
+        User user = userRepository.findByEmail(useremail).orElseThrow();
 
         // Request의 정보로 부터 Post 객체 생성
         Post post = Post.builder()
@@ -109,7 +109,7 @@ public class PostService {
                 .orElseThrow();
 
         // 작성자 정보 추출
-        User author = post.getUser();
+        User user = post.getUser();
 
         // 연관된 PostIngredient 엔티티들로부터 Ingredient 이름만 추출
         List<String> ingredientNames = post.getPostIngredients()
@@ -136,7 +136,7 @@ public class PostService {
                 .isShaken(post.isShaken())
                 .isOfficial(post.isOfficial())
                 .imageUrl(post.getImageUrl())
-                .userNickname(author.getNickname())
+                .userNickname(user.getNickname())
                 .likeCount(likeCount)
                 .createdAt(LocalDate.from(post.getCreatedAt()))
                 .updatedAt(LocalDate.from(post.getUpdatedAt()))
