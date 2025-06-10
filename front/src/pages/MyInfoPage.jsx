@@ -12,77 +12,16 @@ export default function MyInfoPage() {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleNicknameChange = async () => {
-        // try {
-        //     const token = localStorage.getItem("token");
-        //     const response = await fetch("https://your-domain.com/api/v1/user/nickname", {
-        //         method: "PUT",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             Authorization: `Bearer ${token}`,
-        //         },
-        //         body: JSON.stringify({ nickname }),
-        //     });
-        //
-        //     if (!response.ok) throw new Error("닉네임 변경 실패");
-        //
-        //     alert("닉네임이 성공적으로 변경되었습니다.");
-        //     setNickname("");
-        // } catch (err) {
-        //     alert(err.message);
-        // }
+    const handleNicknameChange = () => {
+        // 닉네임 수정 함수
     };
 
-    const handlePasswordChange = async () => {
-        // if (newPassword !== confirmPassword) {
-        //     return alert("비밀번호 확인이 일치하지 않습니다.");
-        // }
-        //
-        // try {
-        //     const token = localStorage.getItem("token");
-        //     const response = await fetch("https://your-domain.com/api/v1/user/password", {
-        //         method: "PUT",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             Authorization: `Bearer ${token}`,
-        //         },
-        //         body: JSON.stringify({
-        //             currentPassword,
-        //             newPassword,
-        //         }),
-        //     });
-        //
-        //     if (!response.ok) throw new Error("비밀번호 변경 실패");
-        //
-        //     alert("비밀번호가 성공적으로 변경되었습니다.");
-        //     setCurrentPassword("");
-        //     setNewPassword("");
-        //     setConfirmPassword("");
-        // } catch (err) {
-        //     alert(err.message);
-        // }
+    const handlePasswordChange = () => {
+        // 비밀번호 수정 함수
     };
 
-    const handleAccountDelete = async () => {
-        // if (!window.confirm("정말로 회원 탈퇴하시겠습니까?")) return;
-        //
-        // try {
-        //     const token = localStorage.getItem("token");
-        //     const response = await fetch("https://your-domain.com/api/v1/user/delete", {
-        //         method: "DELETE",
-        //         headers: {
-        //             Authorization: `Bearer ${token}`,
-        //         },
-        //     });
-        //
-        //     if (!response.ok) throw new Error("회원 탈퇴 실패");
-        //
-        //     alert("회원 탈퇴가 완료되었습니다.");
-        //     localStorage.removeItem("token");
-        //     window.location.href = "/";
-        // } catch (err) {
-        //     alert(err.message);
-        // }
+    const handleAccountDelete = () => {
+        // 회원 탈퇴 함수
     };
 
     return (
