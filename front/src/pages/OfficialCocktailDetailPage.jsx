@@ -80,9 +80,11 @@ export default function OfficialDetailPage() {
                             <div className={styles.recipe}>
                                 <h4>레시피</h4>
                                 <ul>
-                                    {cocktail.recipe && cocktail.recipe.map((step, index) => (
-                                        <li key={index}>{step}</li>
-                                    ))}
+                                    {Array.isArray(cocktail.recipe) ? (
+                                        cocktail.recipe.map((step, index) => <li key={index}>{step}</li>)
+                                    ) : (
+                                        <li>{cocktail.recipe || "레시피 정보 없음"}</li>
+                                    )}
                                 </ul>
                             </div>
 
