@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./OfficialCard.module.css";
-import { useCocktailContext} from "../../context/CocktailContext.jsx";
+import { useOfficialCocktailContext} from "../../context/OfficialCocktailContext.jsx";
 import likeAnimation from "../../utils/likeAnimation.js";
 
 export default function OfficialCard({ cocktail }) {
     const navigate = useNavigate();
-    const {toggleLike, likedMap, cocktailList} = useCocktailContext();
+    const {toggleLike, likedMap, cocktailList} = useOfficialCocktailContext();
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = likeAnimation();
 

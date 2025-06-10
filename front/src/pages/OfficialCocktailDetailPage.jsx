@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useCocktailContext } from "../context/CocktailContext";
 import styles from "./OfficialCocktailDetailPage.module.css";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
@@ -10,10 +9,11 @@ import tag_etc from "../assets/tag_etc.svg";
 import tag_shake from "../assets/tag_shake.svg";
 import likeAnimation from "../utils/likeAnimation.js";
 import cocktailData from "../data/cocktailOfficialData.js";
+import {useOfficialCocktailContext} from "../context/OfficialCocktailContext.jsx";
 
 export default function OfficialDetailPage() {
     const { id } = useParams();
-    const {toggleLike, likedMap, cocktailList} = useCocktailContext();
+    const {toggleLike, likedMap, cocktailList} = useOfficialCocktailContext();
     const cocktail = cocktailData.find((item) => item.id.toString() === id);
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = likeAnimation();
