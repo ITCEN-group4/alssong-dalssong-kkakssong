@@ -1,10 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./OfficialCard.module.css";
 import { useCocktailContext} from "../../context/CocktailContext.jsx";
+import likeAnimation from "../../utils/likeAnimation.js";
 
 export default function OfficialCard({ cocktail }) {
     const navigate = useNavigate();
-    const {updateLikes} = useCocktailContext()
+    const {toggleLike, likedMap, cocktailList} = useCocktailContext();
+    const liked = likedMap[cocktail.id] || false;
+    const [animate, triggerAnimate] = likeAnimation();
+
+    // 실시간 좋아요 수 가져오기 (원본 데이터에서)
+    const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
+    const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
 
     const handleClick = () => {
         navigate(`/posts/${cocktail.id}`);
@@ -12,8 +19,10 @@ export default function OfficialCard({ cocktail }) {
 
     const handleLike = (e) => {
         e.stopPropagation();
-        updateLikes(cocktail.id);
+        toggleLike(cocktail.id);
+        triggerAnimate();
     };
+
 
     return (
         <div className={styles.card} onClick={handleClick}>
@@ -28,7 +37,12 @@ export default function OfficialCard({ cocktail }) {
 
                 <div className={styles.cardBottom}>
                     <button className={styles.likeButton} onClick={handleLike}>
-                        ❤️ {cocktail.likes}
+                        <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
+                            {liked ? "❤️" : "🤍"}
+                        </span>
+                                <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                            {currentLikes}
+                        </span>
                     </button>
                     <span className={styles.shakingTag}>
                 {cocktail.shaking ? "쉐이킹 ON" : "쉐이킹 OFF"}
