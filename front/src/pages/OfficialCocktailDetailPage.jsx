@@ -8,18 +8,25 @@ import tag_base from "../assets/tag_base.svg";
 import tag_dosu from "../assets/tag_dosu.svg";
 import tag_etc from "../assets/tag_etc.svg";
 import tag_shake from "../assets/tag_shake.svg";
+import likeAnimation from "../utils/likeAnimation.js";
 
 export default function OfficialDetailPage() {
     const { id } = useParams();
-    const { cocktailList } = useCocktailContext();
+    const {toggleLike, likedMap, cocktailList} = useCocktailContext();
     const cocktail = cocktailList.find((item) => item.id.toString() === id);
-    const {updateLikes} = useCocktailContext()
+    const liked = likedMap[cocktail.id] || false;
+    const [animate, triggerAnimate] = likeAnimation();
 
     if (!cocktail) return <p>해당 칵테일을 찾을 수 없습니다.</p>;
 
+    // 실시간 좋아요 수 가져오기 (원본 데이터에서)
+    const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
+    const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
+
     const handleLike = (e) => {
         e.stopPropagation();
-        updateLikes(cocktail.id);
+        toggleLike(cocktail.id);
+        triggerAnimate();
     };
 
     return (
@@ -88,7 +95,14 @@ export default function OfficialDetailPage() {
                                 </ul>
                             </div>
 
-                            <div className={styles.likes} onClick={handleLike}>❤️ {cocktail.likes} </div>
+                            <div className={styles.likes} onClick={handleLike}>
+                                <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
+                                    {liked ? "❤️" : "🤍"}
+                                </span>
+                                        <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                                    {currentLikes}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
