@@ -65,16 +65,16 @@ jobs:
       - name: Gradle 실행 권한 부여
         run: chmod +x ./gradlew
 
-      - name: ✅Gradle로 테스트 실행
+      - name: 🖍️Gradle로 테스트 실행
         run: ./gradlew test 
 
-      - name: 테스트 결과를 PR 코멘트로 출력
+      - name: ✅테스트 결과를 PR 코멘트로 출력
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           files: '**/build/test-results/test/TEST-*.xml'
 
-      - name: 테스트 실패 시, 코드 라인에 코멘트 추가
+      - name: ‼️테스트 실패 시, 코드 라인에 코멘트 추가
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
