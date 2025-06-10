@@ -38,7 +38,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle # Gradle 종속성 캐싱으로 속도 향상
-
+      - name: 현재 환경 변수 출력
+        run: env
+        
       - name: Gradle 실행 권한 부여
         run: chmod +x ./gradlew
 
