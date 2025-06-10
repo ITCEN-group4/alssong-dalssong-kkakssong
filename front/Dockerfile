@@ -8,7 +8,7 @@ RUN apk add --no-cache bash
 
 RUN npm ci
 
-COPY front/ .
+COPY . .
 
 # Vite 빌드 실행
 RUN npm run build
