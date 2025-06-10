@@ -1,15 +1,18 @@
- import React, { useEffect, useState } from "react";
+ import React, {useContext, useEffect, useState} from "react";
 import styles from "./CocktailWritePage.module.css";
 import CocktailTagBox from "../components/boxs/CocktailTagBox.jsx";
 import ImageUploadBox from '../components/boxs/ImageUploadBox.jsx';
 import RecipeInputBox from "../components/boxs/RecipeInputBox.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+import {UNSAFE_NavigationContext, useNavigate, useParams} from "react-router-dom";
 import cocktailTestData from "../data/cocktailTestData.js";
 import { ingredientCategoryMap } from "../utils/ingredientCategoryMap.js";
+ import NavBar from "../components/layout/NavBar.jsx";
+ import Footer from "../components/layout/Footer.jsx";
 
 export default function CocktailWritePage({ mode = "create" }) {
     const { id } = useParams();
     const navigate = useNavigate();
+    const navigationContext = useContext(UNSAFE_NavigationContext)
 
     const [cocktailName, setCocktailName] = useState("");
     const [description, setDescription] = useState("");
@@ -37,6 +40,38 @@ export default function CocktailWritePage({ mode = "create" }) {
         });
         return Array.from(categorySet);
     }
+
+    //다른 페이지 이동 시 경고문구
+    useEffect(() => {
+        const navigator = navigationContext.navigator;
+        const originalPush = navigator.push;
+
+        const hasChanges =
+            cocktailName || description || recipeList.length > 0 || selectedImage;
+
+        // 페이지 내 네비게이션 감지 (Link, navigate)
+        navigator.push = (...args) => {
+            if (!hasChanges || window.confirm("정말 작성을 취소하시겠습니까? 작성한 내용은 저장되지 않습니다.")) {
+                navigator.push = originalPush; // 원래대로 복구
+                originalPush(...args);
+            }
+        };
+
+        // 브라우저 뒤로가기 / 새로고침 감지
+        const handleBeforeUnload = (e) => {
+            if (hasChanges) {
+                e.preventDefault();
+                e.returnValue = "";
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            navigator.push = originalPush;
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [cocktailName, description, recipeList, selectedImage]);
 
     // 수정 시 기존 데이터 가져오기. 현재는 더미데이터 기반으로만 가져오고 있기 때문에 추후 수정 필요
     useEffect(() => {
@@ -150,6 +185,8 @@ export default function CocktailWritePage({ mode = "create" }) {
     };
 
     return (
+        <>
+            <NavBar/>
         <div className={styles.pageWrapper}>
             <section className={styles.leftSection}>
                 <div className={styles.inputBox}>
@@ -200,5 +237,7 @@ export default function CocktailWritePage({ mode = "create" }) {
                 </div>
             </section>
         </div>
+            <Footer/>
+        </>
     );
 }
