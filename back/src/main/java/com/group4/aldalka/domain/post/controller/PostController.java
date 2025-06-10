@@ -77,4 +77,5 @@ public class PostController
         return ResponseEntity.noContent().build();  // HTTP 204 (No Content) 반환
     }
 
+
 }
