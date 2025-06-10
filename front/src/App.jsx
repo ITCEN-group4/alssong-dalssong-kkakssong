@@ -1,6 +1,7 @@
 import React from 'react';
 import {Routes, Route, BrowserRouter} from "react-router-dom"
 import {CocktailProvider} from "./context/CocktailContext.jsx";
+import {OfficialCocktailProvider} from "./context/OfficialCocktailContext.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 import CocktailSharePage from "./pages/CocktailSharePage";
 import CocktailDetailPage from "./pages/CocktailDetailPage";
@@ -17,6 +18,7 @@ function App() {
     return (
         <BrowserRouter>
             <CocktailProvider>
+                <OfficialCocktailProvider>
                 <ScrollToTop />
                 <Routes>
                     <Route path="/auth/login" element={<LoginPage />} />
@@ -32,6 +34,7 @@ function App() {
                     <Route path="/posts" element={<OfficialCocktailPage/>}/>
                     <Route path="/posts/:id" element={<OfficialCocktailDetailPage/>}/>
                 </Routes>
+                </OfficialCocktailProvider>
             </CocktailProvider>
         </BrowserRouter>
     );

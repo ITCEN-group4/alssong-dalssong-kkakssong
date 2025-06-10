@@ -9,11 +9,12 @@ import tag_dosu from "../assets/tag_dosu.svg";
 import tag_etc from "../assets/tag_etc.svg";
 import tag_shake from "../assets/tag_shake.svg";
 import likeAnimation from "../utils/likeAnimation.js";
+import cocktailData from "../data/cocktailOfficialData.js";
 
 export default function OfficialDetailPage() {
     const { id } = useParams();
     const {toggleLike, likedMap, cocktailList} = useCocktailContext();
-    const cocktail = cocktailList.find((item) => item.id.toString() === id);
+    const cocktail = cocktailData.find((item) => item.id.toString() === id);
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = likeAnimation();
 

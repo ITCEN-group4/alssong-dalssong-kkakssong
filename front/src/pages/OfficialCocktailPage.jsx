@@ -6,12 +6,12 @@ import Pagination from "../components/layout/Pagination.jsx";
 import { paginate } from "../utils/paginate.js";
 import styles from './OfficialCocktailPage.module.css';
 import SearchBar from "../components/layout/SearchBar.jsx";
-import {useCocktailContext} from "../context/CocktailContext.jsx";
+import {useOfficialCocktailContext} from "../context/OfficialCocktailContext.jsx";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
 
 export default function CocktailSharePage() {
-    const { cocktailList, searchList } = useCocktailContext();
+    const { cocktailList, searchList } = useOfficialCocktailContext();
     const [sortOption, setSortOption] = useState("likes");
     const [currentPage, setCurrentPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState("");
