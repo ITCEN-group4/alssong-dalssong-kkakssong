@@ -19,6 +19,15 @@ jobs:
       checks: write
       pull-requests: write
 
+    env:
+      DB_ADDRESS: ${{ secrets.DB_ADDRESS }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
     steps:
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v4
