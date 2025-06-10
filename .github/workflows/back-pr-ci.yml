@@ -29,6 +29,18 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
     steps:
+      - name: 백엔드 코드가 변경되었는지 확인
+        id: changes
+        uses: tj-actions/changed-files@v44
+        with:
+          files: back/**
+
+      - name: 백엔드 변경 없으면 종료
+        if: steps.changes.outputs.any_changed == 'false'
+        run: |
+          echo "No backend changes. Skipping back CI."
+          exit 0
+      
       - name: 레포지토리 체크아웃
         uses: actions/checkout@v4
 
