@@ -1,0 +1,96 @@
+.infoContainer {
+    width: 100%;
+    max-width: 1000px;
+    margin-left: 3rem;
+    min-height: calc(100vh - 114px);
+    background-color: #fff;
+    padding: 3rem 4rem 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-sizing: border-box;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.note {
+    font-size: 0.85rem;
+    color: #f06292;
+    margin-bottom: 0.75rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.formGroup input {
+    flex: 1 1 200px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    min-width: 180px;
+}
+
+.formGroup button {
+    padding: 10px 20px;
+    background-color: #f8a8c4;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.withdrawWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 9.3rem;
+}
+
+.deleteButton {
+    background-color: #ff6666;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+}
+
+.note {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: #f06292;
+    margin-bottom: 0.5rem;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+.iconSmall {
+    width: 16px;
+    height: 16px;
+}

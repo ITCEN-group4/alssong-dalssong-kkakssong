@@ -1,4 +1,4 @@
- import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import styles from "./CocktailWritePage.module.css";
 import CocktailTagBox from "../components/boxs/CocktailTagBox.jsx";
 import ImageUploadBox from '../components/boxs/ImageUploadBox.jsx';
@@ -6,8 +6,7 @@ import RecipeInputBox from "../components/boxs/RecipeInputBox.jsx";
 import {UNSAFE_NavigationContext, useNavigate, useParams} from "react-router-dom";
 import cocktailTestData from "../data/cocktailTestData.js";
 import { ingredientCategoryMap } from "../utils/ingredientCategoryMap.js";
- import NavBar from "../components/layout/NavBar.jsx";
- import Footer from "../components/layout/Footer.jsx";
+import NavBar from "../components/layout/NavBar.jsx";
 
 export default function CocktailWritePage({ mode = "create" }) {
     const { id } = useParams();
@@ -76,50 +75,6 @@ export default function CocktailWritePage({ mode = "create" }) {
     // 수정 시 기존 데이터 가져오기. 현재는 더미데이터 기반으로만 가져오고 있기 때문에 추후 수정 필요
     useEffect(() => {
         if (mode === "edit" && id) {
-            // 실제 API 연동 시 사용할 코드
-            /*
-        fetch(`https://your-domain.com/post/${id}`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${yourToken}`,
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setCocktailName(data.name);
-                setDescription(data.description);
-                setSelectedImage(data.image_url);
-
-                const parsedRecipe = data.recipe
-                    .split("\n")
-                    .filter(Boolean)
-                    .map((line) => {
-                        const match = line.trim().match(/^(.+?)\s+([\d.]+[a-zA-Z가-힣%]+)$/);
-                        if (!match) return null;
-
-                        const rawName = match[1].trim();
-                        const amount = match[2].trim();
-                        const normalized = normalizeIngredientName(rawName);
-                        const category = ingredientCategoryMap[normalized] || "기타";
-
-                        return { name: normalized, amount, category };
-                    })
-                    .filter(Boolean);
-
-                setRecipeList(parsedRecipe);
-
-                setFilters({
-                    baseLiquors: data.baseLiquors,
-                    ingredients: mapIngredientsToCategories(data.ingredients),
-                    abv: data.abv,
-                    shaking: data.shaking,
-                });
-            })
-            .catch((err) => {
-                console.error("데이터 불러오기 실패:", err);
-                alert("레시피 정보를 불러오지 못했습니다.");
-            });
-        */
 
             //더미데이터 기반 코드라서 추후 아래 삭제 필요
             const found = cocktailTestData.find(item => item.id === Number(id));
@@ -148,7 +103,7 @@ export default function CocktailWritePage({ mode = "create" }) {
             setRecipeList(parsedRecipe);
 
             setFilters({
-                baseLiquors: found.baseLiquors,
+                baseLiquors: Array.isArray(found.baseLiquors) ? found.baseLiquors : [found.baseLiquors],
                 ingredients: mapIngredientsToCategories(found.ingredients),
                 abv: found.abv,
                 shaking: found.shaking,
@@ -237,7 +192,6 @@ export default function CocktailWritePage({ mode = "create" }) {
                 </div>
             </section>
         </div>
-            <Footer/>
         </>
     );
 }

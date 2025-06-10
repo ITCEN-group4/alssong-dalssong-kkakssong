@@ -25,7 +25,7 @@ export default function CocktailSharePage() {
 
     const sortedList = [...cocktailList].sort((a, b) => {
         if (sortOption === "likes") return b.likes - a.likes;
-        if (sortOption === "latest") return b.id - a.id;
+        if (sortOption === "latest") return new Date(b.createdAt) - new Date(a.createdAt);
         return 0;
     });
 

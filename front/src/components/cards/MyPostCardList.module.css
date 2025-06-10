@@ -1,0 +1,13 @@
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+    justify-content: start;
+    align-items: stretch;
+}
+
+.emptyMessage {
+    font-size: 1rem;
+    color: #888;
+    padding: 2rem 0;
+}
