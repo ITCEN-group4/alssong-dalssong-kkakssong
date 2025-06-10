@@ -38,22 +38,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle # Gradle 종속성 캐싱으로 속도 향상
+      
       - name: 현재 환경 변수 출력
         run: env
         
       - name: Gradle 실행 권한 부여
         run: chmod +x ./gradlew
 
-      - name: Gradle로 테스트만 실행
-        run: |
-          ./gradlew test \
-          -DAWS_REGION=${AWS_REGION} \
-          -DAWS_BUCKET=${AWS_BUCKET} \
-          -DAWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-          -DAWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-          -DDB_ADDRESS=${DB_ADDRESS} \
-          -DDB_USERNAME=${DB_USERNAME} \
-          -DDB_PASSWORD=${DB_PASSWORD}
+      - name: ✅Gradle로 테스트 실행
+        run: ./gradlew test 
 
       - name: 테스트 결과를 PR 코멘트로 출력
         uses: EnricoMi/publish-unit-test-result-action@v2
