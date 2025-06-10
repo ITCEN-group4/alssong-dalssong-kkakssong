@@ -8,6 +8,8 @@ import getShakingIcon from "../utils/getShakingIcon.js";
 import getAbvIcon from "../utils/getAbcIcon.js";
 import likeAnimation from "../utils/likeAnimation.js";
 import testData from "../data/cocktailTestData.js";
+import NavBar from "../components/layout/NavBar.jsx";
+import Footer from "../components/layout/Footer.jsx";
 
 export default function CocktailDetailPage() {
     const navigate = useNavigate();
@@ -47,6 +49,8 @@ export default function CocktailDetailPage() {
     }; // 지금은 보이는 리스트에서만 삭제되는거고(새로고침 시 살아남) 추후 CocktailContext의 deleteCocktail 함수 수정해야함
 
     return (
+        <>
+        <NavBar/>
         <div className={styles.detailPage}>
             <div className={styles.pageHeader}>
                 <div className={styles.pageHeaderLeft}>
@@ -135,5 +139,7 @@ export default function CocktailDetailPage() {
                 </div>
             </div>
         </div>
+            <Footer/>
+        </>
     );
 }
