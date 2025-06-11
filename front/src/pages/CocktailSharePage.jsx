@@ -61,9 +61,9 @@ export default function CocktailSharePage() {
         <>
             <NavBar/>
             <div className={styles.header}>
-                <h2 className={styles.title}>칵테일 정보 공유</h2>
+                <h2 className={styles.title}>칵테일 유저 레시피</h2>
                 <h4 className={styles.subtitle}>
-                    다른 사용자의 황금 레시피를 맛 볼 수 있는 공간
+                    다른 사용자의 황금 레시피를 맛 볼 수 있는 공간 <br/>
                     함께 맛있는 칵테일 만들어봐요 ~
                 </h4>
             </div>
