@@ -28,7 +28,7 @@ export default function NavBar() {
             <div className={styles.left}>
                 <img src={logo} alt="logo" className={styles.logo} onClick={handleCocktailPage}/>
                 <div className={styles.menu}>
-                    <span onClick={handleCocktailPage}>칵테일</span>
+                    <span onClick={handleCocktailPage}>유저 레시피</span>
                     <span onClick={handleOfficialPage}>공식 레시피</span>
                 </div>
             </div>
