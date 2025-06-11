@@ -9,7 +9,7 @@
 .header {
     background: linear-gradient(to right, #FC82AB, #FEC58F, #FFEDD9);
     text-align: center;
-    padding: 1rem 0;
+    padding: 2.3rem 0;
     padding-top: 5rem;
     margin-bottom: 0.1rem;
     width: 100%;
@@ -31,10 +31,9 @@
 }
 
 .topSection {
-    max-width: 1100px;
     width: 100%;
-    margin: 0 auto;
-    padding: 0 1rem;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
