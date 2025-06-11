@@ -2,13 +2,13 @@
     display: flex;
     justify-content: space-between;
     gap: 1.5rem;
-    padding: 16px;
-    border: 1px solid #ddd;
+    padding: 25px 35px 25px 35px;
     border-radius: 10px;
     background-color: #ffffff;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     box-sizing: border-box;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .column {
@@ -54,6 +54,8 @@
 .button {
     padding: 6px 10px;
     font-size: 0.875rem;
+    font-family: "IBM Plex Sans KR", sans-serif;
+    font-weight: 300;
     border-radius: 15px;
     border: 1px solid #ccc;
     background-color: #F9FAFB;
@@ -65,11 +67,17 @@
     background-color: #ddd;
 }
 
+.button:hover {
+    border-color: #ccc;
+    background-color: #d3d3d3;
+}
+
 .submitButton,
 .resetPlaceholder {
     padding: 8px 14px;
     font-size: 0.875rem;
     font-weight: 500;
+    font-family: "IBM Plex Sans KR", sans-serif;
     background-color: #ffdddd;
     border: none;
     border-radius: 6px;
@@ -134,3 +142,15 @@
         outline: none !important;
     }
 }
+
+.button:focus,
+.submitButton:focus,
+.resetPlaceholder:focus,
+.button:active,
+.submitButton:active,
+.resetPlaceholder:active {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
