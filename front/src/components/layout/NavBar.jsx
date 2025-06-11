@@ -3,16 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import logo from '../../assets/main_logo.svg'
 import user_profile from '../../assets/user_profile.svg'
+import {useOfficialCocktailContext} from "../../context/OfficialCocktailContext.jsx";
 
 export default function NavBar() {
     const navigate = useNavigate();
+    const { resetList } = useOfficialCocktailContext();
 
     const handleCocktailPage = () => {
-        navigate('/post');
+        resetList();
+        navigate('/post?reset=true');
     };
 
     const handleOfficialPage = () => {
-        navigate('/posts');
+        resetList();
+        navigate('/posts?reset=true');
     };
 
     const handleMyPage = () => {
