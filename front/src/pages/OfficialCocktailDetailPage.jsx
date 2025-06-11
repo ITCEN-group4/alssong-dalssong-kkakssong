@@ -88,19 +88,25 @@ export default function OfficialDetailPage() {
                             <div className={styles.recipe}>
                                 <h4>레시피</h4>
                                 <ul>
-                                    {Array.isArray(cocktail.recipe) ? (
-                                        cocktail.recipe.map((step, index) => <li key={index}>{step}</li>)
-                                    ) : (
-                                        <li>{cocktail.recipe || "레시피 정보 없음"}</li>
-                                    )}
+                                    {typeof cocktail.recipe === "string"
+                                        ? cocktail.recipe.split('\n').map((step, index) => (
+                                            <li key={index}>{step}</li>
+                                        ))
+                                        : Array.isArray(cocktail.recipe)
+                                            ? cocktail.recipe.map((step, index) => (
+                                                <li key={index}>{step}</li>
+                                            ))
+                                            : <li>레시피 정보 없음</li>
+                                    }
                                 </ul>
                             </div>
+
 
                             <div className={styles.likes} onClick={handleLike}>
                                 <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
                                     {liked ? "❤️" : "🤍"}
                                 </span>
-                                        <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                                <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
                                     {currentLikes}
                                 </span>
                             </div>
