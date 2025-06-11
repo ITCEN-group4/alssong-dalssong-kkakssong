@@ -7,7 +7,7 @@ import tag_base from "../assets/tag_base.svg";
 import tag_dosu from "../assets/tag_dosu.svg";
 import tag_etc from "../assets/tag_etc.svg";
 import tag_shake from "../assets/tag_shake.svg";
-import likeAnimation from "../utils/likeAnimation.js";
+import useLikeAnimation from "../utils/useLikeAnimation.js";
 import cocktailData from "../data/cocktailOfficialData.js";
 import {useOfficialCocktailContext} from "../context/OfficialCocktailContext.jsx";
 
@@ -16,7 +16,7 @@ export default function OfficialDetailPage() {
     const {toggleLike, likedMap, cocktailList} = useOfficialCocktailContext();
     const cocktail = cocktailData.find((item) => item.id.toString() === id);
     const liked = likedMap[cocktail.id] || false;
-    const [animate, triggerAnimate] = likeAnimation();
+    const [animate, triggerAnimate] = useLikeAnimation();
 
     if (!cocktail) return <p>해당 칵테일을 찾을 수 없습니다.</p>;
 
