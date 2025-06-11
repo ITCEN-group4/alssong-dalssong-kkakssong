@@ -1,8 +1,12 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styles from "./SearchWriteBar.module.css";
 import searchIcon from "../../assets/search.svg";
 
-export default function SearchBar({ searchKeyword, setSearchKeyword ,onSearch}) {
+export default function SearchBar({ searchKeyword, setSearchKeyword ,onSearch, resetSignal}) {
+
+    useEffect(() => {
+        setSearchKeyword("");
+    }, [resetSignal]);
 
     return (
         <div className={styles.barContainer}>
