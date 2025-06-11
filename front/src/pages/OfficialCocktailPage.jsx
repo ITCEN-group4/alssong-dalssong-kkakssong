@@ -1,21 +1,41 @@
-import React, {useState} from "react";
-import FilterBar from "../components/layout/FilterBar.jsx";
+import React, {useEffect, useState} from "react";
+import { useLocation } from "react-router-dom";
+import OfficialFilterBar from "../components/layout/OfficialFilterBar.jsx";
 import SortBar from "../components/layout/SortBar.jsx";
 import OfficialCardList from "../components/cards/OfficialCardList.jsx";
 import Pagination from "../components/layout/Pagination.jsx";
 import { paginate } from "../utils/paginate.js";
 import styles from './OfficialCocktailPage.module.css';
 import SearchBar from "../components/layout/SearchBar.jsx";
-import {useCocktailContext} from "../context/CocktailContext.jsx";
+import {useOfficialCocktailContext} from "../context/OfficialCocktailContext.jsx";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
 
-export default function CocktailSharePage() {
-    const { cocktailList, searchList } = useCocktailContext();
+export default function OfficialCocktailPage() {
+    const location = useLocation();
+    const query = new URLSearchParams(location.search);
+    const shouldReset = query.get("reset") === "true";
+
+    const { cocktailList, searchList, resetList } = useOfficialCocktailContext();
     const [sortOption, setSortOption] = useState("likes");
     const [currentPage, setCurrentPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState("");
+    const [resetSignal, setResetSignal] = useState(false);
+
     const pageSize = 8;   //한 페이지에 보여줄 카드 수
+
+    useEffect(() => {
+        if (shouldReset) {
+            resetList();                    // cocktailList 초기화
+            setSortOption("likes");         // 정렬 초기화
+            setSearchKeyword("");           // 검색어 초기화
+            setCurrentPage(1);              // 페이지 초기화
+            setResetSignal(prev => !prev);  // 필터 리셋 트리거
+
+            // 쿼리 파라미터 제거하여 URL 깔끔하게 유지
+            window.history.replaceState(null, '', '/posts');
+        }
+    }, [shouldReset]);
 
     const sortedList = [...cocktailList].sort((a, b) => {
         if (sortOption === "likes") return b.likes - a.likes;
@@ -48,6 +68,7 @@ export default function CocktailSharePage() {
                         searchKeyword={searchKeyword}
                         setSearchKeyword={setSearchKeyword}
                         onSearch={handleSearch}
+                        resetSignal={resetSignal}
                     />
                     <SortBar
                         sortOption={sortOption}
@@ -56,7 +77,7 @@ export default function CocktailSharePage() {
                             setCurrentPage(1); // 정렬 변경 시 첫 페이지로
                         }}
                     />
-                    <FilterBar/>
+                    <OfficialFilterBar resetSignal={resetSignal}/>
                 </div>
             </div>
 
