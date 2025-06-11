@@ -229,7 +229,10 @@ public class PostService {
 
     public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
-        Long userId = userService.getUserIdByEmail(userEmail);
+        Long userId= null;
+        if(userEmail != null) {
+            userId = userService.getUserIdByEmail(userEmail);
+        }
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
@@ -248,14 +251,18 @@ public class PostService {
                 .map(post -> PostResponse.from(
                         post,
                         post.getLikes().size(),
-                        userLikeRepository.existsByUserUserIdAndPostPostId(userId, post.getPostId())
+                        (userId != null) && userLikeRepository.existsByUserUserIdAndPostPostId(userId, post.getPostId())
                 ))
                 .collect(Collectors.toList());
     }
 
+
     public OfficialPostDetailResponse getOfficialPostDetail(String userEmail, Long postId) {
 
-        Long userId = userService.getUserIdByEmail(userEmail);
+        Long userId= null;
+        if(userEmail != null) {
+            userId = userService.getUserIdByEmail(userEmail);
+        }
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
