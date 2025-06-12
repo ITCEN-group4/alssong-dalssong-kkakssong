@@ -28,7 +28,11 @@ jobs:
     defaults:
       run:
         working-directory: front
-
+      
+    permissions:
+      checks: write
+      pull-requests: write
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,3 +51,33 @@ jobs:
 
       - name: Run Vite build
         run: npm run build
+
+      - name: Run Tests
+        run: npm test -- --ci --reporters=default --reporters=jest-junit
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-results
+          path: front/junit.xml
+
+  report-frontend-test-results:
+    name: Report Frontend Test Results
+    needs: run-frontend-tests
+    if: always()
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-test-results
+          path: test-results
+
+      - name: Annotate test failures on PR
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: test-results/**/*.xml
+          detailed_summary: true
+          check_name: 'Frontend JUnit Test Report'
