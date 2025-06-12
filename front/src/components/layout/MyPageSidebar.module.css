@@ -51,6 +51,11 @@
     background-color: #f3f3f3;
 }
 
+.menu Button:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
 .menu .active {
     background-color: #ffeef3;
     color: #ff6f91;
@@ -70,5 +75,13 @@
 }
 
 .logoutButton:hover {
-    background-color: #f8f8f8;
+    background-color: #ececec;
+    border: 1px solid #e1e1e1;
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
+.logoutButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
 }
