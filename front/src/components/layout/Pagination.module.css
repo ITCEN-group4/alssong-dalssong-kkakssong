@@ -15,14 +15,20 @@
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
+    font-size: 14px;
 }
 
 .pageButton:hover {
     background-color: #f8bbd0;
 }
 
+.pageButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
 .active {
-    background-color: #ec407a;
+    background-color: #ff5b92;
     color: white;
 }
 
@@ -30,7 +36,7 @@
     border: none;
     background-color: #fce4ec;
     color: #333;
-    font-size: 14px;
+    font-size: 12px;
     padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
@@ -41,6 +47,11 @@
     color: #aaa;
     background-color: #f3f3f3;
     cursor: not-allowed;
+}
+
+.navButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
 }
 
 .ellipsis {

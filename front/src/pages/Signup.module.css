@@ -125,6 +125,11 @@ input::placeholder {
     filter: brightness(0.95);
 }
 
+.signupButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
 .cancelLink {
     margin-top: 10px;
     margin-bottom: 10px;

@@ -51,6 +51,11 @@
     background-color: #f3f3f3;
 }
 
+.menu Button:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
 .menu .active {
     background-color: #ffeef3;
     color: #ff6f91;
@@ -70,5 +75,84 @@
 }
 
 .logoutButton:hover {
-    background-color: #f8f8f8;
+    background-color: #ececec;
+    border: 1px solid #e1e1e1;
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
+.logoutButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalBox {
+    background-color: white;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 1001;
+}
+
+.modalText {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.modalButtonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.modalYes,
+.modalNo {
+    padding: 0.6rem 2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modalYes {
+    background-color: #ff6f91;
+    color: white;
+}
+
+.modalNo {
+    background-color: #eee;
+    color: #555;
+}
+
+.modalYes:focus,
+.modalNo:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
+.modalYes:hover {
+    border-color: #ccc;
+    background-color: #ffa2b6;
+}
+
+.modalNo:hover {
+    border-color: #ccc;
+    background-color: #d3d3d3;
 }

@@ -4,9 +4,19 @@
     gap: 20px;
     max-width: 1300px;
     padding: 0 1rem;
-    margin: 0 auto;
+    margin: 0 auto 3rem;
     justify-items: start;
     background-color: #f9f9f9;
+}
+
+.emptyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 0;
 }
 
 @media (max-width: 1024px) {

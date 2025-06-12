@@ -3,14 +3,18 @@ import styles from "./MyInfoPage.module.css";
 import infoIcon from "../assets/InfoIcon.svg";
 import lockIcon from "../assets/LockIcon.svg";
 import profileIcon from "../assets/ProfileIcon.svg";
+import {useNavigate} from "react-router-dom";
 
 export default function MyInfoPage() {
+    const navigate = useNavigate();
+
     const [nickname, setNickname] = useState("");
     const currentNickname = "칵테일"; // ← 더미, 실제 데이터 연동 필요
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const handleNicknameChange = () => {
         // 닉네임 수정 함수
@@ -22,10 +26,32 @@ export default function MyInfoPage() {
 
     const handleAccountDelete = () => {
         // 회원 탈퇴 함수
+        setShowDeleteConfirm(true);
+    };
+
+    const confirmDelete = () => {
+        // 실제 탈퇴 로직이 있다면 여기에 호출
+        // 예: await deleteAccountApi();
+        navigate("/auth/login");
+    };
+
+    const cancelDelete = () => {
+        setShowDeleteConfirm(false);
     };
 
     return (
         <div className={styles.infoContainer}>
+            {showDeleteConfirm && (
+                <div className={styles.modalOverlay}>
+                <div className={styles.confirmBox}>
+                    <p>정말 탈퇴하시겠어요? 다시 되돌릴 수 없어요.</p>
+                    <div className={styles.buttonGroup}>
+                        <button className={styles.confirmButton} onClick={confirmDelete}>예</button>
+                        <button className={styles.cancelButton} onClick={cancelDelete}>아니오</button>
+                    </div>
+                </div>
+                </div>
+            )}
             <h2 className={styles.title}>
                 <img src={profileIcon} alt="닉네임 아이콘" className={styles.icon} />
                 닉네임 변경

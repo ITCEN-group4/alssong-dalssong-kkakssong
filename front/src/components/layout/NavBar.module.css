@@ -116,3 +116,27 @@
         max-width: 100%;
     }
 }
+
+/* 기본 메뉴 스타일 */
+.menuItem {
+    font-family: "IBM Plex Sans KR", sans-serif;
+    font-size: 1rem;
+    white-space: nowrap;
+    margin: 0 1rem;
+    cursor: pointer;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    color: #454545;
+    font-weight: 700;
+
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.activeMenu {
+    color: #acacac !important;
+    font-weight: 900;
+}
+
+.menuItem:hover {
+    opacity: 0.6;
+}

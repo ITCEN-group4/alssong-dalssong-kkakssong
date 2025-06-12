@@ -1,11 +1,17 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./SearchWriteBar.module.css";
 import searchIcon from "../../assets/search.svg";
 
-export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSearch}) {
+export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSearch, resetSignal}) {
     const navigate = useNavigate();
 
+
+    useEffect(() => {
+        if (resetSignal) {
+            setSearchKeyword("");  // 검색창 초기화
+        }
+    }, [resetSignal]);
 
     return (
         <div className={styles.barContainer}>

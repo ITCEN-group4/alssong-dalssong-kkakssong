@@ -11,7 +11,7 @@ import NavBar from "../components/layout/NavBar.jsx";
 export default function CocktailWritePage({ mode = "create" }) {
     const { id } = useParams();
     const navigate = useNavigate();
-    const navigationContext = useContext(UNSAFE_NavigationContext)
+    const navigationContext = useContext(UNSAFE_NavigationContext);
 
     const [cocktailName, setCocktailName] = useState("");
     const [description, setDescription] = useState("");
@@ -23,6 +23,13 @@ export default function CocktailWritePage({ mode = "create" }) {
         abv: null,
         shaking: null,
     });
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showCancelModal, setShowCancelModal] = useState(false);
+
+    const showError = (msg) => {
+        setErrorMessage(msg);
+        setTimeout(() => setErrorMessage(""), 2000);
+    };
 
     //이름 띄어쓰기 없애는 함수
     function normalizeIngredientName(name) {
@@ -33,7 +40,7 @@ export default function CocktailWritePage({ mode = "create" }) {
     function mapIngredientsToCategories(ingredients) {
         const categorySet = new Set();
         ingredients.forEach(name => {
-            const normalized = name.replace(/\s/g, "").replace(/-/g, "").trim().toLowerCase();
+            const normalized = normalizeIngredientName(name);
             const category = ingredientCategoryMap[normalized];
             if (category) categorySet.add(category);
         });
@@ -111,10 +118,9 @@ export default function CocktailWritePage({ mode = "create" }) {
         }
     }, [mode, id]);
 
-    //이쪽도 콘솔에 FormData만 출력하는 코드라서 추후 수정 필요
     const handleSubmit = async () => {
         if (!cocktailName || !description || !selectedImage || recipeList.length === 0) {
-            alert("모든 필드를 채워주세요.");
+            showError("모든 필드를 채워주세요.");
             return;
         }
 
@@ -136,62 +142,95 @@ export default function CocktailWritePage({ mode = "create" }) {
             console.log(`${pair[0]}:`, pair[1]);
         }
 
-        alert("콘솔에서 FormData 확인");
+        showError("작성 완료 기능은 추후 구현 예정입니다!");
+    };
+
+    const handleCancel = () => {
+        const hasChanges = cocktailName || description || selectedImage || recipeList.length > 0;
+        if (hasChanges) {
+            setShowCancelModal(true);
+        } else {
+            navigate(-1);
+        }
+    };
+
+    const confirmCancel = () => {
+        setCocktailName("");
+        setDescription("");
+        setSelectedImage(null);
+        setRecipeList([]);
+        setFilters({
+            baseLiquors: [],
+            ingredients: [],
+            abv: null,
+            shaking: null,
+        });
+        setShowCancelModal(false);
+        navigate(-1);
     };
 
     return (
         <>
-            <NavBar/>
-        <div className={styles.pageWrapper}>
-            <section className={styles.leftSection}>
-                <div className={styles.inputBox}>
-                    <label className={styles.label}>칵테일 이름</label>
-                    <input
-                        type="text"
-                        value={cocktailName}
-                        onChange={(e) => setCocktailName(e.target.value)}
-                        placeholder="예: 화이트 러시안, 피나콜라다 등"
-                        className={styles.input}
-                    />
-                </div>
+            <NavBar />
+            <div className={styles.pageWrapper}>
+                {errorMessage && (
+                    <div className={styles.errorMessage}>{errorMessage}</div>
+                )}
 
-                <div className={styles.inputBox}>
-                    <label className={styles.label}>소개글</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="예: 오늘 만들어 본건 마가리타 선셋입니다~"
-                        className={styles.textarea}
-                    />
-                </div>
+                {showCancelModal && (
+                    <div className={styles.modalOverlay}>
+                        <div className={styles.modalBox}>
+                            <p className={styles.modalText}>정말 작성을 취소하시겠습니까?</p>
+                            <div className={styles.modalButtonGroup}>
+                                <button className={styles.modalYes} onClick={confirmCancel}>예</button>
+                                <button className={styles.modalNo} onClick={() => setShowCancelModal(false)}>아니오</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
-                <div className={styles.inputBox}>
-                    <label className={styles.label}>레시피</label>
-                    <RecipeInputBox recipeList={recipeList} setRecipeList={setRecipeList} />
-                </div>
-            </section>
+                <section className={styles.leftSection}>
+                    <div className={styles.inputBox}>
+                        <label className={styles.label}>칵테일 이름</label>
+                        <input
+                            type="text"
+                            value={cocktailName}
+                            onChange={(e) => setCocktailName(e.target.value)}
+                            placeholder="예: 화이트 러시안, 피나콜라다 등"
+                            className={styles.input}
+                        />
+                    </div>
 
-            <section className={styles.rightSection}>
-                <ImageUploadBox onImageSelect={setSelectedImage} selectedImage={selectedImage} />
+                    <div className={styles.inputBox}>
+                        <label className={styles.label}>소개글</label>
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="예: 오늘 만들어 본건 마가리타 선셋입니다~"
+                            className={styles.textarea}
+                        />
+                    </div>
 
-                <div className={styles.propertyBox}>
-                    <p className={styles.label}>칵테일 속성</p>
-                    <CocktailTagBox filters={filters} setFilters={setFilters} />
-                </div>
+                    <div className={styles.inputBox}>
+                        <label className={styles.label}>레시피</label>
+                        <RecipeInputBox recipeList={recipeList} setRecipeList={setRecipeList} />
+                    </div>
+                </section>
 
-                <div className={styles.buttonGroup}>
-                    <button
-                        className={styles.cancelButton}
-                        onClick={() => {
-                            if (window.confirm("정말 작성을 취소하시겠습니까? 작성한 내용은 저장되지 않습니다.")) {
-                                navigate(-1);
-                            }
-                        }}
-                    >작성 취소</button>
-                    <button className={styles.submitButton} onClick={handleSubmit}>작성 완료</button>
-                </div>
-            </section>
-        </div>
+                <section className={styles.rightSection}>
+                    <ImageUploadBox onImageSelect={setSelectedImage} selectedImage={selectedImage} />
+
+                    <div className={styles.propertyBox}>
+                        <p className={styles.label}>칵테일 속성</p>
+                        <CocktailTagBox filters={filters} setFilters={setFilters} />
+                    </div>
+
+                    <div className={styles.buttonGroup}>
+                        <button className={styles.cancelButton} onClick={handleCancel}>작성 취소</button>
+                        <button className={styles.submitButton} onClick={handleSubmit}>작성 완료</button>
+                    </div>
+                </section>
+            </div>
         </>
     );
 }
