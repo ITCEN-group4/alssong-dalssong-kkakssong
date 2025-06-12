@@ -1,7 +1,11 @@
 name: Back CI/CD
 
 on:
-  workflow_dispatch
+  push:
+    paths:
+      - 'back/**'
+    branches:
+      - develop
 
 env:
   DATE_TAG: dev-${{ github.run_id }}
