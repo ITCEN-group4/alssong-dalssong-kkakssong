@@ -1,5 +1,5 @@
 # 빌드 단계
-FROM --platform=linux/arm64 amazoncorretto:17 AS build
+FROM --platform=linux/arm64 eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
 COPY gradlew .
@@ -8,15 +8,14 @@ COPY build.gradle settings.gradle .
 
 RUN chmod +x gradlew
 
-RUN ./gradlew build -x test --no-daemon || true
+RUN ./gradlew dependencies --no-daemon || true
 
 COPY src ./src
 
-# 빌드
 RUN ./gradlew bootJar -x test --no-daemon --no-build-cache
 
 # 실행 단계
-FROM --platform=linux/arm64 amazoncorretto:17-alpine-jdk
+FROM --platform=linux/arm64 eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
