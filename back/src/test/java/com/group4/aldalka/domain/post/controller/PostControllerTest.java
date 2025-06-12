@@ -300,6 +300,67 @@ class PostControllerTest {
 
         }
 
+        @Test
+        @DisplayName("9. 베이스주 Single 검색 테스트 - base_liquors =[럼] 인 경우")
+        void searchPostSingleBaseLiquorsParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "base_liquors": ["럼"]
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("모히또");
+
+        }
+
+        @Test
+        @DisplayName("10. 베이스주 Multiple 검색 테스트 - base_liquors =[럼, 보드카] 인 경우")
+        void searchPostMultipleBaseLiquorsParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "base_liquors": ["럼", "보드카"]
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            for(PostResponse postResponse: response.getPosts()){
+                System.out.println(postResponse.getTitle());
+            }
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(2);
+
+            List<PostResponse> posts = response.getPosts();
+
+            // 모든 제목을 하나의 리스트로 추출
+            List<String> titles = posts.stream()
+                    .map(PostResponse::getTitle)
+                    .collect(Collectors.toList());
+
+            assertThat(titles).anyMatch(title -> title.contains("모히또"));
+            assertThat(titles).anyMatch(title -> title.contains("과일주스 칵테일"));
+
+        }
+
+
     }
 
     @Nested
