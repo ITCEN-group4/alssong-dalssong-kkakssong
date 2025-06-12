@@ -196,6 +196,110 @@ class PostControllerTest {
             assertThat(response.getPosts().get(0).getTitle()).isEqualTo("모히또");
         }
 
+        @Test
+        @DisplayName("5. 부가재료 Single 검색 테스트 - ingredients =[과일주스] 인 경우")
+        void SearchPostsSingleIngredientsParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "ingredients": ["과일주스"]
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(2);
+
+            List<PostResponse> posts = response.getPosts();
+
+            // 모든 제목을 하나의 리스트로 추출
+            List<String> titles = posts.stream()
+                    .map(PostResponse::getTitle)
+                    .collect(Collectors.toList());
+
+            assertThat(titles).anyMatch(title -> title.contains("모히또"));
+            assertThat(titles).anyMatch(title -> title.contains("과일주스 칵테일"));
+        }
+
+        @Test
+        @DisplayName("6. 부가재료 Multiple 검색 테스트 - ingredients =[과일주스, 탄산음료] 인 경우")
+        void searchPostsMultipleIngredientsParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "ingredients": ["과일주스", "탄산음료"]
+                        
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("모히또");
+
+        }
+
+        @Test
+        @DisplayName("7. 부가재료 Only 기타 검색 테스트 - ingredients =[기타] 인 경우")
+        void searchPostsOnlyEtcIngredientsParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "ingredients": ["기타"]
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("보드카 라임");
+
+        }
+
+        @Test
+        @DisplayName("8. 부가재료 기타외에 다른 재료와 함께 검색 테스트 - ingredients =[탄산음료, 기타] 인 경우")
+        void searchPostsWithEtcIngredientsParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "ingredients": ["탄산음료", "기타"]
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("모히또");
+
+        }
+
     }
 
     @Nested
