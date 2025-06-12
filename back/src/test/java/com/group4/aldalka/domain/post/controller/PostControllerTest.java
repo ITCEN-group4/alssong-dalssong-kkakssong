@@ -114,7 +114,135 @@ class PostControllerTest {
             assertThat(response.getTotalElements()).isEqualTo(3);
             assertThat(response.getPosts()).hasSize(3);
         }
-        
+
+
+        @Test
+        @DisplayName("1. 아무 파라미터가 없을 때 (기본 검색)")
+        void searchPostsNoParameters() throws Exception {
+            // given: 빈 JSON 객체 (모든 파라미터가 기본값으로 설정될 것임)
+            String requestJson = "{}";
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(resultResponse.getData()).isNotNull();
+            // 기본값: isOfficial=true, page=1, sort="like"
+            // 모든 공식 게시글이 반환될 것으로 예상
+
+            assertThat(response.getTotalElements()).isEqualTo(3);
+            assertThat(response.getTotalPages()).isEqualTo(1);
+            assertThat(response.getPosts().size()).isEqualTo(3);
+
+            List<PostResponse> posts = response.getPosts();
+
+            // 모든 제목을 하나의 리스트로 추출
+            List<String> titles = posts.stream()
+                    .map(PostResponse::getTitle)
+                    .collect(Collectors.toList());
+
+            assertThat(titles).anyMatch(title -> title.contains("모히또"));
+            assertThat(titles).anyMatch(title -> title.contains("보드카 라임"));
+            assertThat(titles).anyMatch(title -> title.contains("과일주스 칵테일"));
+
+        }
+
+
+    }
+
+    @Nested
+    class WithoutBasePost {
+
+        @BeforeEach
+        void setupWithoutBasePost() {
+            clearAllData();
+            setupWithBaseUser();
+        }
+
+        @Test
+        @DisplayName("3. 페이지네이션 테스트 - page =2 인 경우")
+        void searchPostsPageParamTest() throws Exception {
+
+            for (int i = 1; i <= 10; i++) {
+                Post post = Post.builder()
+                        .title("Test Post " + i)
+                        .content("Content " + i)
+                        .isOfficial(true)
+                        .difficulty(1)
+                        .user(savedUser)
+                        .build();
+                postRepository.save(post);
+            }
+
+            // given: page=1 (두 번째 페이지 요청)
+            String requestJson = """
+                    {
+                        "page": 2
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(10);
+            assertThat(response.getPosts()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("13. 정렬 테스트 - sort= new인 경우")
+        void searchPosts_sortParamTest() throws Exception {
+
+            for (int i = 0; i < 8; i++) {
+                Post post = Post.builder()
+                        .title(String.valueOf(i))
+                        .content("Content " + i)
+                        .isOfficial(true)
+                        .difficulty(1)
+                        .user(savedUser)
+                        .build();
+
+                postRepository.save(post);
+
+                try {
+                    Thread.sleep(1000);  // 1초 대기
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            // given: page=1 (두 번째 페이지 요청)
+            String requestJson = """
+                    {
+                        "sort": "new"
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+
+            List<PostResponse> posts = response.getPosts();
+            for (int i = 0; i < posts.size() - 1; i++) {
+                Long currentId = posts.get(i).getPostId();
+                Long nextId = posts.get(i + 1).getPostId();
+                assertThat(currentId).isGreaterThanOrEqualTo(nextId);
+
+            }
+        }
     }
 
     private void clearAllData() {
