@@ -151,6 +151,29 @@ class PostControllerTest {
 
         }
 
+        @Test
+        @DisplayName("2. 공식/유저 포스트 구별 - is_official=false인 경우")
+        void searchPostsIsOfficialParamTest() throws Exception {
+            // given: isOfficial=false 파라미터를 포함한 요청 JSON
+            String requestJson = """
+                    {
+                        "is_official": false
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+            assertThat(response.getPosts()).hasSize(1);
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("진토닉");
+        }
+
 
     }
 
