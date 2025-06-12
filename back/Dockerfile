@@ -1,5 +1,5 @@
 # 빌드 단계
-FROM --platform=linux/arm64 eclipse-temurin:17-jdk-alpine AS build
+FROM --platform=linux/arm64 gradle:8.13-jdk17 AS build
 WORKDIR /app
 
 COPY gradlew .
@@ -15,7 +15,7 @@ COPY src ./src
 RUN ./gradlew bootJar -x test --no-daemon --no-build-cache
 
 # 실행 단계
-FROM --platform=linux/arm64 eclipse-temurin:17-jre-alpine
+FROM --platform=linux/arm64 amazoncorretto:17 
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
