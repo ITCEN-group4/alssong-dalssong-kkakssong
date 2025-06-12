@@ -384,6 +384,29 @@ class PostControllerTest {
 
         }
 
+        @Test
+        @DisplayName("12. 쿼리 검색 테스트 - query = 모히또 인 경우")
+        void searchPostQueryParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "query": "모히또"
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("모히또");
+
+        }
 
     }
 
