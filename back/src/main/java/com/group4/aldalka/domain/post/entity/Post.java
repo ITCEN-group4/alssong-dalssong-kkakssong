@@ -59,4 +59,15 @@ public class Post extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostBaseLiquor> postBaseLiquors = new ArrayList<PostBaseLiquor>();
+
+    //테스트코드를 위한 편의메서드
+    public void addPostIngredient(PostIngredient postIngredient) {
+        this.postIngredients.add(postIngredient);
+        postIngredient.setPost(this); // 양방향 연결
+    }
+
+    public void addPostBaseLiquor(PostBaseLiquor postBaseLiquor) {
+        this.postBaseLiquors.add(postBaseLiquor);
+        postBaseLiquor.setPost(this); // 양방향 연결
+    }
 }
