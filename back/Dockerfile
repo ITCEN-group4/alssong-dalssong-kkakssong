@@ -1,19 +1,22 @@
 # 빌드 단계
-FROM --platform=linux/arm64 gradle:8.13-jdk17 AS build
+FROM --platform=linux/arm64 amazoncorretto:17 AS build
 WORKDIR /app
 
-COPY gradle ./gradle
 COPY gradlew .
+COPY gradle ./gradle
 COPY build.gradle settings.gradle . 
 
 RUN chmod +x gradlew
-RUN ./gradlew dependencies --no-daemon
+
+RUN ./gradlew build -x test --no-daemon || true
 
 COPY src ./src
-RUN ./gradlew bootJar --no-daemon --no-build-cache -x test
+
+# 빌드
+RUN ./gradlew bootJar -x test --no-daemon --no-build-cache
 
 # 실행 단계
-FROM --platform=linux/arm64 amazoncorretto:17
+FROM --platform=linux/arm64 amazoncorretto:17-alpine-jdk
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
