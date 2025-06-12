@@ -1,14 +1,28 @@
-name: front-pr-ci
+name: Frontend PR CI
 
 on:
   pull_request:
     branches: [develop]
     paths:
-      - 'front/**'  
+      - 'front/**'
 
 jobs:
-  front-ci:
-    name: pr-ci
+  check-frontend-changes:
+    name: Check Frontend Changes
+    runs-on: ubuntu-22.04
+    outputs:
+      changed: ${{ steps.changes.outputs.any_changed }}
+    steps:
+      - name: Check for frontend changes
+        id: changes
+        uses: tj-actions/changed-files@v44
+        with:
+          files: front/**
+
+  run-frontend-tests:
+    name: Run Frontend Tests
+    needs: check-frontend-changes
+    if: needs.check-frontend-changes.outputs.changed == 'true'
     runs-on: ubuntu-22.04
 
     defaults:
@@ -16,20 +30,20 @@ jobs:
         working-directory: front
 
     steps:
-      - name: ✅레포지토리 체크아웃
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Node.js 20 설치
+      - name: Install Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: 의존성 설치
+      - name: Install dependencies
         run: npm ci
 
-      - name: ESLint 코드 검사
+      - name: Run ESLint
         run: npm run lint
 
-      - name: Vite 빌드 테스트
+      - name: Run Vite build
         run: npm run build
