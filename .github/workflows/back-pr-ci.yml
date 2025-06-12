@@ -85,12 +85,9 @@ jobs:
           name: test-results
           path: test-results
 
-      - name: Publish test results as PR comment
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: test-results/TEST-*.xml
-
-      - name: Add annotations to PR for failed tests
+      - name: Annotate test failures on PR
         uses: mikepenz/action-junit-report@v4
         with:
           report_paths: test-results/TEST-*.xml
+          detailed_summary: true
+          check_name: 'JUnit Test Report'
