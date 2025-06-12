@@ -1,15 +1,17 @@
 package com.group4.aldalka.global.result;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class ResultResponse {
+@NoArgsConstructor
+public class ResultResponse<T> {
 
-    private final int status;
-    private final String message;
-    private final Object data;
+    private int status;
+    private String message;
+    private T data;
 
-    private ResultResponse(ResultCode resultCode, Object data) {
+    private ResultResponse(ResultCode resultCode, T data) {
         this.status = resultCode.getStatus();
         this.message = resultCode.getMessage();
         this.data = data;
