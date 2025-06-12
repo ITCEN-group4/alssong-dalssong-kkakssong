@@ -2,7 +2,10 @@
 FROM --platform=linux/arm64 gradle:8.13-jdk17 AS build
 WORKDIR /app
 
-COPY gradlew gradle build.gradle settings.gradle ./
+COPY gradle ./gradle 
+COPY gradlew . 
+COPY build.gradle settings.gradle . 
+
 RUN chmod +x gradlew
 RUN ./gradlew dependencies --no-daemon || true
 
