@@ -1,5 +1,5 @@
 # 빌드 단계
-FROM --platform=linux/arm64 eclipse-temurin:17-jdk-alpine AS build
+FROM --platform=linux/arm64 eclipse-temurin:17-jdk-alpine-3.21 AS build
 WORKDIR /app
 
 COPY gradlew .
