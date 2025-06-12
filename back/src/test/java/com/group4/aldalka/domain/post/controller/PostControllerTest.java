@@ -174,6 +174,27 @@ class PostControllerTest {
             assertThat(response.getPosts().get(0).getTitle()).isEqualTo("진토닉");
         }
 
+        @Test
+        @DisplayName("4. 도수 검색 테스트 - difficulty =2 인 경우")
+        void searchPostsDifficultyParamTest() throws Exception {
+
+            String requestJson = """
+                    {
+                        "difficulty": 2
+                    }
+                    """;
+
+            HttpEntity<String> httpEntity = createHttpRequest(requestJson);
+
+            // when
+            ResultResponse<PagedResponse<PostResponse>> resultResponse = sendPostRequest(baseUrl, httpEntity);
+            PagedResponse<PostResponse> response = resultResponse.getData();
+
+            // then
+            assertThat(resultResponse.getStatus()).isEqualTo(200);
+            assertThat(response.getTotalElements()).isEqualTo(1);
+            assertThat(response.getPosts().get(0).getTitle()).isEqualTo("모히또");
+        }
 
     }
 
