@@ -43,12 +43,10 @@ public class JJwtProvider implements JwtProvider {
             UserRole userRole = UserRole.find(payload.get(ROLE, String.class));
             return new CustomClaims(email, userRole);
         } catch (ExpiredJwtException e) {
-            // TODO: 새로운 ErrorCode 정의 필요. EXPIRED_TOKEN으로 하는게?
-            throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
+            throw new BusinessException(ErrorCode.EXPIRED_TOKEN);
         } catch (RuntimeException e) {
             log.debug("액세스 토큰이 유효하지 않습니다. token={}", accessToken);
-            // TODO: 새로운 ErrorCode 정의 필요. Invalid_Token으로 하는게?
-            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+            throw new BusinessException(ErrorCode.TOKEN_INVALID);
         }
     }
 
