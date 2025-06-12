@@ -145,6 +145,22 @@
     font-weight: bold;
 }
 
+.submitButton:hover {
+    border-color: #ccc;
+    background-color: #ffa2b6;
+}
+
+.cancelButton:hover {
+    border-color: #ccc;
+    background-color: #d3d3d3;
+}
+
+.cancelButton:focus,
+.submitButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
 @media (max-width: 768px) {
     .pageWrapper {
         flex-direction: column;
@@ -158,3 +174,103 @@
     }
 }
 
+.errorMessage {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #ff6f91;
+    font-family: "Jua", sans-serif;
+    padding: 10px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    font-size: 0.95rem;
+    animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+}
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalBox {
+    background-color: white;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.modalText {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.modalButtonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.modalYes,
+.modalNo {
+    padding: 0.6rem 2rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modalYes {
+    background-color: #ff6f91;
+    color: white;
+}
+
+.modalNo {
+    background-color: #eee;
+    color: #555;
+}
+
+.modalYes:focus,
+.modalNo:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}
+
+.modalYes:hover {
+    border-color: #ccc;
+    background-color: #ffa2b6;
+}
+
+.modalNo:hover {
+    border-color: #ccc;
+    background-color: #d3d3d3;
+}
