@@ -1,7 +1,5 @@
 package com.group4.aldalka.global.error;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
