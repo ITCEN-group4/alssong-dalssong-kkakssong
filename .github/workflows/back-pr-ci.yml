@@ -85,6 +85,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: test-results/TEST-*.xml
+          github_token: ${{ secrets.PAT_TOKEN }}
 
       - name: Add annotations to PR for failed tests
         uses: mikepenz/action-junit-report@v4
