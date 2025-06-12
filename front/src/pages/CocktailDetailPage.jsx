@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import styles from "./CocktailDetailPage.module.css";
 import {useCocktailContext} from "../context/CocktailContext.jsx";
 import baseIcon from "../assets/baseIcon.svg";
@@ -15,12 +15,15 @@ export default function CocktailDetailPage() {
     const {id} = useParams();
     const {cocktailList, toggleLike, likedMap, deleteCocktail} = useCocktailContext();
     const [animate, triggerAnimate] = useLikeAnimation();
-    const cocktail = testData.find((c) => String(c.id) === id);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
+    const cocktail = testData.find((c) => String(c.id) === id);
     if (!cocktail) return <div>존재하지 않는 칵테일입니다.</div>;
 
     const {label: abvLabel, icon: abvIcon} = getAbvIcon(cocktail.abv);
     const {label: shakingLabel, icon: shakingIcon} = getShakingIcon(cocktail.shaking);
+
     const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
     const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
     const liked = likedMap[cocktail.id] || false;
@@ -40,18 +43,41 @@ export default function CocktailDetailPage() {
         navigate(`/post/update/${cocktail.id}`)
     };
 
-    const handelDelete = () => {
-        if (window.confirm(`'${cocktail.name}' 칵테일을 정말 삭제하시겠습니까?`)) {
-            deleteCocktail(cocktail.id);
-            navigate('/post');
-            alert('칵테일이 삭제되었습니다.');
-        }
-    }; // 지금은 보이는 리스트에서만 삭제되는거고(새로고침 시 살아남) 추후 CocktailContext의 deleteCocktail 함수 수정해야함
+    const handleDelete = () => {
+        setShowDeleteModal(true);
+    };
 
+    const confirmDelete = () => {
+        deleteCocktail(cocktail.id);
+        setShowDeleteModal(false);
+        setErrorMessage("칵테일이 삭제되었습니다.");
+        setTimeout(() => {
+            setErrorMessage("");
+            navigate('/post');
+        }, 1500);
+    };
     return (
         <>
         <NavBar/>
         <div className={styles.detailPage}>
+            {errorMessage && (
+                <div className={styles.errorMessage}>{errorMessage}</div>
+            )}
+
+            {showDeleteModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalBox}>
+                        <p className={styles.modalText}>
+                            정말 삭제하시겠습니까?
+                        </p>
+                        <div className={styles.modalButtonGroup}>
+                            <button className={styles.modalYes} onClick={confirmDelete}>예</button>
+                            <button className={styles.modalNo} onClick={() => setShowDeleteModal(false)}>아니오</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className={styles.pageHeader}>
                 <div className={styles.pageHeaderLeft}>
                     <h1>칵테일 정보 공유</h1>
@@ -66,7 +92,7 @@ export default function CocktailDetailPage() {
                         </button>
                         <button
                             className={styles.deleteButton}
-                            onClick={handelDelete}>
+                            onClick={handleDelete}>
                             🗑️ 삭제
                         </button>
                     </div>)}
