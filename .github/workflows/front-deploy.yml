@@ -7,8 +7,11 @@ on:
     branches:
       - develop
 
+env:
+  DATE_TAG: dev-${{ github.run_id }}
+
 jobs:
-  build-and-deploy-frontend:
+  build:
     runs-on: ubuntu-22.04
 
     steps:
@@ -40,6 +43,11 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/front:${{ env.DATE_TAG }}
             ${{ secrets.DOCKERHUB_USERNAME }}/front:latest
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+
+    steps:
       - name: Deploy via Bastion Host
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -51,17 +59,22 @@ jobs:
           proxy_host: ${{ secrets.BASTION_HOST }}
           proxy_username: ${{ secrets.EC2_USERNAME }}
           proxy_key: ${{ secrets.EC2_SSH_KEY }}
-          proxy_port: ${{ secrets.BASTION_PORT }}  
-          
+          proxy_port: ${{ secrets.BASTION_PORT }}
+
           script: |
             set -e
             cd ~/front
             ./deploy.sh front
 
+  notify:
+    needs: deploy
+    runs-on: ubuntu-22.04
+    if: success()
+
+    steps:
       - name: Discord Notification
-        if: success()
         uses: Ilshidur/action-discord@master
         with:
-          args: "✅ [FRONT] 이미지 푸시 완료: ${{ env.DATE_TAG }}"
+          args: "👍 [FRONT] 이미지 푸시 및 배포 완료: `${{ env.DATE_TAG }}`"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
