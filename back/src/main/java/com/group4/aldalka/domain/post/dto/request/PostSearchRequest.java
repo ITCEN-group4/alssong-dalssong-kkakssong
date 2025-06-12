@@ -25,7 +25,7 @@ public class PostSearchRequest {
             @JsonProperty("sort") String sort,
             @JsonProperty("difficulty") Integer difficulty,
             @JsonProperty("ingredients") List<String> ingredients,
-            @JsonProperty("base_liqueurs") List<String> baseLiqueurs,
+            @JsonProperty("base_liquors") List<String> baseLiqueurs,
             @JsonProperty("is_shaken") Boolean isShaken,
             @JsonProperty("query") String query
     ) {

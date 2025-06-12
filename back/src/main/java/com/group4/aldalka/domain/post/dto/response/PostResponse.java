@@ -31,7 +31,7 @@ public class PostResponse {
     @JsonProperty("image_url")
     private String imageUrl;
 
-    @JsonProperty("base_liqueurs")
+    @JsonProperty("base_liquors")
     private List<String> baseLiqueurs;
 
     private List<String> ingredients;
