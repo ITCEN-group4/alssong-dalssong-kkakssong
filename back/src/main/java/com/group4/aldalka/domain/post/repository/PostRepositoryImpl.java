@@ -92,8 +92,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         .join(post.postBaseLiquors, pbl)
                         .join(pbl.baseLiquor, liquor)
                         .where(liquor.name.in(postSearchRequest.getBaseLiqueurs()))
-                        .groupBy(post.postId)
-                        .having(liquor.name.countDistinct().eq((long) postSearchRequest.getBaseLiqueurs().size()))
         );
     }
     private BooleanExpression buildOnlyEtcIngredientsFilter() {
