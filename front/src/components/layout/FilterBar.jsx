@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './FilterBar.module.css';
 import { useCocktailContext} from "../../context/CocktailContext.jsx";
 
-export default function FilterBar() {
+export default function FilterBar( {resetSignal}) {
     const [filters, setFilters] = useState({
         baseLiquors: [],
         ingredients: [],
@@ -11,6 +11,17 @@ export default function FilterBar() {
     });
 
     const {filterList, triggerListUpdate} = useCocktailContext()
+
+    useEffect(() => {
+        if (resetSignal) {
+            setFilters({
+                baseLiquors: [],
+                ingredients: [],
+                abv: null,
+                shaking: null,
+            });
+        }
+    }, [resetSignal]);
 
     function handleSelect(type, value) {
         setFilters(prev => {
