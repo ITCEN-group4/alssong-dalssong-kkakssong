@@ -26,12 +26,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public CreateUserResponse createUser(UserCreationRequest request) {
-        //TODO: 새로운 ErrorCode 만들지 허가 받기
         userRepository
                 .findByEmail(request.getEmail())
                 .ifPresent(
                         user -> {
-                            throw new BusinessException(ErrorCode.INPUT_VALUE_INVALID);
+                            throw new BusinessException(ErrorCode.EMAIL_EXISTS_ERROR);
                         });
         User user =
                 User.builder()
