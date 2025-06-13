@@ -1,57 +1,32 @@
-import React, {useEffect, useState} from 'react';
-import styles from './OfficialFilterBar.module.css';
-import { useOfficialCocktailContext} from "../../context/OfficialCocktailContext.jsx";
+import React from 'react';
+import styles from './FilterBar.module.css';
 
-export default function OfficialFilterBar({resetSignal}) {
-    const [filters, setFilters] = useState({
-        baseLiquors: [],
-        ingredients: [],
-        abv: null,
-        shaking: null,
-    });
+export default function FilterBar({ filters, setFilters, onFilterApply }) {
+    const handleSelect = (type, value) => {
+        setFilters(prev => ({
+            ...prev,
+            [type]: prev[type] === value ? null : value
+        }));
+    };
 
-    const { filterList, resetList } = useOfficialCocktailContext();
-
-    useEffect(() => {
-        setFilters({
-            baseLiquors: [],
-            ingredients: [],
-            abv: null,
-            shaking: null,
-        });
-    }, [resetSignal]);
-
-    function handleSelect(type, value) {
-        setFilters(prev => {
-            const current = prev[type];
-            const newValue = current === value ? null : value;
-            return { ...prev, [type]: newValue };
-        });
-    }
-
-    function handleMultiSelect(type, value) {
+    const handleMultiSelect = (type, value) => {
         setFilters(prev => {
             const currentArray = prev[type];
-            let newArray;
-            if (currentArray.includes(value)) {
-                newArray = currentArray.filter(item => item !== value);
-            } else {
-                newArray = [...currentArray, value];
-            }
+            const newArray = currentArray.includes(value)
+                ? currentArray.filter(item => item !== value)
+                : [...currentArray, value];
             return { ...prev, [type]: newArray };
         });
-    }
+    };
 
-    function handleResetFilters() {
+    const handleResetFilters = () => {
         setFilters({
             baseLiquors: [],
             ingredients: [],
             abv: null,
             shaking: null,
         });
-
-        resetList();
-    }
+    };
 
     return (
         <div className={styles.container}>
@@ -122,15 +97,16 @@ export default function OfficialFilterBar({resetSignal}) {
             <div className={styles.actionColumn}>
                 <button
                     className={styles.submitButton}
-                    onClick={() =>
-                        filterList(filters)}
+                    onClick={() =>{
+                        onFilterApply(filters);}
+                    }
                 >
                     조합하기
                 </button>
                 <button
                     className={styles.resetPlaceholder}
                     onClick={handleResetFilters}
-                    >
+                >
                     필터 초기화
                 </button>
             </div>

@@ -140,3 +140,27 @@
 .menuItem:hover {
     opacity: 0.6;
 }
+
+.authButton {
+    font-size: 0.8rem;
+    font-family: "IBM Plex Sans KR", sans-serif;
+    font-weight: 700;
+    background-color: transparent;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    padding: 6px 12px;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    color: #454545;
+    transition: all 0.2s ease;
+}
+
+.authButton:hover {
+    border-color: #ccc;
+    background-color: #d3d3d3;
+}
+
+.authButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0);
+}

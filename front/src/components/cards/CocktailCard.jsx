@@ -1,60 +1,92 @@
-import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./CocktailCard.module.css";
 import getAbvTag from "../../utils/getAbvTag.js";
 import useLikeAnimation from "../../utils/useLikeAnimation.js";
-import {useCocktailContext} from "../../context/CocktailContext.jsx";
+import { postLike, deleteLike, getPostById } from "../../api/postApi";
+import {getMyInfo} from "../../api/userApi.js";
 
-export default function CocktailCard({cocktail}) {
+export default function CocktailCard({ cocktail }) {
     const navigate = useNavigate();
-    const {label, icon} = getAbvTag(cocktail.abv);
-    const {toggleLike, likedMap, cocktailList} = useCocktailContext();
-    const liked = likedMap[cocktail.id] || false;
+    const { label, icon } = getAbvTag(cocktail.abv);
+    const [postData, setPostData] = useState(cocktail);
     const [animate, triggerAnimate] = useLikeAnimation();
-
-    // 실시간 좋아요 수 가져오기 (원본 데이터에서)
-    const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
-    const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const handleClick = () => {
-        navigate(`/post/${cocktail.id}`);
+        navigate(`/posts/${postData.id}`);
     };
 
-    const handleLike = (e) => {
+    useEffect(() => {
+        const fetchMyInfo = async () => {
+            try {
+                await getMyInfo();
+                setIsLoggedIn(true);  // 로그인 상태
+            } catch (error) {
+                console.error("유저 정보 조회 실패:", error);
+                setIsLoggedIn(false); // 실패 시 비로그인 상태
+            }
+        };
+        fetchMyInfo();
+    }, []);
+
+    const handleLike = async (e) => {
         e.stopPropagation();
-        toggleLike(cocktail.id);
-        triggerAnimate();
+
+        if (isLoggedIn === false) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
+        try {
+            if (postData.isLiked) {
+                await deleteLike(postData.id);
+            } else {
+                await postLike(postData.id);
+            }
+
+            // 최신 데이터로 갱신
+            const res = await getPostById(postData.id);
+            const updated = res.data.data;
+            setPostData(prev => ({
+                ...prev,
+                isLiked: updated.is_liked,
+                likes: updated.like_count,
+            }));
+            triggerAnimate();
+        } catch (err) {
+            console.error("좋아요 토글 실패:", err);
+        }
     };
 
     return (
         <div className={styles.card} onClick={handleClick}>
-            <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage}/>
+            <img src={postData.image} alt={postData.name} className={styles.cardImage} />
 
             <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{cocktail.name}</h3>
+                <h3 className={styles.cardTitle}>{postData.name}</h3>
 
                 <div className={styles.cardTags}>
-                    <span className={styles.tagBaseLiquors}>{cocktail.baseLiquors}</span>
-                    <span className={styles.tagIngredient}>{cocktail.ingredients[0]}</span>
-                    <span className={styles.tagShaking}>{cocktail.shaking ? "쉐이킹 ON" : "쉐이킹 OFF"}</span>
+                    <span className={styles.tagBaseLiquors}>{postData.baseLiquors[0]}</span>
+                    <span className={styles.tagIngredient}>{postData.ingredients[0]}</span>
+                    <span className={styles.tagShaking}>
+                        {postData.shaking ? "쉐이킹 ON" : "쉐이킹 OFF"}
+                    </span>
                 </div>
             </div>
 
-            <p className={styles.description}>{cocktail.description}</p>
+            <p className={styles.description}>{postData.description}</p>
 
             <button className={styles.likeButton} onClick={handleLike}>
                 <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
-                    {liked ? "❤️" : "🤍"}
+                    {postData.isLiked ? "❤️" : "🤍"}
                 </span>
                 <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
-                    {currentLikes}
+                    {postData.likes}
                 </span>
             </button>
 
-            <img
-                src={icon}
-                alt={label}
-                className={styles.abvBadge}
-            />
+            <img src={icon} alt={label} className={styles.abvBadge} />
         </div>
     );
 }

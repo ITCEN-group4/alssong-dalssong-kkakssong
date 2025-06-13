@@ -1,11 +1,13 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from './MyPageSidebar.module.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {getMyInfo} from "../../api/userApi.js";
 
 export default function MyPageSidebar({ onLogout }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [currentNickname, setCurrentNickname] = useState("");
 
     const currentPath = location.pathname;
     const isInfo = currentPath === "/mypage";
@@ -18,19 +20,31 @@ export default function MyPageSidebar({ onLogout }) {
     const confirmLogout = () => {
         setShowLogoutModal(false);
         onLogout(); // 실제 로그아웃 로직
-        navigate("/auth/login");
     };
 
     const cancelLogout = () => {
         setShowLogoutModal(false);
     };
 
+    useEffect(() => {
+        const fetchMyInfo = async () => {
+            try {
+                const res = await getMyInfo();
+                setCurrentNickname(res.data.nickname);
+            } catch (error) {
+                console.error("유저 정보 조회 실패:", error);
+            }
+        };
+
+        fetchMyInfo();
+    }, []);
+
     return (
         <div className={styles.sidebar}>
             <div>
                 <div className={styles.profileSection}>
                     <div className={styles.profileImg}></div>
-                    <p className={styles.nickname}>닉네임</p>
+                    <p className={styles.nickname}>{currentNickname}</p>
                 </div>
 
                 <div className={styles.menu}>

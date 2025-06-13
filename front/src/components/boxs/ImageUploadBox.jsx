@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./ImageUploadBox.module.css";
 
-export default function ImageUploadBox({ onImageSelect, selectedImage }) {
+export default function ImageUploadBox({ onImageSelect, selectedImage , onDeleteImage}) {
     const fileInputRef = useRef(null);
     const [preview, setPreview] = useState(null);
 
@@ -21,8 +21,8 @@ export default function ImageUploadBox({ onImageSelect, selectedImage }) {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        if (file.size > 10 * 1024 * 1024) {
-            alert("10MB 이하 파일만 업로드 가능합니다.");
+        if (file.size > 5 * 1024 * 1024) {
+            alert("5MB 이하 파일만 업로드 가능합니다.");
             return;
         }
         setPreview(URL.createObjectURL(file));
@@ -33,8 +33,8 @@ export default function ImageUploadBox({ onImageSelect, selectedImage }) {
         e.preventDefault();
         const file = e.dataTransfer.files[0];
         if (!file) return;
-        if (file.size > 10 * 1024 * 1024) {
-            alert("10MB 이하 파일만 업로드 가능합니다.");
+        if (file.size > 5 * 1024 * 1024) {
+            alert("5MB 이하 파일만 업로드 가능합니다.");
             return;
         }
         setPreview(URL.createObjectURL(file));
@@ -47,6 +47,10 @@ export default function ImageUploadBox({ onImageSelect, selectedImage }) {
 
     const handleDelete = (e) => {
         e.stopPropagation();
+        if (onDeleteImage && typeof selectedImage === "string") {
+            onDeleteImage(); // S3에서 삭제
+        }
+
         setPreview(null);
         onImageSelect(null);
         fileInputRef.current.value = '';

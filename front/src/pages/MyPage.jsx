@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import MyPageSidebar from "../components/layout/MyPageSidebar";
 import MyInfoPage from "./MyInfoPage";
 import MyPostViewPage from "./MyPostViewPage";
@@ -8,6 +8,7 @@ import NavBar from "../components/layout/NavBar.jsx";
 export default function MyPage() {
     const location = useLocation();
     const currentPath = location.pathname;
+    const navigate = useNavigate();
 
     // 탭에 따라 보여줄 컴포넌트 결정
     const renderContent = () => {
@@ -16,8 +17,9 @@ export default function MyPage() {
     };
 
     const handleLogout = () => {
-        // 로그아웃 로직 필요(localStorage 제거, navigate 메인화면 등)
+        localStorage.removeItem("token");
         console.log("로그아웃");
+        navigate("/posts?reset=true");
     };
 
     return (

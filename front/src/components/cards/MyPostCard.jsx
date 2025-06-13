@@ -6,7 +6,7 @@ export default function MyPostCard({ cocktail }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/post/${cocktail.id}`);
+        navigate(`/posts/${cocktail.id}`);
     };
 
     // 날짜 변환 (예: 2024-05-12 → 2024.05.12)
