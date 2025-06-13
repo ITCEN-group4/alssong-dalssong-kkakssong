@@ -12,9 +12,9 @@ export default function Footer() {
             <div className={styles.members}>
                 <div><p>mirageoasis</p><p>neokimhw0820@gmail.com</p></div>
                 <div><p>eunalove</p><p>etroppe88@gmail.com</p></div>
-                <div><p>Pest113</p><p>dmsktdl113@gmail.com</p></div>
+                <div><p>PES113</p><p>dmsktd113@gmail.com</p></div>
                 <div><p>happygirlll</p><p>lbm000314@gmail.com</p></div>
-                <div><p>Baesukju</p><p>ssrnm825@gmail.com</p></div>
+                <div><p>Baesukju</p><p>ssmm825@gmail.com</p></div>
                 <div><p>Jordan0216</p><p>jordandan216@gmail.com</p></div>
             </div>
 
