@@ -17,7 +17,9 @@ export default function CocktailDetailPage() {
     const [animate, triggerAnimate] = useLikeAnimation();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [errorLikeMessage, setErrorLikeMessage] = useState("");
 
+    const isLoggedIn = !!localStorage.getItem("accessToken");
     const cocktail = testData.find((c) => String(c.id) === id);
     if (!cocktail) return <div>존재하지 않는 칵테일입니다.</div>;
 
@@ -35,6 +37,11 @@ export default function CocktailDetailPage() {
     const cocktailUserId = cocktail.userId;
 
     const handleLike = () => {
+        if (!isLoggedIn) {
+            setErrorLikeMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorLikeMessage(""), 1000);
+            return;
+        }
         toggleLike(cocktail.id);
         triggerAnimate()
     };
@@ -62,6 +69,12 @@ export default function CocktailDetailPage() {
         <div className={styles.detailPage}>
             {errorMessage && (
                 <div className={styles.errorMessage}>{errorMessage}</div>
+            )}
+
+            {errorLikeMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorLikeMessage}>{errorLikeMessage}</div>
+                </div>
             )}
 
             {showDeleteModal && (

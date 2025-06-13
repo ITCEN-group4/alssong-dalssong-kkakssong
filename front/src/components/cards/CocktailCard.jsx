@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {useNavigate} from "react-router-dom";
 import styles from "./CocktailCard.module.css";
 import getAbvTag from "../../utils/getAbvTag.js";
@@ -10,7 +11,9 @@ export default function CocktailCard({cocktail}) {
     const {toggleLike, likedMap, cocktailList} = useCocktailContext();
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = useLikeAnimation();
+    const [errorMessage, setErrorMessage] = useState("");
 
+    const isLoggedIn = !!localStorage.getItem("accessToken");
     // 실시간 좋아요 수 가져오기 (원본 데이터에서)
     const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
     const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
@@ -21,11 +24,17 @@ export default function CocktailCard({cocktail}) {
 
     const handleLike = (e) => {
         e.stopPropagation();
+        if (!isLoggedIn) {
+            setErrorMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorMessage(""), 1000); // 2초 후 사라짐
+            return;
+        }
         toggleLike(cocktail.id);
         triggerAnimate();
     };
 
     return (
+        <>
         <div className={styles.card} onClick={handleClick}>
             <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage}/>
 
@@ -56,5 +65,12 @@ export default function CocktailCard({cocktail}) {
                 className={styles.abvBadge}
             />
         </div>
+
+            {errorMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorMessage}>{errorMessage}</div>
+                </div>
+            )}
+            </>
     );
 }

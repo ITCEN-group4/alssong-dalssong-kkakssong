@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { useParams } from "react-router-dom";
 import styles from "./OfficialCocktailDetailPage.module.css";
 import NavBar from "../components/layout/NavBar.jsx";
@@ -17,7 +17,9 @@ export default function OfficialDetailPage() {
     const cocktail = cocktailData.find((item) => item.id.toString() === id);
     const liked = likedMap[cocktail.id] || false;
     const [animate, triggerAnimate] = useLikeAnimation();
+    const [errorLikeMessage, setErrorLikeMessage] = useState("");
 
+    const isLoggedIn = !!localStorage.getItem("accessToken");
     if (!cocktail) return <p>해당 칵테일을 찾을 수 없습니다.</p>;
 
     // 실시간 좋아요 수 가져오기 (원본 데이터에서)
@@ -26,6 +28,11 @@ export default function OfficialDetailPage() {
 
     const handleLike = (e) => {
         e.stopPropagation();
+        if (!isLoggedIn) {
+            setErrorLikeMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorLikeMessage(""), 1000);
+            return;
+        }
         toggleLike(cocktail.id);
         triggerAnimate();
     };
@@ -33,6 +40,11 @@ export default function OfficialDetailPage() {
     return (
         <>
             <NavBar/>
+            {errorLikeMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorLikeMessage}>{errorLikeMessage}</div>
+                </div>
+            )}
                 <div className={styles.headerSection}>
                     <h2 className={styles.pageTitle}>칵테일 상세 정보</h2>
                     <p className={styles.pageSubtitle}>
