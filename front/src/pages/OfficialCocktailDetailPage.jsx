@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { useParams } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
 import styles from "./OfficialCocktailDetailPage.module.css";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
@@ -8,33 +8,74 @@ import tag_dosu from "../assets/tag_dosu.svg";
 import tag_etc from "../assets/tag_etc.svg";
 import tag_shake from "../assets/tag_shake.svg";
 import useLikeAnimation from "../utils/useLikeAnimation.js";
-import cocktailData from "../data/cocktailOfficialData.js";
-import {useOfficialCocktailContext} from "../context/OfficialCocktailContext.jsx";
+import {getMyInfo} from "../api/userApi.js";
+import {deleteLike, getPostById, postLike} from "../api/postApi.js";
+import {mapApiToFrontData} from "../utils/MapApiToFrontData.js";
 
 export default function OfficialDetailPage() {
     const { id } = useParams();
-    const {toggleLike, likedMap, cocktailList} = useOfficialCocktailContext();
-    const cocktail = cocktailData.find((item) => item.id.toString() === id);
-    const liked = likedMap[cocktail.id] || false;
+    const [cocktail, setCocktail] = useState(null);
+    const [error, setError] = useState(null);
     const [animate, triggerAnimate] = useLikeAnimation();
     const [errorLikeMessage, setErrorLikeMessage] = useState("");
 
-    const isLoggedIn = !!localStorage.getItem("accessToken");
-    if (!cocktail) return <p>해당 칵테일을 찾을 수 없습니다.</p>;
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // 실시간 좋아요 수 가져오기 (원본 데이터에서)
-    const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
-    const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
+    useEffect(() => {
+        const fetchMyInfo = async () => {
+            try {
+                await getMyInfo();
+                setIsLoggedIn(true);  // 로그인 상태로 변경
+            } catch (error) {
+                console.error("유저 정보 조회 실패:", error);
+                setIsLoggedIn(false); // 실패 시 비로그인 상태 유지
+            }
+        };
+        fetchMyInfo();
+    }, []);
 
-    const handleLike = (e) => {
-        e.stopPropagation();
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                // 게시글 먼저 요청
+                const postRes = await getPostById(id);
+                const mapped = mapApiToFrontData(postRes.data.data);
+                setCocktail(mapped);
+            } catch (err) {
+                console.error("상세 조회 실패", err);
+                setError("존재하지 않는 칵테일입니다.");
+            }
+        };
+
+        fetchPost();
+    }, [id]);
+
+
+    if (error) return <div>{error}</div>;
+    if (!cocktail) return <div>로딩 중...</div>;
+
+
+    const handleLike = async () => {
         if (!isLoggedIn) {
             setErrorLikeMessage("로그인이 필요합니다.");
             setTimeout(() => setErrorLikeMessage(""), 1000);
             return;
         }
-        toggleLike(cocktail.id);
-        triggerAnimate();
+
+        try {
+            if (cocktail.isLiked) {
+                await deleteLike(cocktail.id);
+            } else {
+                await postLike(cocktail.id);
+            }
+
+            const res = await getPostById(cocktail.id);
+            const updated = mapApiToFrontData(res.data.data);
+            setCocktail(updated);
+            triggerAnimate();
+        } catch (err) {
+            console.error("좋아요 처리 실패", err);
+        }
     };
 
     return (
@@ -116,10 +157,10 @@ export default function OfficialDetailPage() {
 
                             <div className={styles.likes} onClick={handleLike}>
                                 <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
-                                    {liked ? "❤️" : "🤍"}
+                                    {cocktail.isLiked ? "❤️" : "🤍"}
                                 </span>
                                 <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
-                                    {currentLikes}
+                                    {cocktail.likes}
                                 </span>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-name: back-pr-ci
+name: Backend PR CI
 
 on:
   pull_request:
@@ -6,9 +6,27 @@ on:
     paths:
       - 'back/**'
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
-  back-ci:
-    name: pr-ci
+  check-backend-changes:
+    name: Check Backend Changes
+    runs-on: ubuntu-22.04
+    outputs:
+      changed: ${{ steps.changes.outputs.any_changed }}
+    steps:
+      - name: Check for backend changes
+        id: changes
+        uses: tj-actions/changed-files@v44
+        with:
+          files: back/**
+
+  run-backend-tests:
+    name: Run Backend Tests
+    needs: check-backend-changes
+    if: needs.check-backend-changes.outputs.changed == 'true'
     runs-on: ubuntu-22.04
 
     defaults:
@@ -27,47 +45,49 @@ jobs:
       AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    
-    steps:
-      - name: 백엔드 코드가 변경되었는지 확인
-        id: changes
-        uses: tj-actions/changed-files@v44
-        with:
-          files: back/**
 
-      - name: 백엔드 변경 없으면 종료
-        if: steps.changes.outputs.any_changed == 'false'
-        run: |
-          echo "No backend changes. Skipping back CI."
-          exit 0
-      
-      - name: 레포지토리 체크아웃
+    steps:
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: JDK 17 설치 및 Gradle 캐시 설정
+      - name: Set up JDK 17 and Gradle cache
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle # Gradle 종속성 캐싱으로 속도 향상
-      
-      - name: 현재 환경 변수 출력
+          cache: gradle
+
+      - name: Print environment variables (for debug)
         run: env
-        
-      - name: Gradle 실행 권한 부여
+
+      - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      - name: ✅Gradle로 테스트 실행
-        run: ./gradlew test 
+      - name: Run Gradle tests
+        run: ./gradlew test
 
-      - name: 🖍️테스트 결과를 PR 코멘트로 출력
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+      - name: Upload test results (for report job)
+        uses: actions/upload-artifact@v4
         with:
-          files: '**/build/test-results/test/TEST-*.xml'
+          name: test-results
+          path: back/build/test-results/test/
 
-      - name: 테스트 실패 시, 코드 라인에 코멘트 추가
+  report-test-results:
+    name: Report Test Results
+    needs: run-backend-tests
+    if: always()
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+
+      - name: Annotate test failures on PR
         uses: mikepenz/action-junit-report@v4
-        if: always()
         with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+          report_paths: test-results/TEST-*.xml
+          detailed_summary: true
+          check_name: 'JUnit Test Report'

@@ -13,7 +13,7 @@ export default function MyPostSortBar({ sortOption, setSortOption }) {
             }}
         >
             <option value="latest">최신순</option>
-            <option value="likes">좋아요순</option>
+            <option value="like">좋아요순</option>
         </select>
     );
 }

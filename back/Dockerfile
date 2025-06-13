@@ -2,15 +2,17 @@
 FROM --platform=linux/arm64 gradle:8.13-jdk17 AS build
 WORKDIR /app
 
-COPY gradle ./gradle
-COPY gradlew .
+COPY gradle ./gradle 
+COPY gradlew . 
 COPY build.gradle settings.gradle . 
 
 RUN chmod +x gradlew
-RUN ./gradlew dependencies --no-daemon
+RUN ./gradlew dependencies --no-daemon || true
 
 COPY src ./src
-RUN ./gradlew bootJar --no-daemon --no-build-cache -x test
+
+# 최종 빌드
+RUN ./gradlew bootJar -x test --no-daemon
 
 # 실행 단계
 FROM --platform=linux/arm64 amazoncorretto:17

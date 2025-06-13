@@ -17,6 +17,8 @@ public class PostResponse {
 
     private String title;
 
+    private String content;
+
     private Integer difficulty;
 
     @JsonProperty("is_shaken")
@@ -31,7 +33,7 @@ public class PostResponse {
     @JsonProperty("image_url")
     private String imageUrl;
 
-    @JsonProperty("base_liqueurs")
+    @JsonProperty("base_liquors")
     private List<String> baseLiqueurs;
 
     private List<String> ingredients;
@@ -40,6 +42,7 @@ public class PostResponse {
         return new PostResponse(
                 post.getPostId(),
                 post.getTitle(),
+                post.getContent(),
                 post.getDifficulty(),
                 post.isShaken(),
                 likeCount,

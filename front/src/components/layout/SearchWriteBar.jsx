@@ -2,12 +2,26 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./SearchWriteBar.module.css";
 import searchIcon from "../../assets/search.svg";
+import {getMyInfo} from "../../api/userApi.js";
 
 export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSearch, resetSignal}) {
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
 
-    const isLoggedIn = !!localStorage.getItem('accessToken'); // 로그인 여부 확인
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const fetchMyInfo = async () => {
+            try {
+                await getMyInfo();
+                setIsLoggedIn(true);  // 로그인 상태로 변경
+            } catch (error) {
+                console.error("유저 정보 조회 실패:", error);
+                setIsLoggedIn(false); // 실패 시 비로그인 상태 유지
+            }
+        };
+        fetchMyInfo();
+    }, []);
 
     useEffect(() => {
         if (resetSignal) {
@@ -16,13 +30,13 @@ export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSear
     }, [resetSignal]);
 
     const handleWriteClick = () => {
-        if (!isLoggedIn) {
+        if (isLoggedIn === false) {
             setErrorMessage('로그인이 필요합니다.');
             setTimeout(() => setErrorMessage(''), 1000);
-        } else {
-            navigate("/post/create");
+            return;
         }
-    };
+        navigate("/posts/create");
+    }
 
     return (
         <div className={styles.barContainer}>

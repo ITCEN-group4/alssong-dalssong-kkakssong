@@ -1,68 +1,123 @@
-import {useNavigate, useParams} from "react-router-dom";
-import React, {useState} from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import styles from "./CocktailDetailPage.module.css";
-import {useCocktailContext} from "../context/CocktailContext.jsx";
 import baseIcon from "../assets/baseIcon.svg";
 import ingredientIcon from "../assets/ingredientIcon.svg";
 import getShakingIcon from "../utils/getShakingIcon.js";
 import getAbvIcon from "../utils/getAbcIcon.js";
 import useLikeAnimation from "../utils/useLikeAnimation.js";
-import testData from "../data/cocktailTestData.js";
 import NavBar from "../components/layout/NavBar.jsx";
+import { getPostById, postLike, deleteLike, deletePost } from "../api/postApi.js";
+import { mapApiToFrontData } from "../utils/MapApiToFrontData.js";
+import { getMyInfo } from "../api/userApi";
 
 export default function CocktailDetailPage() {
     const navigate = useNavigate();
-    const {id} = useParams();
-    const {cocktailList, toggleLike, likedMap, deleteCocktail} = useCocktailContext();
+    const { id } = useParams();
+    const [cocktail, setCocktail] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const [error, setError] = useState(null);
     const [animate, triggerAnimate] = useLikeAnimation();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [errorLikeMessage, setErrorLikeMessage] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const isLoggedIn = !!localStorage.getItem("accessToken");
-    const cocktail = testData.find((c) => String(c.id) === id);
-    if (!cocktail) return <div>존재하지 않는 칵테일입니다.</div>;
+    useEffect(() => {
+        const fetchMyInfo = async () => {
+            try {
+                await getMyInfo();
+                setIsLoggedIn(true);  // 로그인 상태로 변경
+            } catch (error) {
+                console.error("유저 정보 조회 실패:", error);
+                setIsLoggedIn(false); // 실패 시 비로그인 상태 유지
+            }
+        };
+        fetchMyInfo();
+    }, []);
 
-    const {label: abvLabel, icon: abvIcon} = getAbvIcon(cocktail.abv);
-    const {label: shakingLabel, icon: shakingIcon} = getShakingIcon(cocktail.shaking);
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                // 게시글 먼저 요청
+                const postRes = await getPostById(id);
+                const mapped = mapApiToFrontData(postRes.data.data);
+                setCocktail(mapped);
 
-    const currentCocktail = cocktailList.find(c => c.id === cocktail.id);
-    const currentLikes = currentCocktail ? currentCocktail.likes : cocktail.likes;
-    const liked = likedMap[cocktail.id] || false;
+                // 로그인 사용자 정보는 선택적으로 시도
+                getMyInfo()
+                    .then(userRes => {
+                        setUserId(userRes.data.userId);
+                    })
+                    .catch(() => {
+                        // 로그인 안 한 경우, 사용자 정보 없음
+                        setUserId(null);
+                    });
 
+            } catch (err) {
+                console.error("상세 조회 실패", err);
+                setError("존재하지 않는 칵테일입니다.");
+            }
+        };
+
+        fetchPost();
+    }, [id]);
+
+
+    if (error) return <div>{error}</div>;
+    if (!cocktail) return <div>로딩 중...</div>;
+
+    const { label: abvLabel, icon: abvIcon } = getAbvIcon(cocktail.abv);
+    const { label: shakingLabel, icon: shakingIcon } = getShakingIcon(cocktail.shaking);
     const formattedDate = cocktail.createdAt?.slice(0, 10).replace(/-/g, ".") || "작성일 미상";
 
-    //더미데이터 테스트용 유저 아이디
-    const currentUserId = "123";
-    const cocktailUserId = cocktail.userId;
-
-    const handleLike = () => {
+    const handleLike = async () => {
         if (!isLoggedIn) {
             setErrorLikeMessage("로그인이 필요합니다.");
             setTimeout(() => setErrorLikeMessage(""), 1000);
             return;
         }
-        toggleLike(cocktail.id);
-        triggerAnimate()
+
+        try {
+            if (cocktail.isLiked) {
+                await deleteLike(cocktail.id);
+            } else {
+                await postLike(cocktail.id);
+            }
+
+            const res = await getPostById(cocktail.id);
+            const updated = mapApiToFrontData(res.data.data);
+            setCocktail(updated);
+            triggerAnimate();
+        } catch (err) {
+            console.error("좋아요 처리 실패", err);
+        }
     };
 
     const handleWrite = () => {
-        navigate(`/post/update/${cocktail.id}`)
+        navigate(`/posts/update/${cocktail.id}`);
     };
 
     const handleDelete = () => {
         setShowDeleteModal(true);
     };
 
-    const confirmDelete = () => {
-        deleteCocktail(cocktail.id);
-        setShowDeleteModal(false);
-        setErrorMessage("칵테일이 삭제되었습니다.");
-        setTimeout(() => {
-            setErrorMessage("");
-            navigate('/post');
-        }, 1500);
+    const confirmDelete = async () => {
+        try {
+            await deletePost(cocktail.id);       // 실제 API 요청
+            setShowDeleteModal(false);           // 모달 닫기
+            setErrorMessage("게시글이 삭제되었습니다.");
+            setTimeout(() => {
+                setErrorMessage("");
+                navigate("/posts");
+            }, 1500);
+        } catch (error) {
+            console.error("삭제 실패:", error);
+            setShowDeleteModal(false);
+            setErrorMessage("삭제 중 오류가 발생했습니다.");
+            setTimeout(() => setErrorMessage(""), 1500);
+        }
     };
+
     return (
         <>
         <NavBar/>
@@ -96,7 +151,7 @@ export default function CocktailDetailPage() {
                     <h1>칵테일 정보 공유</h1>
                     <p>칵테일 정보를 공유하는 공간..<br/>다른 유저의 황금레시피를 엿볼 수 있어요.</p>
                 </div>
-                {currentUserId === cocktailUserId && (
+                {userId === cocktail.userId && (
                     <div className={styles.editButtonGroup}>
                         <button
                             className={styles.editButton}
@@ -111,73 +166,73 @@ export default function CocktailDetailPage() {
                     </div>)}
             </div>
 
-            <div className={styles.topSection}>
-                <div className={styles.leftContent}>
-                    <div className={styles.titleRow}>
-                        <h2 className={styles.title}>{cocktail.name}</h2>
-                        <div className={styles.UserWrapper}>
-                            <div className={styles.UserIcon}>👤</div>
-                            <span className={styles.UserName}>{cocktailUserId}</span> {/*유저아이디가 아닌 유저네임 데이터 넣어야됨*/}
+                <div className={styles.topSection}>
+                    <div className={styles.leftContent}>
+                        <div className={styles.titleRow}>
+                            <h2 className={styles.title}>{cocktail.name}</h2>
+                            <div className={styles.UserWrapper}>
+                                <div className={styles.UserIcon}>👤</div>
+                                <span className={styles.UserName}>{cocktail.writerNickname}</span>
+                            </div>
+                        </div>
+
+                        <p className={styles.description}>{cocktail.description}</p>
+
+                        <div className={styles.infoRow}>
+                            <button className={styles.likeButton} onClick={handleLike}>
+                                <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
+                                    {cocktail.isLiked ? "❤️" : "🤍"}
+                                </span>
+                                <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                                    {cocktail.likes}
+                                </span>
+                            </button>
+                            <span className={styles.date}>작성일 : {formattedDate}</span>
                         </div>
                     </div>
 
-                    <p className={styles.description}>{cocktail.description}</p>
-
-                    <div className={styles.infoRow}>
-                        <button className={styles.likeButton} onClick={handleLike}>
-                            <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
-                                {liked ? "❤️" : "🤍"}
-                            </span>
-                            <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
-                                {currentLikes}
-                            </span>
-                        </button>
-                        <span className={styles.date}>작성일 : {formattedDate}</span>
+                    <div className={styles.imageWrapper}>
+                        <img src={cocktail.image} alt={cocktail.name} />
                     </div>
                 </div>
 
-                <div className={styles.imageWrapper}>
-                    <img src={cocktail.image} alt={cocktail.name}/>
-                </div>
-            </div>
+                <div className={styles.bottomSection}>
+                    <div className={styles.recipeBox}>
+                        <h3>레시피</h3>
+                        <ul>
+                            {cocktail.recipe
+                                .split('\n')
+                                .filter(Boolean)
+                                .map((step, idx) => (
+                                    <li key={idx}>{step}</li>
+                                ))}
+                        </ul>
+                    </div>
 
-            <div className={styles.bottomSection}>
-                <div className={styles.recipeBox}>
-                    <h3>레시피</h3>
-                    <ul>
-                        {cocktail.recipe
-                            .split('\n')
-                            .filter(Boolean)
-                            .map((step, idx) => (
-                                <li key={idx}>{step}</li>
-                            ))}
-                    </ul>
-                </div>
-
-                <div className={styles.iconGrid}>
-                    <div className={styles.iconItem}>
-                        <span className={styles.iconLabel}>베이스 술</span>
-                        <img src={baseIcon} alt="base" className={styles.infoIcon}/>
-                        <span className={styles.iconValue}>{cocktail.baseLiquors}</span>
-                    </div>
-                    <div className={styles.iconItem}>
-                        <span className={styles.iconLabel}>도수</span>
-                        <img src={abvIcon} alt="abv" className={styles.infoIcon}/>
-                        <span className={styles.iconValue}>{abvLabel}</span>
-                    </div>
-                    <div className={styles.iconItem}>
-                        <span className={styles.iconLabel}>부가재료</span>
-                        <img src={ingredientIcon} alt="ingredient" className={styles.infoIcon}/>
-                        <span className={styles.iconValue}>{cocktail.ingredients[0]}</span>
-                    </div>
-                    <div className={styles.iconItem}>
-                        <span className={styles.iconLabel}>쉐이킹</span>
-                        <img src={shakingIcon} alt="shaking" className={styles.infoIcon}/>
-                        <span className={styles.iconValue}>{shakingLabel}</span>
+                    <div className={styles.iconGrid}>
+                        <div className={styles.iconItem}>
+                            <span className={styles.iconLabel}>베이스 술</span>
+                            <img src={baseIcon} alt="base" className={styles.infoIcon} />
+                            <span className={styles.iconValue}>{cocktail.baseLiquors[0]}</span>
+                        </div>
+                        <div className={styles.iconItem}>
+                            <span className={styles.iconLabel}>도수</span>
+                            <img src={abvIcon} alt="abv" className={styles.infoIcon} />
+                            <span className={styles.iconValue}>{abvLabel}</span>
+                        </div>
+                        <div className={styles.iconItem}>
+                            <span className={styles.iconLabel}>부가재료</span>
+                            <img src={ingredientIcon} alt="ingredient" className={styles.infoIcon} />
+                            <span className={styles.iconValue}>{cocktail.ingredients[0]}</span>
+                        </div>
+                        <div className={styles.iconItem}>
+                            <span className={styles.iconLabel}>쉐이킹</span>
+                            <img src={shakingIcon} alt="shaking" className={styles.infoIcon} />
+                            <span className={styles.iconValue}>{shakingLabel}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </>
     );
 }

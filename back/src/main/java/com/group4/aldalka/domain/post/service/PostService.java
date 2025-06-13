@@ -229,7 +229,10 @@ public class PostService {
 
     public PagedResponse searchPosts(String userEmail, PostSearchRequest postSearchRequest) {
 
-        Long userId = userService.getUserIdByEmail(userEmail);
+        Long userId= null;
+        if(userEmail != null) {
+            userId = userService.getUserIdByEmail(userEmail);
+        }
 
         PostSearchResult result = postRepository.searchPosts(postSearchRequest);
         int pageSize = 8;
@@ -248,14 +251,18 @@ public class PostService {
                 .map(post -> PostResponse.from(
                         post,
                         post.getLikes().size(),
-                        userLikeRepository.existsByUserUserIdAndPostPostId(userId, post.getPostId())
+                        (userId != null) && userLikeRepository.existsByUserUserIdAndPostPostId(userId, post.getPostId())
                 ))
                 .collect(Collectors.toList());
     }
 
-    public OfficialPostDetailResponse getOfficialPostDetail(String userEmail, Long postId) {
 
-        Long userId = userService.getUserIdByEmail(userEmail);
+    public PostDetailResponse getPostDetail(String userEmail, Long postId) {
+
+        Long userId= null;
+        if(userEmail != null) {
+            userId = userService.getUserIdByEmail(userEmail);
+        }
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
@@ -265,10 +272,10 @@ public class PostService {
 
         int likeCount = post.getLikes().size();
 
-        return buildOfficialPostDetailResponse(post, likeCount, isLiked);
+        return buildPostDetailResponse(post, likeCount, isLiked);
     }
 
-    private OfficialPostDetailResponse buildOfficialPostDetailResponse(Post post, int likeCount, boolean isLiked) {
+    private PostDetailResponse buildPostDetailResponse(Post post, int likeCount, boolean isLiked) {
         List<String> ingredients = post.getPostIngredients().stream()
                 .map(p -> p.getIngredient().getName())
                 .toList();
@@ -277,14 +284,17 @@ public class PostService {
                 .map(b -> b.getBaseLiquor().getName())
                 .toList();
 
-        return OfficialPostDetailResponse.builder()
+        return PostDetailResponse.builder()
                 .postId(post.getPostId())
+                .userId(post.getUser().getUserId())
+                .user_nickname(post.getUser().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .recipe(post.getRecipe())
                 .difficulty(post.getDifficulty())
                 .isShaken(post.isShaken())
                 .createdAt(post.getCreatedAt().toLocalDate())
+                .updateAt(post.getUpdatedAt().toLocalDate())
                 .likeCount(likeCount)
                 .isLiked(isLiked)
                 .imageUrl(post.getImageUrl())

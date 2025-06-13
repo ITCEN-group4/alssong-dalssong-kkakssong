@@ -11,10 +11,15 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Jackson 역직렬화를 위해 기본생성자 필요, 외부 호출 차단
 @AllArgsConstructor
 @Builder
-public class OfficialPostDetailResponse {
+public class PostDetailResponse {
 
     @JsonProperty("post_id")
     private Long postId;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
+    private String user_nickname;
 
     private String title;
 
@@ -31,6 +36,10 @@ public class OfficialPostDetailResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
 
+    @JsonProperty("updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate updateAt;
+
     @JsonProperty("like_count")
     private Integer likeCount;
 
@@ -40,7 +49,7 @@ public class OfficialPostDetailResponse {
     @JsonProperty("image_url")
     private String imageUrl;
 
-    @JsonProperty("base_liqueurs")
+    @JsonProperty("base_liquors")
     private List<String> baseLiqueurs;
 
     private List<String> ingredients;

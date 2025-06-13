@@ -57,11 +57,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String removeBearer(String bearerAccessToken) {
-        // TODO: 새로운 ErrorCode 만들지 허가 받기 line 62
         if (bearerAccessToken.contains(BEARER)) {
             return bearerAccessToken.replace(BEARER, "");
         }
-        throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
+        throw new BusinessException(ErrorCode.TOKEN_INVALID);
     }
 
     private JwtAuthentication authenticate(String accessToken) {

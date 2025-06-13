@@ -1,27 +1,57 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import styles from "./MyInfoPage.module.css";
 import infoIcon from "../assets/InfoIcon.svg";
 import lockIcon from "../assets/LockIcon.svg";
 import profileIcon from "../assets/ProfileIcon.svg";
 import {useNavigate} from "react-router-dom";
+import {deleteUser, getMyInfo, updateNickname, updatePassword} from "../api/userApi.js";
 
 export default function MyInfoPage() {
-    const navigate = useNavigate();
-
-    const [nickname, setNickname] = useState("");
-    const currentNickname = "칵테일"; // ← 더미, 실제 데이터 연동 필요
-
+    const [pastNickname, setPastNickname] = useState("");
+    const [currentNickname, setCurrentNickname] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const navigate = useNavigate();
 
-    const handleNicknameChange = () => {
-        // 닉네임 수정 함수
+    useEffect(() => {
+        const fetchMyInfo = async () => {
+            try {
+                const res = await getMyInfo();
+                setPastNickname(res.data.nickname);
+            } catch (error) {
+                console.error("유저 정보 조회 실패:", error);
+            }
+        };
+
+        fetchMyInfo();
+    }, []);
+
+    const handleNicknameChange = async () => {
+        try {
+            await updateNickname(currentNickname);
+            alert("닉네임이 변경되었습니다.");
+            setCurrentNickname(""); // 입력 초기화
+        } catch (error) {
+            alert("닉네임 변경 실패: " + (error.response?.data?.message || error.message));
+        }
     };
 
-    const handlePasswordChange = () => {
-        // 비밀번호 수정 함수
+    const handlePasswordChange = async () => {
+        if (newPassword !== confirmPassword) {
+            alert("새 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+        try {
+            await updatePassword(currentPassword, newPassword);
+            alert("비밀번호가 변경되었습니다.");
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch (error) {
+            alert("비밀번호 변경 실패: " + (error.response?.data?.message || error.message));
+        }
     };
 
     const handleAccountDelete = () => {
@@ -29,9 +59,16 @@ export default function MyInfoPage() {
         setShowDeleteConfirm(true);
     };
 
-    const confirmDelete = () => {
-        // 실제 탈퇴 로직이 있다면 여기에 호출
-        // 예: await deleteAccountApi();
+    const confirmDelete = async () => {
+        if (window.confirm("정말로 회원 탈퇴하시겠습니까?")) {
+            try {
+                await deleteUser();
+                alert("회원 탈퇴가 완료되었습니다.");
+                // 필요시 로그아웃 처리나 홈으로 리디렉션
+            } catch (error) {
+                alert("회원 탈퇴 실패: " + (error.response?.data?.message || error.message));
+            }
+        }
         navigate("/auth/login");
     };
 
@@ -43,13 +80,13 @@ export default function MyInfoPage() {
         <div className={styles.infoContainer}>
             {showDeleteConfirm && (
                 <div className={styles.modalOverlay}>
-                <div className={styles.confirmBox}>
-                    <p>정말 탈퇴하시겠어요? 다시 되돌릴 수 없어요.</p>
-                    <div className={styles.buttonGroup}>
-                        <button className={styles.confirmButton} onClick={confirmDelete}>예</button>
-                        <button className={styles.cancelButton} onClick={cancelDelete}>아니오</button>
+                    <div className={styles.confirmBox}>
+                        <p>정말 탈퇴하시겠어요? 다시 되돌릴 수 없어요.</p>
+                        <div className={styles.buttonGroup}>
+                            <button className={styles.confirmButton} onClick={confirmDelete}>예</button>
+                            <button className={styles.cancelButton} onClick={cancelDelete}>아니오</button>
+                        </div>
                     </div>
-                </div>
                 </div>
             )}
             <h2 className={styles.title}>
@@ -60,12 +97,12 @@ export default function MyInfoPage() {
                 <img src={infoIcon} alt="안내 아이콘" className={styles.iconSmall} />
                 닉네임은 한 달에 1회만 변경할 수 있습니다.</p>
             <div className={styles.formGroup}>
-                <input type="text" value={currentNickname} readOnly />
+                <input type="text" value={pastNickname} readOnly />
                 <input
                     type="text"
                     placeholder="새 닉네임 입력"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
+                    value={currentNickname}
+                    onChange={(e) => setCurrentNickname(e.target.value)}
                 />
                 <button onClick={handleNicknameChange}>저장</button>
             </div>

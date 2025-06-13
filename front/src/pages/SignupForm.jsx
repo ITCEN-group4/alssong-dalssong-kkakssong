@@ -5,6 +5,7 @@ import login from '../assets/login.svg';
 import logo from '../assets/cocktail_logo.svg';
 import password_viewless from '../assets/password_viewless.svg';
 import password_visible from '../assets/password_visible.svg';
+import { signupUser } from "../api/userApi.js";
 
 export default function SignupForm() {
 
@@ -31,7 +32,7 @@ export default function SignupForm() {
         navigate('/auth/login');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const trimmedNick = nickname.trim();
@@ -84,14 +85,29 @@ export default function SignupForm() {
             return;
         }
 
-        // 모든 조건 통과
-        setErrorMessage('');
-        setErrorMessage('회원가입이 완료되었습니다!');
-        setTimeout(() => {
-            setErrorMessage('');
-            navigate('/auth/login');
-        }, 1000);
+        try {
+            const response = await signupUser({
+                email: trimmedEmail,
+                password: trimmedPassword,
+                nickname: trimmedNick
+            });
 
+            // 모든 조건 통과
+            if(response.status === 201 || response.status === 200){
+                setErrorMessage('');
+                setErrorMessage('회원가입이 완료되었습니다!');
+                setTimeout(() => {
+                    setErrorMessage('');
+                    navigate('/auth/login');
+                }, 1000);
+            }
+        }
+
+        catch (error) {
+            console.error("회원가입 실패", error);
+            setErrorMessage('회원가입에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
+        }
     };
 
     return (

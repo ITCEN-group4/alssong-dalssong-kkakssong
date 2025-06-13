@@ -7,8 +7,11 @@ on:
     branches:
       - develop
 
+env:
+  DATE_TAG: dev-${{ github.run_id }}
+
 jobs:
-  build-and-deploy-backend:
+  build:
     runs-on: ubuntu-22.04
 
     steps:
@@ -24,6 +27,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+      
       - name: Set up Docker Build
         uses: docker/setup-buildx-action@v2
 
@@ -46,7 +59,11 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/back:${{ env.DATE_TAG }}
             ${{ secrets.DOCKERHUB_USERNAME }}/back:latest
 
-    
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+
+    steps:
       - name: Deploy via Bastion Host
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -58,17 +75,22 @@ jobs:
           proxy_host: ${{ secrets.BASTION_HOST }}
           proxy_username: ${{ secrets.EC2_USERNAME }}
           proxy_key: ${{ secrets.EC2_SSH_KEY }}
-          proxy_port: ${{ secrets.BASTION_PORT }}                   
+          proxy_port: ${{ secrets.BASTION_PORT }}
 
           script: |
             set -e
             cd ~/back
             ./deploy.sh backend
 
+  notify:
+    needs: deploy
+    runs-on: ubuntu-22.04
+    if: success()
+
+    steps:
       - name: Discord Notification
-        if: success()
         uses: Ilshidur/action-discord@master
         with:
-          args: "✅ [BACK] 이미지 푸시 완료: `${{ env.DATE_TAG }}`"
+          args: "👍 [BACK] 이미지 푸시 및 배포 완료: `${{ env.DATE_TAG }}`"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
