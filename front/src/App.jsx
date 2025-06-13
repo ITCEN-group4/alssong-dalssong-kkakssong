@@ -1,6 +1,5 @@
 import React from 'react';
 import {Routes, Route, BrowserRouter} from "react-router-dom"
-import {OfficialCocktailProvider} from "./context/OfficialCocktailContext.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 import CocktailSharePage from "./pages/CocktailSharePage";
 import CocktailDetailPage from "./pages/CocktailDetailPage";
@@ -16,7 +15,6 @@ import OfficialDetailPage from "./pages/OfficialCocktailDetailPage.jsx";
 function App() {
     return (
         <BrowserRouter>
-                <OfficialCocktailProvider>
                 <ScrollToTop />
                 <Routes>
                     <Route path="/auth/login" element={<LoginPage />} />
@@ -32,7 +30,6 @@ function App() {
                         <Route path="posts" element={<MyPostViewPage />} />
                     </Route>
                 </Routes>
-                </OfficialCocktailProvider>
         </BrowserRouter>
     );
 }

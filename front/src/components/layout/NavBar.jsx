@@ -3,14 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './NavBar.module.css';
 import logo from '../../assets/main_logo.svg';
 import user_profile from '../../assets/user_profile.svg';
-import { useOfficialCocktailContext } from "../../context/OfficialCocktailContext.jsx";
 import { getMyInfo } from "../../api/userApi.js";
 
 export default function NavBar() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { resetList } = useOfficialCocktailContext();
-
     const [currentNickname, setCurrentNickname] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -30,7 +27,6 @@ export default function NavBar() {
     }, []);
 
     const handleCocktailPage = () => {
-        resetList();
         if (location.pathname === "/posts") {
             window.location.reload(); // 현재가 /면 새로고침
         } else {
@@ -39,7 +35,6 @@ export default function NavBar() {
     };
 
     const handleOfficialPage = () => {
-        resetList();
         if (location.pathname === "/post") {
             window.location.reload(); // 현재가 /면 새로고침
         } else {
