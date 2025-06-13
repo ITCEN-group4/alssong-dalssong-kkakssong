@@ -17,6 +17,8 @@ export default function OfficialDetailPage() {
     const [cocktail, setCocktail] = useState(null);
     const [error, setError] = useState(null);
     const [animate, triggerAnimate] = useLikeAnimation();
+    const [errorLikeMessage, setErrorLikeMessage] = useState("");
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
@@ -39,7 +41,6 @@ export default function OfficialDetailPage() {
                 const postRes = await getPostById(id);
                 const mapped = mapApiToFrontData(postRes.data.data);
                 setCocktail(mapped);
-
             } catch (err) {
                 console.error("상세 조회 실패", err);
                 setError("존재하지 않는 칵테일입니다.");
@@ -55,8 +56,9 @@ export default function OfficialDetailPage() {
 
 
     const handleLike = async () => {
-        if (isLoggedIn === false) {
-            alert("로그인이 필요합니다.");
+        if (!isLoggedIn) {
+            setErrorLikeMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorLikeMessage(""), 1000);
             return;
         }
 
@@ -79,6 +81,11 @@ export default function OfficialDetailPage() {
     return (
         <>
             <NavBar/>
+            {errorLikeMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorLikeMessage}>{errorLikeMessage}</div>
+                </div>
+            )}
                 <div className={styles.headerSection}>
                     <h2 className={styles.pageTitle}>칵테일 상세 정보</h2>
                     <p className={styles.pageSubtitle}>

@@ -71,8 +71,9 @@ export default function CocktailDetailPage() {
     const formattedDate = cocktail.createdAt?.slice(0, 10).replace(/-/g, ".") || "작성일 미상";
 
     const handleLike = async () => {
-        if (isLoggedIn === false) {
-            alert("로그인이 필요합니다.");
+        if (!isLoggedIn) {
+            setErrorLikeMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorLikeMessage(""), 1000);
             return;
         }
 
@@ -123,6 +124,12 @@ export default function CocktailDetailPage() {
         <div className={styles.detailPage}>
             {errorMessage && (
                 <div className={styles.errorMessage}>{errorMessage}</div>
+            )}
+
+            {errorLikeMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorLikeMessage}>{errorLikeMessage}</div>
+                </div>
             )}
 
             {showDeleteModal && (

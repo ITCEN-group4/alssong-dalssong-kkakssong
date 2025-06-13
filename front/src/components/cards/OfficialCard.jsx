@@ -9,6 +9,7 @@ export default function OfficialCard({ cocktail }) {
     const navigate = useNavigate();
     const [postData, setPostData] = useState(cocktail);
     const [animate, triggerAnimate] = useLikeAnimation();
+    const [errorMessage, setErrorMessage] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const handleClick = () => {
@@ -30,11 +31,10 @@ export default function OfficialCard({ cocktail }) {
 
     const handleLike = async (e) => {
         e.stopPropagation();
-
-        if (isLoggedIn === false) {
-            alert("로그인이 필요합니다.");
+        if (!isLoggedIn) {
+            setErrorMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorMessage(""), 1000); // 2초 후 사라짐
             return;
-        }
 
         try {
             if (postData.isLiked) {
@@ -58,31 +58,38 @@ export default function OfficialCard({ cocktail }) {
     };
 
     return (
-        <div className={styles.card} onClick={handleClick}>
-            <div className={styles.cardWrapper}>
-                <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage}/>
-            </div>
-            <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{cocktail.name}</h3>
-                <p className={styles.cardDescription}>
-                    {cocktail.baseLiquors} · {cocktail.ingredients[0]} · {cocktail.abv}도
-                </p>
+        <>
+            <div className={styles.card} onClick={handleClick}>
+                <div className={styles.cardWrapper}>
+                    <img src={cocktail.image} alt={cocktail.name} className={styles.cardImage} />
+                </div>
+                <div className={styles.cardContent}>
+                    <h3 className={styles.cardTitle}>{cocktail.name}</h3>
+                    <p className={styles.cardDescription}>
+                        {cocktail.baseLiquors[0]} · {cocktail.ingredients[0]} · {cocktail.abv}도
+                    </p>
 
-                <div className={styles.cardBottom}>
-                    <button className={styles.likeButton} onClick={handleLike}>
-                        <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
-                            {postData.isLiked ? "❤️" : "🤍"}
+                    <div className={styles.cardBottom}>
+                        <button className={styles.likeButton} onClick={handleLike}>
+                            <span className={`${styles.heartIcon} ${animate ? styles.bump : ""}`}>
+                                {postData.isLiked ? "❤️" : "🤍"}
+                            </span>
+                            <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
+                                {postData.likes}
+                            </span>
+                        </button>
+                        <span className={styles.shakingTag}>
+                            {cocktail.shaking ? "쉐이킹 ON" : "쉐이킹 OFF"}
                         </span>
-                                <span className={`${styles.likeCount} ${animate ? styles.bump : ""}`}>
-                            {postData.likes}
-                        </span>
-                    </button>
-                    <span className={styles.shakingTag}>
-                {cocktail.shaking ? "쉐이킹 ON" : "쉐이킹 OFF"}
-            </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
+            {errorMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorMessage}>{errorMessage}</div>
+                </div>
+            )}
+        </>
     );
 }

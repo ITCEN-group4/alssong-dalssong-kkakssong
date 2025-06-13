@@ -11,6 +11,7 @@ export default function CocktailCard({ cocktail }) {
     const { label, icon } = getAbvTag(cocktail.abv);
     const [postData, setPostData] = useState(cocktail);
     const [animate, triggerAnimate] = useLikeAnimation();
+    const [errorMessage, setErrorMessage] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const handleClick = () => {
@@ -33,8 +34,9 @@ export default function CocktailCard({ cocktail }) {
     const handleLike = async (e) => {
         e.stopPropagation();
 
-        if (isLoggedIn === false) {
-            alert("로그인이 필요합니다.");
+       if (!isLoggedIn) {
+            setErrorMessage("로그인이 필요합니다.");
+            setTimeout(() => setErrorMessage(""), 1000); // 2초 후 사라짐
             return;
         }
 
@@ -60,6 +62,7 @@ export default function CocktailCard({ cocktail }) {
     };
 
     return (
+        <>
         <div className={styles.card} onClick={handleClick}>
             <img src={postData.image} alt={postData.name} className={styles.cardImage} />
 
@@ -88,5 +91,12 @@ export default function CocktailCard({ cocktail }) {
 
             <img src={icon} alt={label} className={styles.abvBadge} />
         </div>
+
+            {errorMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorMessage}>{errorMessage}</div>
+                </div>
+            )}
+            </>
     );
 }

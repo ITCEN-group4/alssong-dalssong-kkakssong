@@ -6,6 +6,7 @@ import {getMyInfo} from "../../api/userApi.js";
 
 export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSearch, resetSignal}) {
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -30,7 +31,8 @@ export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSear
 
     const handleWriteClick = () => {
         if (isLoggedIn === false) {
-            alert("로그인이 필요합니다.");
+            setErrorMessage('로그인이 필요합니다.');
+            setTimeout(() => setErrorMessage(''), 1000);
             return;
         }
         navigate("/posts/create");
@@ -60,6 +62,13 @@ export default function SearchWriteBar({ searchKeyword, setSearchKeyword ,onSear
             <button className={styles.writeButton} onClick={handleWriteClick}>
                 + 게시글 작성
             </button>
+
+            {errorMessage && (
+                <div className={styles.errorOverlay}>
+                    <div className={styles.errorMessage}>{errorMessage}</div>
+
+                </div>
+                    )}
         </div>
     );
 }
