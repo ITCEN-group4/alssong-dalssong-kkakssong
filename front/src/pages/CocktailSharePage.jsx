@@ -1,98 +1,98 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import FilterBar from "../components/layout/FilterBar.jsx";
 import SortBar from "../components/layout/SortBar.jsx";
 import CocktailCardList from "../components/cards/CocktailCardList.jsx";
 import Pagination from "../components/layout/Pagination.jsx";
-import { paginate } from "../utils/paginate.js";
 import styles from './CocktailSharePage.module.css';
 import SearchWriteBar from "../components/layout/SearchWriteBar.jsx";
-import {useCocktailContext} from "../context/CocktailContext.jsx";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
+import { getUserPosts } from "../api/postApi";
+import { mapApiToFrontData } from "../utils/MapApiToFrontData.js";
 
 export default function CocktailSharePage() {
-    const {
-        cocktailList,
-        searchList,
-        filterList,
-        shouldUpdateList,
-        setShouldUpdateList,
-        triggerListUpdate
-    } = useCocktailContext();
-
-    const [sortOption, setSortOption] = useState("likes");
+    const [cocktailList, setCocktailList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [sortOption, setSortOption] = useState("likes");
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [currentPageList, setCurrentPageList] = useState([]);
-    const [resetSignal, setResetSignal] = useState(false);
-    const [searchParams] = useSearchParams();
-    const pageSize = 8;
-
-    useEffect(() => {
-        // 페이지가 처음 렌더링될 때 목록을 초기화 (뒤로가기도 포함)
-        triggerListUpdate();
-    }, []);
-
-    useEffect(() => {
-        if (searchParams.get("reset") === "true") {
-            setResetSignal(true);
-            setSearchKeyword("");
-            setSortOption("likes");
-            setCurrentPage(1);
-            filterList({
-                baseLiquors: [],
-                ingredients: [],
-                abv: null,
-                shaking: null
-            });
-            triggerListUpdate();
-
-            setTimeout(() => setResetSignal(false), 0);
-        }
-    }, [searchParams]);
-
-    const sortedList = [...cocktailList].sort((a, b) => {
-        if (sortOption === "likes") return b.likes - a.likes;
-        if (sortOption === "latest") return new Date(b.createdAt) - new Date(a.createdAt);
-        return 0;
+    const [filters, setFilters] = useState({
+        ingredients: [],
+        baseLiquors: [],
+        abv: null,
+        shaking: null
     });
 
-    const usePagination = sortedList.length > pageSize;
-    const { pagedList, totalPages } = paginate(sortedList, currentPage, pageSize);
+    const fetchList = async () => {
+        try {
+            const backendSort = sortOption === "likes" ? "like" : "latest";
+            const response = await getUserPosts({
+                is_official: false,
+                page: currentPage,
+                sort: backendSort,
+                query: searchKeyword,
+                ingredients: filters.ingredients,
+                base_liquors: filters.baseLiquors,
+                is_shaken: filters.shaking,
+            });
 
-    // 플래그가 true일 때만 currentPageList 업데이트
-    useEffect(() => {
-        if (shouldUpdateList) {
-            setCurrentPageList(pagedList);
-            setShouldUpdateList(false); // 업데이트 후 플래그 리셋
+            let list = response.data.data.posts.map(mapApiToFrontData);
+
+            // 도수 level(문자열) 기준으로 필터링
+            if (filters.abv) {
+                list = list.filter(item => item.level === filters.abv);
+            }
+
+            setCocktailList(list);
+            setTotalPages(response.data.data.total_pages);
+            console.log("적용된 filters:", filters);
+        } catch (err) {
+            console.error("게시글 조회 실패", err);
         }
-    }, [pagedList, shouldUpdateList]);
+    };
+
+    useEffect(() => {
+        fetchList();
+    }, [currentPage, sortOption]);
 
     const handleSearch = () => {
-        searchList(searchKeyword);
         setCurrentPage(1);
-        triggerListUpdate(); // 검색 시 플래그 설정
+        fetchList();
     };
 
     const handleSortChange = (option) => {
         setSortOption(option);
         setCurrentPage(1);
-        triggerListUpdate(); // 정렬 변경시 플래그 설정
     };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
-        triggerListUpdate(); // 페이지 변경시 플래그 설정
     };
+
+    const handleFilterApply = (appliedFilters) => {
+        setFilters(appliedFilters);
+        setCurrentPage(1);
+        fetchList();
+    };
+
+    useEffect(() => {
+        const handlePageShow = (event) => {
+            if (event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
+                fetchList();
+            }
+        };
+
+        window.addEventListener("pageshow", handlePageShow);
+        return () => window.removeEventListener("pageshow", handlePageShow);
+    }, []);
 
     return (
         <>
-            <NavBar/>
+            <NavBar />
             <div className={styles.header}>
                 <h2 className={styles.title}>칵테일 유저 레시피</h2>
                 <h4 className={styles.subtitle}>
-                    다른 사용자의 황금 레시피를 맛 볼 수 있는 공간 <br/>
+                    다른 사용자의 황금 레시피를 맛 볼 수 있는 공간<br />
                     함께 맛있는 칵테일 만들어봐요 ~
                 </h4>
             </div>
@@ -103,19 +103,22 @@ export default function CocktailSharePage() {
                         searchKeyword={searchKeyword}
                         setSearchKeyword={setSearchKeyword}
                         onSearch={handleSearch}
-                        resetSignal={resetSignal}
                     />
                     <SortBar
                         sortOption={sortOption}
                         setSortOption={handleSortChange}
                     />
-                    <FilterBar resetSignal={resetSignal}/>
+                    <FilterBar
+                        filters={filters}
+                        setFilters={setFilters}
+                        onFilterApply={handleFilterApply}
+                    />
                 </div>
             </div>
 
             <div className={styles.bottomSection}>
-                <CocktailCardList cocktailList={currentPageList} />
-                {usePagination && (
+                <CocktailCardList cocktailList={cocktailList} />
+                {totalPages > 1 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
@@ -123,7 +126,7 @@ export default function CocktailSharePage() {
                     />
                 )}
             </div>
-            <Footer/>
+            <Footer />
         </>
     );
 }

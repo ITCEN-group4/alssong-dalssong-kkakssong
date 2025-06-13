@@ -6,6 +6,7 @@ import password from '../assets/password.svg';
 import login from '../assets/login.svg';
 import password_viewless from '../assets/password_viewless.svg';
 import password_visible from '../assets/password_visible.svg';
+import {loginUser} from "../api/userApi.js";
 
 export default function LoginForm({setErrorMessage}) {
 
@@ -18,11 +19,11 @@ export default function LoginForm({setErrorMessage}) {
         setShowPassword(prev => !prev);
     }
 
-    const handlesignup = () => {
+    const handleSignup = () => {
         navigate('/auth/signup');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const trimmedEmail = emailValue.trim();
@@ -59,12 +60,25 @@ export default function LoginForm({setErrorMessage}) {
             return;
         }
 
-        setErrorMessage('');
-        setErrorMessage(`${trimmedEmail}님 환영합니다.`);
-        setTimeout(() => {
-            setErrorMessage('');
-            navigate('/post');
-        }, 1000);
+        try {
+            const response = await loginUser({
+                email: trimmedEmail,
+                password: trimmedPassword
+            });
+
+            const token = response.data.accessToken;
+            localStorage.setItem("token", token);
+
+            setErrorMessage(`${trimmedEmail}님 환영합니다.`);
+            setTimeout(() => {
+                setErrorMessage('');
+                navigate('/posts');
+            }, 1000);
+        } catch (error) {
+            console.error("로그인 실패", error);
+            setErrorMessage('로그인에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.');
+            setTimeout(() => setErrorMessage(''), 2000);
+        }
     };
 
     return (
@@ -107,7 +121,7 @@ export default function LoginForm({setErrorMessage}) {
                         </div>
                     </label>
                     <button type="submit" className={styles.loginButton}>로그인</button>
-                    <div className={styles.registerLink} onClick={handlesignup}>회원가입</div>
+                    <div className={styles.registerLink} onClick={handleSignup}>회원가입</div>
                 </form>
         </div>
             );

@@ -1,55 +1,90 @@
 import React, {useEffect, useState} from "react";
-import { useLocation } from "react-router-dom";
 import OfficialFilterBar from "../components/layout/OfficialFilterBar.jsx";
 import SortBar from "../components/layout/SortBar.jsx";
 import OfficialCardList from "../components/cards/OfficialCardList.jsx";
 import Pagination from "../components/layout/Pagination.jsx";
-import { paginate } from "../utils/paginate.js";
 import styles from './OfficialCocktailPage.module.css';
 import SearchBar from "../components/layout/SearchBar.jsx";
-import {useOfficialCocktailContext} from "../context/OfficialCocktailContext.jsx";
 import NavBar from "../components/layout/NavBar.jsx";
 import Footer from "../components/layout/Footer.jsx";
+import {getOfficialPosts} from "../api/postApi.js";
+import {mapApiToFrontData} from "../utils/MapApiToFrontData.js";
 
-export default function OfficialCocktailPage() {
-    const location = useLocation();
-    const query = new URLSearchParams(location.search);
-    const shouldReset = query.get("reset") === "true";
-
-    const { cocktailList, searchList, resetList } = useOfficialCocktailContext();
-    const [sortOption, setSortOption] = useState("likes");
+export default function CocktailSharePage() {
+    const [cocktailList, setCocktailList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [sortOption, setSortOption] = useState("likes");
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [resetSignal, setResetSignal] = useState(false);
-
-    const pageSize = 8;   //한 페이지에 보여줄 카드 수
-
-    useEffect(() => {
-        if (shouldReset) {
-            resetList();                    // cocktailList 초기화
-            setSortOption("likes");         // 정렬 초기화
-            setSearchKeyword("");           // 검색어 초기화
-            setCurrentPage(1);              // 페이지 초기화
-            setResetSignal(prev => !prev);  // 필터 리셋 트리거
-
-            // 쿼리 파라미터 제거하여 URL 깔끔하게 유지
-            window.history.replaceState(null, '', '/posts');
-        }
-    }, [shouldReset]);
-
-    const sortedList = [...cocktailList].sort((a, b) => {
-        if (sortOption === "likes") return b.likes - a.likes;
-        if (sortOption === "latest") return b.id - a.id;
-        return 0;
+    const [filters, setFilters] = useState({
+        ingredients: [],
+        baseLiquors: [],
+        abv: null,
+        shaking: null
     });
 
-    const usePagination = sortedList.length > pageSize;
-    const { pagedList: currentList, totalPages } = paginate(sortedList, currentPage, pageSize);
+    const fetchList = async () => {
+        try {
+            const backendSort = sortOption === "likes" ? "like" : "latest";
+            const response = await getOfficialPosts({
+                is_official: true,
+                page: currentPage,
+                sort: backendSort,
+                query: searchKeyword,
+                ingredients: filters.ingredients,
+                base_liquors: filters.baseLiquors,
+                is_shaken: filters.shaking,
+            });
+
+            let list = response.data.data.posts.map(mapApiToFrontData);
+
+            // 도수 level(문자열) 기준으로 필터링
+            if (filters.abv) {
+                list = list.filter(item => item.level === filters.abv);
+            }
+
+            setCocktailList(list);
+            setTotalPages(response.data.data.total_pages);
+            console.log("적용된 filters:", filters);
+        } catch (err) {
+            console.error("게시글 조회 실패", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchList();
+    }, [currentPage, sortOption]);
 
     const handleSearch = () => {
-        searchList(searchKeyword);
-        setCurrentPage(1)
+        setCurrentPage(1);
+        fetchList();
     };
+
+    const handleSortChange = (option) => {
+        setSortOption(option);
+        setCurrentPage(1);
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const handleFilterApply = (appliedFilters) => {
+        setFilters(appliedFilters);
+        setCurrentPage(1);
+        fetchList();
+    };
+
+    useEffect(() => {
+        const handlePageShow = (event) => {
+            if (event.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
+                fetchList();
+            }
+        };
+
+        window.addEventListener("pageshow", handlePageShow);
+        return () => window.removeEventListener("pageshow", handlePageShow);
+    }, []);
 
     return (
         <>
@@ -68,26 +103,26 @@ export default function OfficialCocktailPage() {
                         searchKeyword={searchKeyword}
                         setSearchKeyword={setSearchKeyword}
                         onSearch={handleSearch}
-                        resetSignal={resetSignal}
                     />
                     <SortBar
                         sortOption={sortOption}
-                        setSortOption={(option) => {
-                            setSortOption(option);
-                            setCurrentPage(1); // 정렬 변경 시 첫 페이지로
-                        }}
+                        setSortOption={handleSortChange}
                     />
-                    <OfficialFilterBar resetSignal={resetSignal}/>
+                    <OfficialFilterBar
+                        filters={filters}
+                        setFilters={setFilters}
+                        onFilterApply={handleFilterApply}
+                    />
                 </div>
             </div>
 
             <div className={styles.bottomSection}>
-                <OfficialCardList cocktailList={currentList} />
-                {usePagination && (
+                <OfficialCardList cocktailList={cocktailList} />
+                {totalPages > 1 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
-                        onPageChange={(page) => setCurrentPage(page)}
+                        onPageChange={handlePageChange}
                     />
                 )}
             </div>

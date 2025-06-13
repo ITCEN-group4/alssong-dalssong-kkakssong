@@ -1,7 +1,5 @@
 import React from 'react';
 import {Routes, Route, BrowserRouter} from "react-router-dom"
-import {CocktailProvider} from "./context/CocktailContext.jsx";
-import {OfficialCocktailProvider} from "./context/OfficialCocktailContext.jsx";
 import ScrollToTop from "./utils/ScrollToTop.jsx";
 import CocktailSharePage from "./pages/CocktailSharePage";
 import CocktailDetailPage from "./pages/CocktailDetailPage";
@@ -17,25 +15,21 @@ import OfficialDetailPage from "./pages/OfficialCocktailDetailPage.jsx";
 function App() {
     return (
         <BrowserRouter>
-            <CocktailProvider>
-                <OfficialCocktailProvider>
                 <ScrollToTop />
                 <Routes>
                     <Route path="/auth/login" element={<LoginPage />} />
                     <Route path="/auth/signup" element={<SignupPage/>} />
-                    <Route path="/post" element={<CocktailSharePage/>}/>
-                    <Route path="/post/:id" element={<CocktailDetailPage/>}/>
-                    <Route path="/post/create" element={<CocktailWritePage mode="create" />} />
-                    <Route path="/post/update/:id" element={<CocktailWritePage mode="edit" />} />
+                    <Route path="/posts" element={<CocktailSharePage/>}/>
+                    <Route path="/post" element={<OfficialCocktailPage/>}/>
+                    <Route path="/post/:id" element={<OfficialDetailPage/>}/>
+                    <Route path="/posts/:id" element={<CocktailDetailPage/>}/>
+                    <Route path="/posts/create" element={<CocktailWritePage mode="create" />} />
+                    <Route path="/posts/update/:id" element={<CocktailWritePage mode="edit" />} />
                     <Route path="/mypage" element={<MyPage />}>
                         <Route index element={<MyInfoPage />} />
                         <Route path="posts" element={<MyPostViewPage />} />
                     </Route>
-                    <Route path="/posts" element={<OfficialCocktailPage/>}/>
-                    <Route path="/posts/:id" element={<OfficialDetailPage/>}/>
                 </Routes>
-                </OfficialCocktailProvider>
-            </CocktailProvider>
         </BrowserRouter>
     );
 }
