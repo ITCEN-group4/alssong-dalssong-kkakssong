@@ -286,6 +286,7 @@ public class PostService {
 
         return PostDetailResponse.builder()
                 .postId(post.getPostId())
+                .userId(post.getUser().getUserId())
                 .user_nickname(post.getUser().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())

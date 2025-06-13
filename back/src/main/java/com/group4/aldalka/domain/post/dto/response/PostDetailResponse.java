@@ -16,6 +16,9 @@ public class PostDetailResponse {
     @JsonProperty("post_id")
     private Long postId;
 
+    @JsonProperty("user_id")
+    private Long userId;
+
     private String user_nickname;
 
     private String title;
