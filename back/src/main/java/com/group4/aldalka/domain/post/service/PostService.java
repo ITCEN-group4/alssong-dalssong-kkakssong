@@ -257,7 +257,7 @@ public class PostService {
     }
 
 
-    public OfficialPostDetailResponse getOfficialPostDetail(String userEmail, Long postId) {
+    public PostDetailResponse getPostDetail(String userEmail, Long postId) {
 
         Long userId= null;
         if(userEmail != null) {
@@ -272,10 +272,10 @@ public class PostService {
 
         int likeCount = post.getLikes().size();
 
-        return buildOfficialPostDetailResponse(post, likeCount, isLiked);
+        return buildPostDetailResponse(post, likeCount, isLiked);
     }
 
-    private OfficialPostDetailResponse buildOfficialPostDetailResponse(Post post, int likeCount, boolean isLiked) {
+    private PostDetailResponse buildPostDetailResponse(Post post, int likeCount, boolean isLiked) {
         List<String> ingredients = post.getPostIngredients().stream()
                 .map(p -> p.getIngredient().getName())
                 .toList();
@@ -284,14 +284,16 @@ public class PostService {
                 .map(b -> b.getBaseLiquor().getName())
                 .toList();
 
-        return OfficialPostDetailResponse.builder()
+        return PostDetailResponse.builder()
                 .postId(post.getPostId())
+                .user_nickname(post.getUser().getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .recipe(post.getRecipe())
                 .difficulty(post.getDifficulty())
                 .isShaken(post.isShaken())
                 .createdAt(post.getCreatedAt().toLocalDate())
+                .updateAt(post.getUpdatedAt().toLocalDate())
                 .likeCount(likeCount)
                 .isLiked(isLiked)
                 .imageUrl(post.getImageUrl())

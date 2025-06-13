@@ -34,9 +34,9 @@ public class PostController
 
     //비회원, 회원 모두 접근가능
     @GetMapping("/{postId}")
-    public ResponseEntity<ResultResponse> getOfficialPostDetail(@LoginUser String userEmail, @PathVariable Long postId){
+    public ResponseEntity<ResultResponse> getPostDetail(@LoginUser String userEmail, @PathVariable Long postId){
         return ResponseEntity.ok(
-                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getOfficialPostDetail(userEmail, postId))
+                ResultResponse.of(GET_OFFICIAL_DETAIL_INFO_SUCCESS, postService.getPostDetail(userEmail, postId))
         );
     }
 
