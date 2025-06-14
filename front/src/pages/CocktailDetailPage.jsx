@@ -20,6 +20,7 @@ export default function CocktailDetailPage() {
     const [animate, triggerAnimate] = useLikeAnimation();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [errorLikeMessage, setErrorLikeMessage] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {

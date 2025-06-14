@@ -35,6 +35,7 @@ export default function OfficialCard({ cocktail }) {
             setErrorMessage("로그인이 필요합니다.");
             setTimeout(() => setErrorMessage(""), 1000); // 2초 후 사라짐
             return;
+        }
 
         try {
             if (postData.isLiked) {
