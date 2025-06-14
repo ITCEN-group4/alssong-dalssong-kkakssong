@@ -15,6 +15,7 @@ export default function CocktailSharePage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [sortOption, setSortOption] = useState("likes");
+    const [sortTrigger, setSortTrigger] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState("");
     const [filters, setFilters] = useState({
         ingredients: [],
@@ -22,6 +23,12 @@ export default function CocktailSharePage() {
         abv: null,
         shaking: null
     });
+
+    const difficultyMap = {
+        "초보": 0,
+        "중수": 1,
+        "고수": 2
+    };
 
     const fetchList = async () => {
         try {
@@ -34,18 +41,14 @@ export default function CocktailSharePage() {
                 ingredients: filters.ingredients,
                 base_liquors: filters.baseLiquors,
                 is_shaken: filters.shaking,
+                difficulty: difficultyMap[filters.abv] ?? null
             });
 
             let list = response.data.data.posts.map(mapApiToFrontData);
 
-            // 도수 level(문자열) 기준으로 필터링
-            if (filters.abv) {
-                list = list.filter(item => item.level === filters.abv);
-            }
-
             setCocktailList(list);
             setTotalPages(response.data.data.total_pages);
-            console.log("적용된 filters:", filters);
+
         } catch (err) {
             console.error("게시글 조회 실패", err);
         }
@@ -53,7 +56,7 @@ export default function CocktailSharePage() {
 
     useEffect(() => {
         fetchList();
-    }, [currentPage, sortOption]);
+    }, [currentPage, sortOption, sortTrigger]);
 
     const handleSearch = () => {
         setCurrentPage(1);
@@ -61,8 +64,12 @@ export default function CocktailSharePage() {
     };
 
     const handleSortChange = (option) => {
-        setSortOption(option);
-        setCurrentPage(1);
+        if (option === sortOption) {
+            setSortTrigger(prev => prev + 1);  // 강제 리렌더
+        } else {
+            setSortOption(option);
+            setCurrentPage(1);
+        }
     };
 
     const handlePageChange = (page) => {
