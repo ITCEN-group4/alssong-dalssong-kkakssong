@@ -22,18 +22,18 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
-// 응답 에러 처리 (401, 403일 경우 토큰 제거 및 리디렉션)
-axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        const status = error?.response?.status;
-        if (status === 401 || status === 403) {
-            localStorage.removeItem("token");
-            alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
-            window.location.href = "/auth/login";
-        }
-        return Promise.reject(error);
-    }
-);
+// // 응답 에러 처리 (401, 403일 경우 토큰 제거 및 리디렉션)
+// axiosInstance.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//         const status = error?.response?.status;
+//         if (status === 401 || status === 403) {
+//             localStorage.removeItem("token");
+//             alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
+//             window.location.href = "/auth/login";
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 
 export default axiosInstance;
