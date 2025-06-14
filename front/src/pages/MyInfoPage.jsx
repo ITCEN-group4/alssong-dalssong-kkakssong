@@ -64,7 +64,7 @@ export default function MyInfoPage() {
             try {
                 await deleteUser();
                 alert("회원 탈퇴가 완료되었습니다.");
-                // 필요시 로그아웃 처리나 홈으로 리디렉션
+                localStorage.removeItem("token");
             } catch (error) {
                 alert("회원 탈퇴 실패: " + (error.response?.data?.message || error.message));
             }
