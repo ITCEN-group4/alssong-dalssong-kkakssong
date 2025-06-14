@@ -1,7 +1,7 @@
 import React from "react";
 import MyPostCard from "./MyPostCard.jsx";
 import styles from "./MyPostCardList.module.css";
-import { mapApiToFrontData } from "../../utils/mapApiToFrontData.js";
+import { mapApiToFrontData } from "../../utils/MapApiToFrontData.js";
 
 export default function MyPostCardList({ cocktailList }) {
     if (!cocktailList || cocktailList.length === 0) {
