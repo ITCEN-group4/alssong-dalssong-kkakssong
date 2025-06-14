@@ -1,14 +1,15 @@
 package com.group4.aldalka.domain;
 
+import java.time.ZonedDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
+
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import lombok.Getter;
 
 @Getter
 @MappedSuperclass
@@ -22,10 +23,10 @@ public abstract class BaseEntity {
     private ZonedDateTime updatedAt;
 
     public BaseEntity() {
-        this.createdAt = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        createdAt = ZonedDateTime.now();
     }
 
     public BaseEntity(ZonedDateTime createdAt) {
-        this.createdAt = createdAt.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+        this.createdAt = createdAt;
     }
 }
