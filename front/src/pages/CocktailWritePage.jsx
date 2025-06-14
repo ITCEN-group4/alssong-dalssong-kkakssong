@@ -1,23 +1,24 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styles from "./CocktailWritePage.module.css";
 import CocktailTagBox from "../components/boxs/CocktailTagBox.jsx";
 import ImageUploadBox from '../components/boxs/ImageUploadBox.jsx';
 import RecipeInputBox from "../components/boxs/RecipeInputBox.jsx";
 import NavBar from "../components/layout/NavBar.jsx";
-import {UNSAFE_NavigationContext, useNavigate, useParams} from "react-router-dom";
+import { UNSAFE_NavigationContext, useNavigate, useParams } from "react-router-dom";
 import { ingredientCategoryMap } from "../utils/ingredientCategoryMap.js";
-import {createPost, updatePost, getPostById} from "../api/postApi.js";
-import {mapApiToFrontData} from "../utils/MapApiToFrontData.js";
-import {uploadImage} from "../api/imageApi.js";
+import { createPost, updatePost, getPostById } from "../api/postApi.js";
+import { mapApiToFrontData } from "../utils/MapApiToFrontData.js";
+import { uploadImage } from "../api/imageApi.js";
 
 export default function CocktailWritePage({ mode = "create" }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const navigationContext = useContext(UNSAFE_NavigationContext);
+    const isSubmittingRef = useRef(false);
 
     const [cocktailName, setCocktailName] = useState("");
     const [description, setDescription] = useState("");
-    const [selectedImage, setSelectedImage] = useState(null);  // S3 URL
+    const [selectedImage, setSelectedImage] = useState(null); // S3 URL 또는 File 객체
     const [recipeList, setRecipeList] = useState([]);
     const [filters, setFilters] = useState({
         baseLiquors: [],
@@ -27,13 +28,15 @@ export default function CocktailWritePage({ mode = "create" }) {
     });
     const [errorMessage, setErrorMessage] = useState("");
     const [showCancelModal, setShowCancelModal] = useState(false);
+    const [showSubmitModal, setShowSubmitModal] = useState(false);
 
+    // 에러 메시지 표시
     const showError = (msg) => {
         setErrorMessage(msg);
         setTimeout(() => setErrorMessage(""), 2000);
     };
 
-    //띄어쓰기 제거 함수
+    // 띄어쓰기 제거 함수
     function normalizeIngredientName(name) {
         return name.replace(/\s/g, "").replace(/-/g, "").trim().toLowerCase();
     }
@@ -42,14 +45,14 @@ export default function CocktailWritePage({ mode = "create" }) {
     function mapIngredientsToCategories(ingredients) {
         const categorySet = new Set();
         ingredients.forEach(name => {
-            const normalized = name.replace(/\s/g, "").replace(/-/g, "").trim().toLowerCase();
+            const normalized = normalizeIngredientName(name);
             const category = ingredientCategoryMap[normalized];
             if (category) categorySet.add(category);
         });
         return Array.from(categorySet);
     }
 
-    //다른 페이지 이동 시 경고문구
+    // 다른 페이지 이동 시 경고 모달 표시
     useEffect(() => {
         const navigator = navigationContext.navigator;
         const originalPush = navigator.push;
@@ -57,17 +60,17 @@ export default function CocktailWritePage({ mode = "create" }) {
         const hasChanges =
             cocktailName || description || recipeList.length > 0 || selectedImage;
 
-        // 페이지 내 네비게이션 감지 (Link, navigate)
         navigator.push = (...args) => {
-            if (!hasChanges || window.confirm("정말 작성을 취소하시겠습니까? 작성한 내용은 저장되지 않습니다.")) {
+            if (isSubmittingRef.current || !hasChanges) {
                 navigator.push = originalPush;
                 originalPush(...args);
+            } else {
+                setShowCancelModal(true);
             }
         };
 
-        // 브라우저 뒤로가기 / 새로고침 감지
         const handleBeforeUnload = (e) => {
-            if (hasChanges) {
+            if (hasChanges && !isSubmittingRef.current) {
                 e.preventDefault();
                 e.returnValue = "";
             }
@@ -81,7 +84,7 @@ export default function CocktailWritePage({ mode = "create" }) {
         };
     }, [cocktailName, description, recipeList, selectedImage]);
 
-    //이미지 컨버팅 함수
+    // 이미지 파일을 Base64로 변환
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -101,7 +104,14 @@ export default function CocktailWritePage({ mode = "create" }) {
 
                     setCocktailName(found.name);
                     setDescription(found.description);
-                    setSelectedImage(found.image);
+
+                    if (
+                        found.image === "https://dummyimage.com/300x300/cccccc/000000&text=Cocktail"
+                    ) {
+                        setSelectedImage(null);
+                    } else {
+                        setSelectedImage(found.image);
+                    }
 
                     const parsedRecipe = found.recipe
                         .split("\n")
@@ -134,7 +144,7 @@ export default function CocktailWritePage({ mode = "create" }) {
         }
     }, [mode, id]);
 
-    // 레시피에서 재료 선택시 해당 필터박스의 카테고리 자동 체크
+    // 레시피 입력 시 필터 자동 반영
     useEffect(() => {
         const newIngredientCategories = mapIngredientsToCategories(
             recipeList.map(item => item.name)
@@ -147,6 +157,8 @@ export default function CocktailWritePage({ mode = "create" }) {
             showError("모든 필드를 채워주세요.");
             return;
         }
+
+        isSubmittingRef.current = true;
 
         // 이미지 업로드
         let imageUrl = "https://dummyimage.com/300x300/cccccc/000000&text=Cocktail";
@@ -164,7 +176,7 @@ export default function CocktailWritePage({ mode = "create" }) {
                 return;
             }
         } else if (typeof selectedImage === "string" && selectedImage !== "") {
-            imageUrl = selectedImage; // 수정 모드에서 기존 이미지 URL
+            imageUrl = selectedImage; // 수정 모드에서 기존 이미지 URL 유지
         }
 
         const recipeString = recipeList.map(i => `${i.name} ${i.amount}`).join('\n');
@@ -186,32 +198,20 @@ export default function CocktailWritePage({ mode = "create" }) {
         try {
             if (mode === "edit" && id) {
                 await updatePost(id, payload);
-                alert("게시글이 수정되었습니다.");
             } else {
                 await createPost(payload);
-                alert("게시글이 작성되었습니다.");
             }
-            navigate("/posts");
+            setShowSubmitModal(true);
+            setTimeout(() => navigate("/posts"), 1000);
         } catch (err) {
             console.error("작성/수정 실패:", err);
             alert("요청 중 오류가 발생했습니다.");
         }
-
     };
 
-    const handleImageDelete = async () => {
-        if (typeof selectedImage !== "string") return; // URL이 아닐 경우 무시
-
-        const key = selectedImage.split("/").slice(-2).join("/"); // 예: images/example.png
-
-        try {
-            await deleteImage(key);
-            setSelectedImage(null);
-            alert("이미지가 삭제되었습니다.");
-        } catch (e) {
-            console.error("이미지 삭제 실패:", e);
-            alert("이미지 삭제에 실패했습니다.");
-        }
+    const handleImageDelete = () => {
+        // S3 삭제는 작성 완료 시점에만 진행. 이 함수에서는 화면에서만 제거
+        setSelectedImage(null);
     };
 
     const handleCancel = () => {
@@ -238,7 +238,6 @@ export default function CocktailWritePage({ mode = "create" }) {
         navigate(-1);
     };
 
-
     return (
         <>
             <NavBar />
@@ -255,6 +254,14 @@ export default function CocktailWritePage({ mode = "create" }) {
                                 <button className={styles.modalYes} onClick={confirmCancel}>예</button>
                                 <button className={styles.modalNo} onClick={() => setShowCancelModal(false)}>아니오</button>
                             </div>
+                        </div>
+                    </div>
+                )}
+
+                {showSubmitModal && (
+                    <div className={styles.modalOverlay}>
+                        <div className={styles.modalBox}>
+                            <p className={styles.modalText}>게시글이 {mode === "edit" ? "수정" : "작성"}되었습니다!</p>
                         </div>
                     </div>
                 )}
