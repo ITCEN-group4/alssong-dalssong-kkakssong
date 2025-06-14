@@ -10,7 +10,15 @@ const axiosInstance = axios.create({
 // 요청 시 토큰 추가
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+
+    // 회원가입 또는 로그인 요청일 경우 Authorization 헤더 생략
+    const isAuthRequest =
+        config.url.includes("/users") && config.method === "post";
+
+    if (token && !isAuthRequest) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
 });
 
