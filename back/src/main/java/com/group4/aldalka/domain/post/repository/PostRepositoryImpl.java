@@ -59,8 +59,17 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             builder.and(post.isOfficial.eq(postSearchRequest.getIsOfficial()));
         }
         if (postSearchRequest.getDifficulty() != null) {
-            builder.and(post.difficulty.eq(postSearchRequest.getDifficulty()));
+            int difficultyLevel = postSearchRequest.getDifficulty();
+
+            if (difficultyLevel == 0) {
+                builder.and(post.difficulty.loe(15)); // 15 이하
+            } else if (difficultyLevel == 1) {
+                builder.and(post.difficulty.gt(15).and(post.difficulty.loe(30))); // 16~30
+            } else if (difficultyLevel == 2) {
+                builder.and(post.difficulty.gt(30)); // 30 초과
+            }
         }
+
         if (postSearchRequest.getIsShaken() != null) {
             builder.and(post.isShaken.eq(postSearchRequest.getIsShaken()));
         }
