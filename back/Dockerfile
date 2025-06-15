@@ -1,4 +1,4 @@
-# 빌드 단계
+# 빌드 단계 
 FROM --platform=linux/arm64 gradle:8.13-jdk17 AS build
 WORKDIR /app
 
