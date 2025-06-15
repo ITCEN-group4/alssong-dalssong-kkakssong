@@ -18,7 +18,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set DATE_TAG
-        run: echo "DATE_TAG=dev-$(date +%Y%m%d-%H%M)" >> $GITHUB_ENV
+        id: set-tag
+        run: |
+          TAG=dev-$(date +%Y%m%d-%H%M)
+          echo "date_tag=$TAG" >> $GITHUB_OUTPUT
+          echo "DATE_TAG=$TAG" >> $GITHUB_ENV
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -59,7 +63,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/back:latest
 
   deploy:
-    needs: build
+    needs: [build, deploy]
     runs-on: ubuntu-22.04
 
     steps:
