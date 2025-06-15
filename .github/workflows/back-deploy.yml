@@ -63,7 +63,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/back:latest
 
   deploy:
-    needs: [build, deploy]
+    needs: build
     runs-on: ubuntu-22.04
 
     steps:
@@ -86,7 +86,7 @@ jobs:
             ./deploy.sh backend
 
   notify:
-    needs: deploy
+    needs: [build, deploy]
     runs-on: ubuntu-22.04
     if: success()
 
