@@ -20,7 +20,7 @@ jobs:
       - name: Set DATE_TAG
         id: set-tag
         run: |
-          TAG=dev-$(date +%Y%m%d-%H%M)
+          TAG=dev-$(TZ=Asia/Seoul date +%Y%m%d-%H%M)
           echo "date_tag=$TAG" >> $GITHUB_OUTPUT
           echo "DATE_TAG=$TAG" >> $GITHUB_ENV
 
