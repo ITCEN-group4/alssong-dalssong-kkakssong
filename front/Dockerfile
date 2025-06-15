@@ -10,7 +10,7 @@ RUN npm ci
 
 COPY . .
 
-# Vite 빌드 실행 
+# Vite 빌드 실행
 RUN npm run build
 
 # 실행용 이미지
