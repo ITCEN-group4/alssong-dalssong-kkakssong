@@ -7,12 +7,11 @@ on:
     branches:
       - develop
 
-env:
-  DATE_TAG: dev-${{ github.run_id }}
-
 jobs:
   build:
     runs-on: ubuntu-22.04
+    outputs:
+      date_tag: ${{ steps.set-tag.outputs.date_tag }}
 
     steps:
       - name: Checkout code
@@ -91,6 +90,6 @@ jobs:
       - name: Discord Notification
         uses: Ilshidur/action-discord@master
         with:
-          args: "👍 [BACK] 이미지 푸시 및 배포 완료: `${{ env.DATE_TAG }}`"
+          args: "👍 [BACK] 이미지 푸시 및 배포 완료: `${{ needs.build.outputs.date_tag }}`"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
