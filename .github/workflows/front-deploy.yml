@@ -70,7 +70,7 @@ jobs:
             ./deploy.sh front
 
   notify:
-    needs: deploy
+    needs: [build, deploy]
     runs-on: ubuntu-22.04
     if: success()
 
